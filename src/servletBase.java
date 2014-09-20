@@ -1,5 +1,4 @@
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,8 +43,9 @@ public class servletBase extends HttpServlet {
 	 */
     public servletBase() {
     	try{
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/base?" +
-            "user=martin&password=");			
+    		Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
+			           "user=puss1403&password=9dpa2oan");			
 			       
 						
 			// Display the contents of the database in the console. 
@@ -63,6 +63,15 @@ public class servletBase extends HttpServlet {
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
     }
     
