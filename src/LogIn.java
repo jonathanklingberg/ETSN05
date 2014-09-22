@@ -129,7 +129,7 @@ public class LogIn extends servletBase {
        	}else{ // name was null, probably because no form has been filled out yet. Display form.
        		out.println(loginRequestForm());
        	}
-		
+        
 		out.println("</body></html>");
 	}
 
