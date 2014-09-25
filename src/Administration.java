@@ -173,10 +173,18 @@ public class Administration extends servletBase {
 				// check if the administrator wants to delete a user by clicking the URL in the list
 				String deleteName = request.getParameter("deletename");
 				if (deleteName != null) {
-					if (checkNewName(deleteName)) {
+//					if (checkNewName(deleteName)) {
 						deleteUser(deleteName);
-					}	else
-						out.println("<p>Error: URL wrong</p>");
+//					}	else
+//						out.println("<p>Error: URL wrong</p>");
+				}
+				
+				String inactivateName = request.getParameter("inactivatename");
+				if (inactivateName != null) {
+//					if (checkNewName(inactivateName)) {
+						inactivateUser(inactivateName);
+//					}	else
+//						out.println("<p>Error: URL wrong</p>");
 				}
 				
 				try {
@@ -192,12 +200,19 @@ public class Administration extends servletBase {
 				    	String deleteCode = "<a href=" + formElement(deleteURL) +
 				    			            " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + 
 				    			            "> delete </a>";
-				    	if (name.equals("admin")) 
+				    	String inactivateURL = "Administration?inactivatename="+name;
+				    	String inactivateCode = "<a href=" + formElement(inactivateURL) +
+	    			            " onclick="+formElement("return confirm('Are you sure you want to inactivate "+name+"?')") + 
+	    			            "> inactivate </a>";
+				    	if (name.equals("admin")){
 				    		deleteCode = "";
+				    		inactivateCode = "";
+				    	}
 				    	out.println("<tr>");
 				    	out.println("<td>" + name + "</td>");
 				    	out.println("<td>" + pw + "</td>");
 				    	out.println("<td>" + deleteCode + "</td>");
+				    	out.println("<td>" + inactivateCode + "</td>");
 				    	out.println("</tr>");
 				    }
 				    out.println("</table>");
@@ -221,6 +236,23 @@ public class Administration extends servletBase {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+	}
+	
+	private boolean inactivateUser(String username) {
+		boolean resultOk = true;
+		try{
+			Statement stmt = conn.createStatement();
+			String statement = "update users set is_active = 0 where name = '" + username + "'";
+			System.out.println(statement);
+		    stmt.executeUpdate(statement); 
+		    stmt.close();
+		} catch (SQLException ex) {
+		    resultOk = false;
+		    // System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		return resultOk;
 	}
 
 }

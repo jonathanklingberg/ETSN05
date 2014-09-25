@@ -1,6 +1,4 @@
 import java.io.*;
-
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -69,9 +67,13 @@ public class LogIn extends servletBase {
 		    while (rs.next( ) && !userChecked) {
 		    	String nameSaved = rs.getString("name"); 
 		    	String passwordSaved = rs.getString("password");
+		    	int isActive = rs.getInt("is_active");
+		    	System.out.println("is_active: " + isActive);
 		    	if (name.equals(nameSaved)) {
 		    		userChecked = true;
-		    		userOk = password.equals(passwordSaved);
+		    		if(password.equals(passwordSaved) && isActive == 1){
+	    				userOk = true;
+		    		}
 		    	}
 		    }
 		    stmt.close();
@@ -104,23 +106,22 @@ public class LogIn extends servletBase {
 
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
+		String name;
+		String password;
 		
 		if (loggedIn(request)) {
 			session.setAttribute("state", LOGIN_FALSE);
 			out.println("<p>You are now logged out</p>");
 		}
 		
-		String name;
-		String password;
-				
-        name = request.getParameter("user"); // get the string that the user entered in the form
+		name = request.getParameter("user"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
         if (name != null && password != null) {
         	if (checkUser(name, password)) {
-        		state = LOGIN_TRUE;
-       			session.setAttribute("state", state);  // save the state in the session
-       			session.setAttribute("name", name);  // save the name in the session
-       			response.sendRedirect("functionality.html");
+	        		state = LOGIN_TRUE;
+	       			session.setAttribute("state", state);  // save the state in the session
+	       			session.setAttribute("name", name);  // save the name in the session
+	       			response.sendRedirect("functionality.html");
        		}
        		else {
        			out.println("<p>That was not a valid user name / password. </p>");
@@ -141,5 +142,22 @@ public class LogIn extends servletBase {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
+	
+//	protected boolean setActive(String username){
+//    	boolean resultOk = true;
+//    	try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "update users set is_active = 1 where name = '" + username + "'";
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
+//			
+//		} catch (SQLException ex) {
+//		    resultOk = false;
+//		    // System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+//    	return resultOk;
+//	}
 }
