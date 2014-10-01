@@ -23,6 +23,10 @@ import javax.servlet.http.HttpServletResponse;
  * @version 1.0
  * 
  */
+
+/*
+ * SG was here
+ */
 @WebServlet("/LogIn")
 public class LogIn extends servletBase {
 	private static final long serialVersionUID = 1L;
