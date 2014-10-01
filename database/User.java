@@ -19,45 +19,53 @@ public class User implements DatabaseInterface {
 	 * 
 	 * @param Connection conn is a connection to the database
 	 */
-	User(Connection conn) {
-	}
+	User(Connection conn, String name, String password, int userID, int role) {}
 	
 	private Connection conn;
-	private string name;
-	private string password;
+	private String name;
+	private String password;
 	private int userID;
 	private int role;
 	
 	/**
 	 * 
-	 * @param u Depending on what role user u has the output is different
-	 * @return The user in HTML
-	 */
-	public String toHtml(User u) {}
-	
-	/**
-	 * 
 	 * @return The name
 	 */
-	public String getName() {}
+	public String getName() {return null;}
 	
 	/**
 	 * 
 	 * @return User ID
 	 */
-	public int getUserID() {}
+	public int getUserID() {return -1;}
 	
 	/**
 	 * 
 	 * @param pw Password to be compared to
 	 * @return True if they match, false otherwise
 	 */
-	public boolean comparePassword(String pw) {}
+	public boolean comparePassword(String pw) {return false;}
 	
 	/**
 	 * 
-	 * @return The role 
+	 * @return The user role 
 	 */
-	public String getRole() {}
+	public String getRole() {return null;}
+
+	/**
+	 * @param user Should be ProjectManager or Admin, otherwise null will be returned.
+	 * @return Returns the user in HTML representation.
+	 */
+	public String toHTML(User user) {
+		return null;
+	}
+
+	/**
+	 * 
+	 * @return True if the object manages to remove itself, otherwise false
+	 */
+	public boolean removeMe() {
+		return false;
+	}
 
 }
