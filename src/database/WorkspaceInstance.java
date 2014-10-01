@@ -7,6 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+/**
+ * 
+ * @author seb
+ * This class contains operations that act over the whole database, and certain specific operations on projects and users
+ */
 public class WorkspaceInstance implements DatabaseInterface {
 
 	public WorkspaceInstance(Connection conn) {}
@@ -55,8 +60,22 @@ public class WorkspaceInstance implements DatabaseInterface {
 	public List<User> getUsers() {
 		return null;}
 
+	/**
+	 * 
+	 * @param id The id of the project to retrieve
+	 * @return The Project that maps to id in the database
+	 */
+	public Project getProject(int id) {
+		return null;}
 	
-
+	/**
+	 * 
+	 * @param user The user to be moved from one project to another
+	 * @param project1 The project the user should be moved from
+	 * @param project2 The project the user should be moved to
+	 */
+	public void moveUser(User user, Project project1, Project project2) {}
+	
 	/**
 	 * @param user Should be ProjectManager or Admin, otherwise null will be returned.
 	 * @return Returns the user in HTML representation.
@@ -64,8 +83,6 @@ public class WorkspaceInstance implements DatabaseInterface {
 	public String toHTML(User user) {
 		return null;
 	}
-
-
 
 	/**
 	 * @return True if the object manages to remove itself, otherwise false
