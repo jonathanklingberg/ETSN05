@@ -14,6 +14,10 @@ import java.util.List;
  */
 public class WorkspaceInstance implements DatabaseInterface {
 
+	/**
+	 * 
+	 * @param conn A connection to the database
+	 */
 	public WorkspaceInstance(Connection conn) {}
 	
 
@@ -23,7 +27,8 @@ public class WorkspaceInstance implements DatabaseInterface {
  	* @return The projects associated with this workspace
  	*/
 	public List<Project> getProjects() {
-		return null;}
+		return null;
+	}
 
 	/**
 	 * 
@@ -31,7 +36,8 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return True if it succeeds adding the project, otherwise false.
 	 */
 	public boolean addProject(Project project) {
-		return false;}
+		return false;
+	}
 
 	/**
 	 * 
@@ -39,7 +45,8 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return True if it succeeds with removing the project, otherwise false.
 	 */
 	public boolean removeProject(Project project) {
-		return false;}
+		return false;
+	}
 
 	
 	/**
@@ -58,7 +65,8 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return A list of users in the workspace
 	 */
 	public List<User> getUsers() {
-		return null;}
+		return null;
+	}
 
 	/**
 	 * 
@@ -66,7 +74,8 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return The Project that maps to id in the database
 	 */
 	public Project getProject(int id) {
-		return null;}
+		return null;
+	}
 	
 	/**
 	 * 
@@ -77,7 +86,7 @@ public class WorkspaceInstance implements DatabaseInterface {
 	public void moveUser(User user, Project project1, Project project2) {}
 	
 	/**
-	 * @param user Should be ProjectManager or Admin, otherwise null will be returned.
+	 * @param user Should be a ProjectManager or Administrator, otherwise null will be returned.
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {
