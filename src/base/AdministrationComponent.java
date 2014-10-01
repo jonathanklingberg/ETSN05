@@ -27,7 +27,7 @@ import java.util.Random;
  *  @version 1.0
  */
 @WebServlet("/Administration")
-public class Administration extends servletBase {
+public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
        

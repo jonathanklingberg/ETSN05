@@ -34,7 +34,7 @@ public class LoginComponent extends ServletBase {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LogIn() {
+    public LoginComponent() {
         super();
         // TODO Auto-generated constructor stub
     }

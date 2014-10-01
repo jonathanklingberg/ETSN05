@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
  *  @version 1.0
  *  
  */
-public class servletBase extends HttpServlet {
+public class ServletBase extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -43,7 +43,7 @@ public class servletBase extends HttpServlet {
 	 * Constructs a servlet and makes a connection to the database. 
 	 * It also writes all user names on the console for test purpose. 
 	 */
-    public servletBase() {
+    public ServletBase() {
     	try{
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
