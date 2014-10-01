@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
  * 
  */
 
-//Hejsan
 
 @WebServlet("/LogIn")
 public class LogIn extends servletBase {
