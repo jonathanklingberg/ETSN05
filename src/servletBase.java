@@ -38,7 +38,7 @@ public class servletBase extends HttpServlet {
 	protected static final int LOGIN_FALSE = 0;
 	protected static final int LOGIN_TRUE = 1;	
 	protected Connection conn = null;
-	
+
 	/**
 	 * Constructs a servlet and makes a connection to the database. 
 	 * It also writes all user names on the console for test purpose. 
