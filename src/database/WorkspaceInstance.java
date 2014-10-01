@@ -62,6 +62,7 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {
+		return null;
 	}
 
 
