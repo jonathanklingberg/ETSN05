@@ -20,8 +20,6 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 */
 	public WorkspaceInstance(Connection conn) {}
 	
-
-
 	/**
  	* 
  	* @return The projects associated with this workspace
@@ -48,7 +46,6 @@ public class WorkspaceInstance implements DatabaseInterface {
 		return false;
 	}
 
-	
 	/**
 	 * 
 	 * @param user The user to be added to the database
@@ -86,7 +83,37 @@ public class WorkspaceInstance implements DatabaseInterface {
 	public void moveUser(User user, Project project1, Project project2) {}
 	
 	/**
-	 * @param user Should be a ProjectManager or Administrator, otherwise null will be returned.
+	 * 
+	 * @param user The user who should get its role changed
+	 * @param role The role to change to.
+	 * @return True if it succeeds, false otherwise.
+	 */
+	public boolean changeRole(User user, int role) {
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param user The user who should get its name changed
+	 * @param name The new user name
+	 * @return True if it succeeds, false otherwise
+	 */
+	public boolean changeUserName(User user, String name) {
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param user The user who should get its password changed
+	 * @param password The new password
+	 * @return True if it succeeds, false otherwise.
+	 */
+	public boolean changePassword(User user, String password) {
+		return false;
+	}
+	
+	/**
+	 * @param user Should be an Administrator, otherwise null will be returned.
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {
@@ -97,7 +124,6 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return True if the object manages to remove itself, otherwise false
 	 */
 	public boolean removeMe() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

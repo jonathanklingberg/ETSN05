@@ -17,19 +17,20 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @param conn
-	 * @param name
-	 * @param password
-	 * @param userID
+	 * @param conn A connection to the database
+	 * @param name  user name
+	 * @param password A password
+	 * @param userID 
 	 * @param role
 	 */
 	public User(Connection conn, String name, String password, int userID, int role) {}
 
 	/**
 	 * 
-	 * @param conn
+	 * @param conn A connection to the database
+	 * @param name A user name
 	 */
-	public User(Connection conn) {}
+	public User(Connection conn, String name) {}
 	
 	private Connection conn;
 	private String name;
@@ -68,6 +69,15 @@ public class User implements DatabaseInterface {
 	 */
 	public String getRole() {
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param role The role the user's role should be set to
+	 * @return True if it succeeds, false otherwise.
+	 */
+	public boolean setRole(int role) {
+		return false;
 	}
 
 	/**
