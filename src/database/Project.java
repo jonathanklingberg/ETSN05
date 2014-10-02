@@ -3,6 +3,14 @@ package database;
 import java.sql.Connection;
 import java.util.List;
 
+/**
+ * 
+ * @author seb
+ *
+ * This class describes the user in the database and provides a number of methods
+ * on this data
+ */
+
 public class Project implements DatabaseInterface {
 	private int id;
 	private String name;
