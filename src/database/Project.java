@@ -69,15 +69,15 @@ public class Project implements DatabaseInterface {
 		return false;
 	}
 	
-	/**
-	 * 
-	 * @param signer The user who want's to sign the time report.
-	 * @param reportId The ID of the report
-	 * @return True if it succeeds, fail otherwise.
-	 */
-	public boolean signTimeReport(User signer, int reportId) {
-		return false;
-	}
+//	/**
+//	 * 
+//	 * @param signer The user who want's to sign the time report.
+//	 * @param reportId The ID of the report
+//	 * @return True if it succeeds, fail otherwise.
+//	 */
+//	public boolean signTimeReport(User signer, int reportId) {
+//		return false;
+//	}
 	
 	
 	/**
