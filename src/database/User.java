@@ -17,9 +17,19 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @param Connection conn is a connection to the database
+	 * @param conn
+	 * @param name
+	 * @param password
+	 * @param userID
+	 * @param role
 	 */
-	User(Connection conn, String name, String password, int userID, int role) {}
+	public User(Connection conn, String name, String password, int userID, int role) {}
+
+	/**
+	 * 
+	 * @param conn
+	 */
+	public User(Connection conn) {}
 	
 	private Connection conn;
 	private String name;
@@ -29,31 +39,39 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @return The name
+	 * @return User name
 	 */
-	public String getName() {return null;}
+	public String getName() {
+		return null;
+	}
 	
 	/**
 	 * 
 	 * @return User ID
 	 */
-	public int getUserID() {return -1;}
+	public int getUserID() {
+		return -1;
+	}
 	
 	/**
 	 * 
 	 * @param pw Password to be compared to
 	 * @return True if they match, false otherwise
 	 */
-	public boolean comparePassword(String pw) {return false;}
+	public boolean comparePassword(String pw) {
+		return false;
+	}
 	
 	/**
 	 * 
 	 * @return The user role 
 	 */
-	public String getRole() {return null;}
+	public String getRole() {
+		return null;
+	}
 
 	/**
-	 * @param user Should be ProjectManager or Admin, otherwise null will be returned.
+	 * @param user Should be a ProjectManager or Administrator, otherwise null will be returned.
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {
