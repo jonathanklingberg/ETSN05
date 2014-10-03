@@ -26,7 +26,7 @@ import java.util.Random;
  *  @author Martin Host
  *  @version 1.0
  */
-@WebServlet("/Administration")
+@WebServlet("/administrationComponent")
 public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
@@ -156,7 +156,7 @@ public class AdministrationComponent extends ServletBase {
 		
 		// check that the user is logged in
 		if (!loggedIn(request))
-			response.sendRedirect("LogIn");
+			response.sendRedirect("LoginComponent");
 		else
 			if (myName.equals("admin")) {
 				out.println("<h1>Administration page " + "</h1>");

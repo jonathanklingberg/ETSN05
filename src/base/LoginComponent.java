@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 
-@WebServlet("/LogIn")
+@WebServlet("/LoginComponent")
 public class LoginComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
        
