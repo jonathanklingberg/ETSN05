@@ -13,13 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LogIn
+ * Servlet implementation class LoginComponent
  * 
  * A log-in page. 
  * 
  * The first thing that happens is that the user is logged out if he/she is logged in. 
  * Then the user is asked for name and password. 
- * If the user is logged in he/she is directed to the functionality page. 
+ * If the user is logged in he/she is directed to the page corresponding to his rights
+ * in the system. (Administrator, Project Manager, Project Worker). 
  * 
  * @author SG
  * @version 0.1

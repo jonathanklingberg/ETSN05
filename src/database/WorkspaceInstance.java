@@ -15,12 +15,19 @@ import java.util.List;
  * 
  */
 public class WorkspaceInstance implements DatabaseInterface {
-
-	/**
-	 * 
-	 * @param conn A connection to the database
-	 */
-	public WorkspaceInstance(Connection conn) {}
+	private static WorkspaceInstance instance = null;
+	private static Connection conn;
+	
+	protected WorkspaceInstance(Connection conn) {
+		WorkspaceInstance.conn = conn;
+	}
+	   
+	public static WorkspaceInstance getInstance(Connection conn) {  
+		if(instance == null) {
+	         instance = new WorkspaceInstance(conn);
+	     }
+	      return instance;
+	   }
 	
 	/**
  	* 
