@@ -70,7 +70,18 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * 
 	 * @return A list of users in the workspace
 	 */
-	public synchronized  List<User> getUsers() {
+	public synchronized List<User> getUsers() {
+		return null;
+	}
+	
+	/** 
+	 * 
+	 * @param userName The username of the user that should be
+	 * fetched from the database
+	 * @return The user if it is found in the database, otherwise
+	 * null
+	 */
+	public synchronized User getUser(String userName) {
 		return null;
 	}
 
