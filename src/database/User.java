@@ -7,28 +7,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * 
- * @author seb
  *
  * This class describes the user in the database and provides a number of methods
- * on this data
+ * on this data. 
+ * @author SG
+ * @version 0.1
+ * 
  */
 public class User implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @param conn A connection to the database
-	 * @param name  user name
-	 * @param password A password
-	 * @param userID 
-	 * @param role
+	 * @param conn A connection to the database.
+	 * @param name  User name.
+	 * @param password A password.
+	 * @param userID The user's ID.
+	 * @param role The user's role.
 	 */
 	public User(Connection conn, String name, String password, int userID, int role) {}
 
 	/**
 	 * 
-	 * @param conn A connection to the database
-	 * @param name A user name
+	 * @param conn A connection to the database.
+	 * @param name A user name.
 	 */
 	public User(Connection conn, String name) {}
 	
@@ -40,7 +41,7 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @return User name
+	 * @return User name.
 	 */
 	public String getName() {
 		return null;
@@ -76,7 +77,7 @@ public class User implements DatabaseInterface {
 	 * @param role The role the user's role should be set to
 	 * @return True if it succeeds, false otherwise.
 	 */
-	public boolean setRole(int role) {
+	public boolean setRole(String role) {
 		return false;
 	}
 

@@ -21,8 +21,9 @@ import javax.servlet.http.HttpServletResponse;
  * Then the user is asked for name and password. 
  * If the user is logged in he/she is directed to the functionality page. 
  * 
- * @author Martin Host
- * @version 1.0
+ * @author SG
+ * @version 0.1
+ *
  * 
  */
 
@@ -91,13 +92,9 @@ public class LoginComponent extends ServletBase {
 
     
     
-	/**
-	 * Implementation of all input to the servlet. All post-messages are forwarded to this method. 
+    /**
+	 * Handles input from the user and displays information for login. 
 	 * 
-	 * First logout the user, then check if he/she has provided a username and a password. 
-	 * If he/she has, it is checked with the database and if it matches then the session state is 
-	 * changed to login, the username that is saved in the session is updated, and the user is 
-	 * relocated to the functionality page. 
 	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */

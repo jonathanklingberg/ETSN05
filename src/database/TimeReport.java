@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,25 +9,25 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- * 
- * @author seb
+ *
  * This class describes the time report in the database and provides a number of methods on this data.
+ * @author SG
+ * @version 0.1
  */
 public class TimeReport implements DatabaseInterface {
 	
-	/**
-	 * @param conn A connection to the database
-	 * @param type A type, see documentation
-	 * @param value Number of minutes to report, above zero
-	 * @param signed If the time report is signed
-	 * @param user The user that the time reports belong to
-	 */
-	public TimeReport(Connection conn, int type, int value, boolean signed, String user) {}
-		
+
+	public TimeReport(Connection conn, int id, int userId, int groupId, int type, int duration, Date date, boolean signed) {}
+	
+	public TimeReport(Connection conn, int userId, int groupId, int type, int duration, Date date, boolean signed) {}
+	
+	private int id;
+	private int groupId;
+	private int userId;
 	private int type;
-	private int value;
+	private int duration;
+	private Date date;
 	private boolean signed;
-	private String user;
 	
 	/**
 	 * @param user The user who wants to sign the time report.
@@ -49,6 +50,62 @@ public class TimeReport implements DatabaseInterface {
 	 * @return True if the time report was edited successfully, false otherwise.
 	 */
 	public boolean editTimeReport(User user) {
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return The id of the report.
+	 */
+	public int getId() {
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @return The group id to which the report belong.
+	 */
+	public int getGroupId() {
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @return The user id to which the report belong.
+	 */
+	public int getUserId() {
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @return The type of the report.
+	 */
+	public int getType() {
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @return Number of minutes reported.
+	 */
+	public int getDuration() {
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @return The date the time report was created.
+	 */
+	public Date getDate() {
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @return True if the report is signed, false otherwise.
+	 */
+	public boolean getSigned() {
 		return false;
 	}
 

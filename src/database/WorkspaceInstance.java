@@ -8,9 +8,11 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- * 
- * @author seb
+ *
  * This class contains operations that act over the whole database, and certain specific operations on projects and users
+ * @author SG
+ * @version 0.1
+ * 
  */
 public class WorkspaceInstance implements DatabaseInterface {
 
@@ -113,7 +115,7 @@ public class WorkspaceInstance implements DatabaseInterface {
 	}
 	
 	/**
-	 * @param user Should be an Administrator, otherwise null will be returned.
+	 * @param user The user who wants to print a project.
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {
@@ -121,7 +123,8 @@ public class WorkspaceInstance implements DatabaseInterface {
 	}
 
 	/**
-	 * @return True if the object manages to remove itself, otherwise false
+	 * Should not be implemented!
+	 * @return False.
 	 */
 	public boolean removeMe() {
 		return false;
