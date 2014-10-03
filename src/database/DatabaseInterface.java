@@ -1,8 +1,10 @@
 package database;
 
-/**
+/** 
+ * A simple interface with two methods which all non-components 
+ * classes will implement, thus all classes interacting with 
+ * the database in any way should implement this interface
  * 
- * An interface that defines methods that should be callable on all the data from the database.
  * @author SG
  * @version 0.1
  *
@@ -10,6 +12,8 @@ package database;
 public interface DatabaseInterface {
 	
 	/**
+	 * Creates an HTML representation of the object depending on
+	 * what object and which user that asks for it
 	 * 
 	 * @param user The user who wants to print the object in HTML.
 	 * @return  A HTML representation of the object.
@@ -17,8 +21,12 @@ public interface DatabaseInterface {
 	public String toHTML(User user);
 	
 	/**
+	 * Removes the object completely from the database. What actually
+	 * will be removed is different for different objects and is 
+	 * elaborated on in the classes which implement this interface.
 	 * 
-	 * @return True if it succeeds, false otherwise.
+	 * @return True if the object is able to remove itself,
+	 * otherwise false
 	 */
 	public boolean removeMe();
 }

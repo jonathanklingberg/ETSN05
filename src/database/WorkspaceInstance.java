@@ -8,8 +8,18 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- *
- * This class contains operations that act over the whole database, and certain specific operations on projects and users
+ *  This class is singleton and contains operations that act over the 
+ *  entire database. It is typically used by the 'Component' classes
+ *  when initially needing information about users or project groups
+ *  in the database. Then after having retrieved these objects,
+ *  operations can be further carried out on them instead. The class
+ *  communicates with a MySQL database via the 'Connection' attribute.
+ *  
+ *  The class also implements the DatabaseInterface which will provide
+ *  methods for generating the project to HTML, as well as removing the
+ *  project from the database. However, the remove method will not be
+ *  implemented by this class.
+ *  
  * @author SG
  * @version 0.1
  * 
@@ -22,24 +32,35 @@ public class WorkspaceInstance implements DatabaseInterface {
 		WorkspaceInstance.conn = conn;
 	}
 	   
+	/**
+	 * Typical singleton method in order to retrieve the
+	 * instance of the object
+	 * 
+	 * @param conn A connection to the database
+	 * @return The WorkspaceInstance which will be the same
+	 * in the entire system.
+	 */
 	public static WorkspaceInstance getInstance(Connection conn) {  
 		if(instance == null) {
 	         instance = new WorkspaceInstance(conn);
 	     }
 	      return instance;
-	   }
+	}
 	
 	/**
+ 	* Retrieves all projects in the database
  	* 
- 	* @return The projects associated with this workspace
+ 	* @return A list of all the projects associated with this database,
+ 	* or an empty list if no projects exist.
  	*/
 	public synchronized List<Project> getProjects() {
 		return null;
 	}
 
 	/**
+	 * Adds a project to the database
 	 * 
-	 * @param project The project to add to the workspace.
+	 * @param project The project to add to the database.
 	 * @return True if it succeeds adding the project, otherwise false.
 	 */
 	public synchronized boolean addProject(Project project) {
@@ -47,34 +68,29 @@ public class WorkspaceInstance implements DatabaseInterface {
 	}
 
 	/**
-	 * 
-	 * @param project The project to be removed from the workspace.
-	 * @return True if it succeeds with removing the project, otherwise false.
-	 */
-	public synchronized boolean removeProject(Project project) {
-		return false;
-	}
-
-	/**
+	 * Adds a user to the database
 	 * 
 	 * @param user The user to be added to the database
 	 */
-	public synchronized void addUser(User user) {}	
-	/**
-	 * 
-	 * @param user The user to be removed from the database
-	 */
-	public synchronized void removeUser(User user) {}
+	public synchronized void addUser(User user) {
+		//Since the user will contain the group id as well,
+		//calls both to the "Users" table as well as the
+		//"RoleInGroup" table could (should?) be made here, since
+		//the user needs to be assigned to the group instantly.
+	}	
 	
 	/**
+	 * Retrieves all users in the database
 	 * 
-	 * @return A list of users in the workspace
+	 * @return A list of all users in the database, or an empty list
+	 * if no users exist in the system.
 	 */
 	public synchronized List<User> getUsers() {
 		return null;
 	}
 	
 	/** 
+	 * Retrieves a specific user from the database
 	 * 
 	 * @param userName The username of the user that should be
 	 * fetched from the database
@@ -86,50 +102,14 @@ public class WorkspaceInstance implements DatabaseInterface {
 	}
 
 	/**
+	 * Retrieves a specific project from the database
 	 * 
 	 * @param id The id of the project to retrieve
-	 * @return The Project that maps to id in the database
+	 * @return The project that maps to id in the database, or 
+	 * null if no such project is found
 	 */
 	public synchronized Project getProject(int id) {
 		return null;
-	}
-	
-	/**
-	 * 
-	 * @param user The user to be moved from one project to another
-	 * @param project1 The project the user should be moved from
-	 * @param project2 The project the user should be moved to
-	 */
-	public synchronized void moveUser(User user, Project project1, Project project2) {}
-	
-	/**
-	 * 
-	 * @param user The user who should get its role changed
-	 * @param role The role to change to.
-	 * @return True if it succeeds, false otherwise.
-	 */
-	public synchronized boolean changeRole(User user, int role) {
-		return false;
-	}
-	
-	/**
-	 * 
-	 * @param user The user who should get its name changed
-	 * @param name The new user name
-	 * @return True if it succeeds, false otherwise
-	 */
-	public synchronized boolean changeUserName(User user, String name) {
-		return false;
-	}
-	
-	/**
-	 * 
-	 * @param user The user who should get its password changed
-	 * @param password The new password
-	 * @return True if it succeeds, false otherwise.
-	 */
-	public synchronized boolean changePassword(User user, String password) {
-		return false;
 	}
 	
 	/**

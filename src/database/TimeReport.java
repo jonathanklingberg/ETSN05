@@ -9,18 +9,21 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- *
- * This class describes the time report in the database and provides a number of methods on this data.
+ *	This class represents a Time report in the system, and thus
+ *	contains methods which are applicable for time reports such
+ *  as signing time reports or adding one the database. This
+ *  is done by making queries to the MySQL database via the connection
+ *  attribute.
+ *  
+ *  The class also implements the DatabaseInterface which will provide
+ *  methods for generating the project to HTML, as well as removing the
+ *  project from the database
+ *  
  * @author SG
  * @version 0.1
  */
 public class TimeReport implements DatabaseInterface {
-	
-
-	public TimeReport(Connection conn, int id, int userId, int groupId, int type, int duration, Date date, boolean signed) {}
-	
-	public TimeReport(Connection conn, int userId, int groupId, int type, int duration, Date date, boolean signed) {}
-	
+	private Connection conn;
 	private int id;
 	private int groupId;
 	private int userId;
@@ -30,26 +33,57 @@ public class TimeReport implements DatabaseInterface {
 	private boolean signed;
 	
 	/**
-	 * @param user The user who wants to sign the time report.
+	 * Constructor which should be used when the time report
+	 * already exists in the database since it will be possible
+	 * to fetch all information needed in this case
+	 * 
+	 * @param conn A connection to the database
+	 * @param id	The id of the time report
+	 * @param userId The user id the time report belongs to
+	 * @param groupId The group id the time reports belongs to
+	 * @param type The type of the time report
+	 * @param duration The duration of the time report
+	 * @param date The date which the time report was created
+	 * @param signed A boolean stating whether the time report is signed
+	 */
+	public TimeReport(Connection conn, int id, int userId, int groupId, 
+			int type, int duration, Date date, boolean signed) {}
+	
+	/**
+	 * Constructor which should be used when the time report is about
+	 * to be created in the database
+	 * 
+	 * @param conn A connection to the database
+	 * @param id	The id of the time report
+	 * @param userId The user id the time report belongs to
+	 * @param groupId The group id the time reports belongs to
+	 * @param type The type of the time report
+	 * @param duration The duration of the time report
+	 * @param date The date which the time report was created
+	 * @param signed A boolean stating whether the time report is signed
+	 */
+	public TimeReport(Connection conn, int userId, int groupId, int type, 
+			int duration, Date date, boolean signed) {}
+	
+	
+	/**
 	 * @return True if the time report was signed successfully, false otherwise.
 	 */
-	public boolean signTimeReport(User user) {
+	public boolean signTimeReport() {
 		return false;
 	}
 	
 	/**
-	 * @param user The user who wants to unsign the time report.
 	 * @return True if the time report was unsigned successfully, false otherwise.
 	 */
-	public boolean unsignTimeReport(User user) {
+	public boolean unsignTimeReport() {
 		return false;
 	}
 	
 	/**
-	 * @param user The user who wants to edit the time report.
 	 * @return True if the time report was edited successfully, false otherwise.
 	 */
-	public boolean editTimeReport(User user) {
+	public boolean editTimeReport() {
 		return false;
 	}
 	
@@ -118,9 +152,14 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Will remove the time report from the database
+	 * 
 	 * @return True if the object manages to remove itself, otherwise false.
 	 */
 	public boolean removeMe() {
+		//Does not matter whether it's signed or not, since this method
+		//only should be called when we are certain that the object
+		//actually is to be removed.
 		return false;
 	}
 }
