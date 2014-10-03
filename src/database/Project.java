@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.util.List;
 
 /**
- * 
- * @author seb
  *
  * This class describes the project in the database and provides a number of methods
  * on this data.
+ * @author SG
+ * @version 0.1 
+ *
  */
 public class Project implements DatabaseInterface {
 	private int id;
@@ -18,7 +19,7 @@ public class Project implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @param conn A connection toe the database.
+	 * @param conn A connection to the database.
 	 * @param id The id for the project.
 	 * @param name The project name.
 	 */
@@ -69,16 +70,6 @@ public class Project implements DatabaseInterface {
 		return false;
 	}
 	
-//	/**
-//	 * 
-//	 * @param signer The user who want's to sign the time report.
-//	 * @param reportId The ID of the report
-//	 * @return True if it succeeds, fail otherwise.
-//	 */
-//	public boolean signTimeReport(User signer, int reportId) {
-//		return false;
-//	}
-	
 	
 	/**
 	 * 
@@ -96,6 +87,14 @@ public class Project implements DatabaseInterface {
 	 */
 	public boolean removeUser(User user) {
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @return The name of the project
+	 */
+	public String getName() {
+		return null;
 	}
 	
 	/**
