@@ -21,7 +21,10 @@ import java.util.Random;
  * Servlet implementation class Administration. 
  * Constructs a page for administration purpose. 
  * Checks first if the user is logged in and then if it is the administrator. 
- 
+ * The validation whether a user is allowed to perform a specific 
+ * action should be carried out in this class, whereas the format
+ * on the input should not be taken care of here.
+ * 
  *  @author SG
  *  @version 0.1
  */

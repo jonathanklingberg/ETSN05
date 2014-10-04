@@ -19,12 +19,8 @@ import javax.servlet.http.HttpSession;
  *  This application requires a database.
  *  For username and password, see the constructor in this class.
  *  
- *  <p>The database can be created with the following SQL command: 
- *  mysql> create database base;
- *  <p>The required table can be created with created with:
- *  mysql> create table users(name varchar(10), password varchar(10), primary key (name));
- *  <p>The administrator can be added with:
- *  mysql> insert into users (name, password) values('admin', 'adminp'); 
+ *  For database creation statements, please refer to the corresponding STLDD
+ *  for the project.
  *  
  *  @author Martin Host
  *  @version 1.0
