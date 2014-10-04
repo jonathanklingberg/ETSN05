@@ -23,7 +23,11 @@ public class ProjectManagerComponent extends ServletBase {
 	  * 
 	  * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	  */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		//Don't forget that the administrator should be allowed to perform
+		//all actions here as well, since he should have the same rights
+		//as the administrator
 	
 	}
 	
@@ -34,7 +38,8 @@ public class ProjectManagerComponent extends ServletBase {
 	  * 
 	  * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	  */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 	}
 
 }
