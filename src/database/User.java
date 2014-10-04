@@ -39,7 +39,9 @@ public class User implements DatabaseInterface {
 	 * @param name  Username.
 	 * @param password A password.
 	 * @param userID The user's ID.
+	 * @param groupID The user's group ID.
 	 * @param role The user's role.
+	 * @param isOnline Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
 			int userID, int groupID, int role, String isOnline) {}
@@ -48,11 +50,11 @@ public class User implements DatabaseInterface {
 	 * Constructor which should be used when the user is about
 	 * to be created in the database
 	 * 
-	 * @param conn
-	 * @param name
-	 * @param password
-	 * @param role
-	 * @param groupID
+	 * @param conn A connection to the database.
+	 * @param name Username.
+	 * @param password A password.
+	 * @param role The user's role.
+	 * @param groupID The user's  group ID.
 	 */
 	public User(Connection conn, String name, String password, 
 			int role, int groupID) {}
@@ -154,8 +156,10 @@ public class User implements DatabaseInterface {
 		
 	
 	/**
-	 * @param user Should be a ProjectManager or Administrator, 
-	 * otherwise null will be returned.
+	 * Will produce an HTML representation of the user depending on the
+	 * user asking for it
+	 * 
+	 * @param user A user in the system who wants to display this user.
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {

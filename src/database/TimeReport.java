@@ -144,6 +144,9 @@ public class TimeReport implements DatabaseInterface {
 	}
 
 	/**
+	 * Will produce an HTML representation of the time report depending on the
+	 * user asking for it
+	 * 
 	 * @param user A user in the system who wants to display this time report.
 	 * @return Returns the time report in HTML representation.
 	 */
