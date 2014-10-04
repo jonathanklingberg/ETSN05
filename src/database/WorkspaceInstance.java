@@ -61,7 +61,8 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * Adds a project to the database
 	 * 
 	 * @param project The project to add to the database.
-	 * @return True if it succeeds adding the project, otherwise false.
+	 * @return True if the project is successfully added to the database,
+	 * otherwise false
 	 */
 	public synchronized boolean addProject(Project project) {
 		return false;
@@ -71,12 +72,22 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * Adds a user to the database
 	 * 
 	 * @param user The user to be added to the database
+	 * @return True if the user is successfully added to the database,
+	 * otherwise false
 	 */
-	public synchronized void addUser(User user) {
+	public synchronized boolean addUser(User user) {
 		//Since the user will contain the group id as well,
 		//calls both to the "Users" table as well as the
 		//"RoleInGroup" table could (should?) be made here, since
 		//the user needs to be assigned to the group instantly.
+		
+		//Also note that according to the requirements in the base
+		//system, the password needs to be 6 characters long, and
+		//exactly 6 characters long. This might be a stupid requirement
+		//we would like to change later on, just keep it in mind when
+		//implementing for now though
+		
+		return false;
 	}	
 	
 	/**

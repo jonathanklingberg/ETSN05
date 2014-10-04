@@ -39,14 +39,13 @@ public class Project implements DatabaseInterface {
 	}
 	
 	/**
-	 * Constructor which should be used when the project group is about
-	 * to be created in the database
+	 * Constructor which should only be used when the project group is about
+	 * to be created in the database.
 	 * 
 	 * @param conn The connection to the database
 	 * @param name The name of the project group
 	 */
-	public Project(Connection conn, String name) {
-		this.conn = conn;
+	public Project(String name) {
 		this.name = name;
 	}
 	
@@ -109,6 +108,10 @@ public class Project implements DatabaseInterface {
 	 * otherwise false
 	 */
 	public boolean addUser(User user) {
+		//Don't forget to check that the user is not
+		//the administrator, since he isn't allowed to
+		//be a part of a group
+		
 		return false;
 	}
 	

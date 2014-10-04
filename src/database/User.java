@@ -27,7 +27,7 @@ public class User implements DatabaseInterface {
 	private String password;
 	private int userID;
 	private int groupID;
-	private int role;
+	private String role;
 	private String sessionID; 
 	
 	/**
@@ -44,20 +44,19 @@ public class User implements DatabaseInterface {
 	 * @param isOnline Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
-			int userID, int groupID, int role, String isOnline) {}
+			int userID, int groupID, String role, String isOnline) {}
 
 	/**
-	 * Constructor which should be used when the user is about
+	 * Constructor which only should be used when the user is about
 	 * to be created in the database
 	 * 
-	 * @param conn A connection to the database.
-	 * @param name Username.
-	 * @param password A password.
+	 * @param name The username of the user
+	 * @param password The password for the user.
 	 * @param role The user's role.
 	 * @param groupID The user's  group ID.
 	 */
-	public User(Connection conn, String name, String password, 
-			int role, int groupID) {}
+	public User(String name, String password, 
+			String role, int groupID) {}
 	
 	/**
 	 * Getter for the username
@@ -140,6 +139,9 @@ public class User implements DatabaseInterface {
 	 * @return True if it succeeds, false otherwise.
 	 */
 	public boolean setRole(String role) {
+		//Don't forget to kill the user's session since he should
+		//be logged out after this operation has been done
+		
 		return false;
 	}
 	
@@ -147,11 +149,18 @@ public class User implements DatabaseInterface {
 	 *  Moves a user to another group
 	 *  
 	 * 	@param project The project the user should be moved to
+	 *  @return True if the user is successfully moved to the
+	 *  specified project, otherwise false
 	 */
-	public void moveUser(Project project) {
+	public boolean moveUser(Project project) {
 		//Should be sufficient to do an update table
 		//instead of having to use "Add" and "Remove"
 		//methods in the two different projects
+		
+		//Don't forget to kill the user's session since he should
+		//be logged out after this operation has been done
+		
+		return false;
 	}
 		
 	

@@ -50,11 +50,9 @@ public class TimeReport implements DatabaseInterface {
 			int type, int duration, Date date, boolean signed) {}
 	
 	/**
-	 * Constructor which should be used when the time report is about
+	 * Constructor which only should be used when the time report is about
 	 * to be created in the database
 	 * 
-	 * @param conn A connection to the database
-	 * @param id	The id of the time report
 	 * @param userId The user id the time report belongs to
 	 * @param groupId The group id the time reports belongs to
 	 * @param type The type of the time report
@@ -62,7 +60,7 @@ public class TimeReport implements DatabaseInterface {
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
-	public TimeReport(Connection conn, int userId, int groupId, int type, 
+	public TimeReport(int userId, int groupId, int type, 
 			int duration, Date date, boolean signed) {}
 	
 	
