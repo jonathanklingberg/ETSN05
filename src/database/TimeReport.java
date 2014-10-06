@@ -20,7 +20,7 @@ import java.util.List;
  *  project from the database
  *  
  * @author SG
- * @version 0.1
+ * @version 0.2
  */
 public class TimeReport implements DatabaseInterface {
 	private Connection conn;
@@ -68,6 +68,9 @@ public class TimeReport implements DatabaseInterface {
 	
 	
 	/**
+	 * Signs the current time report. If it already is signed, it will
+	 * still be signed after this operation.
+	 * 
 	 * @return True if the time report was signed successfully, false otherwise.
 	 */
 	public boolean signTimeReport() {
@@ -75,6 +78,9 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Unsigns the current time report.  If it already is unsigned, it will
+	 * still be unsigned after this operation.
+	 * 
 	 * @return True if the time report was unsigned successfully, false otherwise.
 	 */
 	public boolean unsignTimeReport() {
@@ -82,6 +88,11 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Performs an update on the object. Should typically be called after having
+	 * used one or more setters, since the setters themselves do not update
+	 * the database. It is not until this method is called that the actual
+	 * changes will be pushed to it.
+	 * 
 	 * @return True if the time report was updated successfully, false otherwise.
 	 */
 	public boolean updateTimeReport() {
@@ -89,6 +100,7 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Getter for the id of the time report.
 	 * 
 	 * @return The id of the report.
 	 */
@@ -97,6 +109,7 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Getter for the group id of the time report.
 	 * 
 	 * @return The group id to which the report belong.
 	 */
@@ -105,6 +118,7 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Getter for the user id of the time report.
 	 * 
 	 * @return The user id to which the report belong.
 	 */
@@ -113,6 +127,7 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Getter for the type of this time report.
 	 * 
 	 * @return The type of the report.
 	 */
@@ -121,14 +136,16 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Getter for the duration of this time report.
 	 * 
 	 * @return Number of minutes reported.
 	 */
-	public int getDuration() {
+	public long getDuration() {
 		return -1;
 	}
 	
 	/**
+	 * Getter for the date of this time report.
 	 * 
 	 * @return The date the time report was created.
 	 */
@@ -137,6 +154,7 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Getter for the week of this time report.
 	 * 
 	 * @return The week which the time report concerns.
 	 */
@@ -145,6 +163,7 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Determines whether the report is signed
 	 * 
 	 * @return True if the report is signed, false otherwise.
 	 */
@@ -153,53 +172,76 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
+	 * Setter for the id of the time report
 	 * 
-	 * @param id The Id to change to.
+	 * @param id The id to change to.
 	 */
-	public void setId(long id) {}
+	public void setId(long id) {
+		//Note that this should just be set internally here
+		//like this.id = id, and the changes are actually pushed
+		//to the database when updateTimeReport() is called.
+		//(The SQL statement is created here)
+	}
 	
 	/**
+	 * Setter for the user id of the time report.
 	 * 
 	 * @param userId The userId to change to.
 	 */
-	public void setUserId(long userId) {}
+	public void setUserId(long userId) {
+		//See setId
+	}
 	
 	/**
+	 * Setter for the group id of this time report.
 	 * 
 	 * @param groupId The groupId to change to.
 	 */
-	public void setGroupId(long groupId) {}
+	public void setGroupId(long groupId) {
+		//See setId
+	}
 	
 	/**
+	 * Setter for the type of this time report
 	 * 
 	 * @param type The type to change to.
 	 */
-	public void setType(int type) {}
+	public void setType(int type) {
+		//See setId
+	}
 	
 	/**
+	 * Setter for the duration of this time report
 	 * 
 	 * @param duration The duration to change to.
 	 */
-	public void setDuration(long duration) {}
+	public void setDuration(long duration) {
+		//See setId
+	}
 	
 	/**
+	 * Setter for the week of this time report
 	 * 
 	 * @param week The week to change to.
 	 */
-	public void setWeek(long week) {}
+	public void setWeek(long week) {
+		//See setId
+		
+		//Moreover the user will never enter an explicit value
+		//for the week, this will be calculated based on the date
+		//instead before calling this method. Thus if setWeek
+		//is called, setDate should have been called as well
+	}
 	
 	/**
+	 * Setter for the date of this time report.
 	 * 
 	 * @param date The date to change to.
 	 */
-	public void setDate(Date date) {}
+	public void setDate(Date date) {
+		//See setId
+	}
 	
-	/**
-	 * 
-	 * @param signed The signStatus to change to.
-	 */
-	public void setSignStatus(boolean sign) {}
-
 	/**
 	 * Will produce an HTML representation of the time report depending on the
 	 * user asking for it

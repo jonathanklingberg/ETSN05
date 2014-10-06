@@ -1,7 +1,7 @@
 package data;
 
 /**
- * Simple enum class for representing the different types
+ * Simple enum class which holds the different types in the system.
  * 
  * @author SG
  * @version 0.2

@@ -17,7 +17,7 @@ import data.Roles;
  *  project from the database
  *  
  *  @author SG
- *  @version 0.1
+ *  @version 0.2
  */
 
 public class ProjectGroup implements DatabaseInterface {

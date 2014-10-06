@@ -18,7 +18,7 @@ import java.sql.Statement;
  *  project from the database
  *  
  * @author SG
- * @version 0.1
+ * @version 0.2
  * 
  */
 public class User implements DatabaseInterface {
@@ -79,6 +79,7 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * Getter for the userID
+	 * 
 	 * @return The user id of the user
 	 */
 	public long getUserId() {
@@ -87,6 +88,7 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * Getter for the groupID
+	 * 
 	 * @return The group id of the group the user is a part of
 	 */
 	public long getGroupId() {
@@ -95,6 +97,7 @@ public class User implements DatabaseInterface {
 	
 	/**
 	 * Getter for session ID
+	 * 
 	 * @return The session ID if it exists, otherwise null
 	 */
 	public String getSessionId() {
@@ -142,6 +145,16 @@ public class User implements DatabaseInterface {
 		//Don't forget to kill the user's session since he should
 		//be logged out after this operation has been done
 		
+		//Also check if the user is the administrator, if so
+		//just set the attribute this.role = role but do not
+		//make any changes to the database, since the administrator
+		//account should not exist in the "RoleInGroup" table.
+		
+		//The reason to actually use setRole for the administrator is
+		//that it will allow him to determine when he would like to gain
+		//project management rights. This is as stated in WorkspaceInstance
+		//->toHTML() an ugly solution, but it should work. But feel free to
+		//refine it.
 		return false;
 	}
 	
@@ -172,6 +185,9 @@ public class User implements DatabaseInterface {
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(User user) {
+		//If the administrator asks password and everything 
+		//should be displayed and if a project worker asks
+		//not that much should be displayed etc..
 		return null;
 	}
 

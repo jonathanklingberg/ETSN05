@@ -27,7 +27,7 @@ import java.util.Random;
  * on the input should not be taken care of here.
  * 
  *  @author SG
- *  @version 0.1
+ *  @version 0.2
  */
 @WebServlet("/administrationComponent")
 public class AdministrationComponent extends ServletBase {

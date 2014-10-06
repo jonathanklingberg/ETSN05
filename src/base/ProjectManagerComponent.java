@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * on the input should not be taken care of here.
  * 
  * @author SG
- * @version 0.1
+ * @version 0.2
  * 
  */
 public class ProjectManagerComponent extends ServletBase {

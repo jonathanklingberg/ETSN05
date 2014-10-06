@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- *  This class is singleton and contains operations that act over the 
+ *  This class is a singleton and contains operations that act over the 
  *  entire database. It is typically used by the 'Component' classes
  *  when initially needing information about users or project groups
  *  in the database. Then after having retrieved these objects,
@@ -21,7 +21,7 @@ import java.util.List;
  *  implemented by this class.
  *  
  * @author SG
- * @version 0.1
+ * @version 0.2
  * 
  */
 public class WorkspaceInstance implements DatabaseInterface {
@@ -30,6 +30,10 @@ public class WorkspaceInstance implements DatabaseInterface {
 	
 	protected WorkspaceInstance(Connection conn) {
 		WorkspaceInstance.conn = conn;
+		//Food for thought: Will this connection live on forever,
+		//or will it be closed when the session of the user who created is
+		//is closed? If so, there might be a need for a redesign, or setConnection
+		//method
 	}
 	   
 	/**
@@ -119,16 +123,48 @@ public class WorkspaceInstance implements DatabaseInterface {
 	 * @return The project group that maps to id in the database, or 
 	 * null if no such project group is found
 	 */
-	public synchronized ProjectGroup getProjectGroup(int id) {
+	public synchronized ProjectGroup getProjectGroup(long id) {
 		return null;
 	}
 	
 	/**
+	 * Method for generating the overall structure for the different
+	 * component classes. Will typically differ depending on the user who
+	 * is sent as input.
+	 * 
 	 * @param user The user who wants to print a project group.
-	 * @return Returns the user in HTML representation.
+	 * @return Returns the components of the page in HTML representation.
 	 */
 	public synchronized String toHTML(User user) {
 		return null;
+		//If administrator, getProjects and getUsers should be called
+		//and then for each on each of those objects and call toHTML()
+		//on them. If project worker, call appropriate methods to
+		//generate this page instead, etc.
+		
+		//If the administrator would like to get the view of a project
+		//manager (which should be possible since the administrator also
+		//has the same rights as project manager), an 'ugly' solution
+		//is proposed here, but feel free to refine it if you find it too 
+		//ugly.
+		
+		//Simply change the role for the user (who is the administrator)
+		//to "ProjectManager" (before calling this method), 
+		//and then check what role the user has in this method. That is,
+		//always check the role to determine which page that should be generated
+		
+		//Problem if done this way is that the administrator does not have any
+		//role defined, however, then it should be null, so if the role is null
+		//we can be certain that the user is the administrator who wants 
+		//the administrator page. But as stated earlier, this is kind of
+		//ugly so there might be a better way to solve it!
+		
+		//Moreover the setRole(ProjectManager) for the administrator object should not
+		//have any effect on the database, thus a control needs to be done in
+		//setRole which checks if it is the administrator who the role is set for,
+		//if so, just set the attribute internally for the class, but do not
+		//update the database.	
+		
 	}
 
 	/**
