@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  * This class will be used by project managers in order to
  * communicate with the system. Therefore this class will
  * handle requests regarding everything that a project manager
- * is allowed to do, such as listing signing time reports, or assigning
+ * is allowed to do, such as listing and signing time reports, or assigning
  * roles to the users.
  * 
  * The validation whether a user is allowed to perform a specific 
