@@ -29,6 +29,7 @@ public class TimeReport implements DatabaseInterface {
 	private int userId;
 	private int type;
 	private int duration;
+	private int week;
 	private Date date;
 	private boolean signed;
 	
@@ -43,11 +44,12 @@ public class TimeReport implements DatabaseInterface {
 	 * @param groupId The group id the time reports belongs to
 	 * @param type The type of the time report
 	 * @param duration The duration of the time report
+	 * @param week The week which the time report concerns
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
 	public TimeReport(Connection conn, int id, int userId, int groupId, 
-			int type, int duration, Date date, boolean signed) {}
+			int type, int duration, int week, Date date, boolean signed) {}
 	
 	/**
 	 * Constructor which only should be used when the time report is about
@@ -57,11 +59,12 @@ public class TimeReport implements DatabaseInterface {
 	 * @param groupId The group id the time reports belongs to
 	 * @param type The type of the time report
 	 * @param duration The duration of the time report
+	 * @param week The week which the time report concerns
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
 	public TimeReport(int userId, int groupId, int type, 
-			int duration, Date date, boolean signed) {}
+			int duration, int week, Date date, boolean signed) {}
 	
 	
 	/**
@@ -79,9 +82,9 @@ public class TimeReport implements DatabaseInterface {
 	}
 	
 	/**
-	 * @return True if the time report was edited successfully, false otherwise.
+	 * @return True if the time report was updated successfully, false otherwise.
 	 */
-	public boolean editTimeReport() {
+	public boolean updateTimeReport() {
 		return false;
 	}
 	
@@ -135,11 +138,67 @@ public class TimeReport implements DatabaseInterface {
 	
 	/**
 	 * 
+	 * @return The week which the time report concerns.
+	 */
+	public int getWeek() {
+		return -1;
+	}
+	
+	/**
+	 * 
 	 * @return True if the report is signed, false otherwise.
 	 */
 	public boolean getSigned() {
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param Id The Id to change to.
+	 */
+	public void setId(int Id) {}
+	
+	/**
+	 * 
+	 * @param UserId The userId to change to.
+	 */
+	public void getUserId(int UserId) {}
+	
+	/**
+	 * 
+	 * @param groupId The groupId to change to.
+	 */
+	public void getGroupId(int groupId) {}
+	
+	/**
+	 * 
+	 * @param type The type to change to.
+	 */
+	public void setType(int type) {}
+	
+	/**
+	 * 
+	 * @param duration The duration to change to.
+	 */
+	public void setDuration(int duration) {}
+	
+	/**
+	 * 
+	 * @param week The week to change to.
+	 */
+	public void setWeek(int week) {}
+	
+	/**
+	 * 
+	 * @param date The date to change to.
+	 */
+	public void setDate(Date date) {}
+	
+	/**
+	 * 
+	 * @param signed The signedStatus to change to.
+	 */
+	public void getSignedStatus(boolean signed) {}
 
 	/**
 	 * Will produce an HTML representation of the time report depending on the
