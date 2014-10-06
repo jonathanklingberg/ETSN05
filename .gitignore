@@ -13,3 +13,7 @@ hs_err_pid*
 
 #classpath file:
 .classpath
+/bin
+
+#ignore javadoc
+/doc
