@@ -1,4 +1,4 @@
-
+package base;
 
 import java.sql.Connection;
 
@@ -20,18 +20,14 @@ import javax.servlet.http.HttpSession;
  *  This application requires a database.
  *  For username and password, see the constructor in this class.
  *  
- *  <p>The database can be created with the following SQL command: 
- *  mysql> create database base;
- *  <p>The required table can be created with created with:
- *  mysql> create table users(name varchar(10), password varchar(10), primary key (name));
- *  <p>The administrator can be added with:
- *  mysql> insert into users (name, password) values('admin', 'adminp'); 
+ *  For database creation statements, please refer to the corresponding STLDD
+ *  for the project.
  *  
  *  @author Martin Host
  *  @version 1.0
  *  
  */
-public class servletBase extends HttpServlet {
+public class ServletBase extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -39,12 +35,12 @@ public class servletBase extends HttpServlet {
 	protected static final int LOGIN_FALSE = 0;
 	protected static final int LOGIN_TRUE = 1;	
 	protected Connection conn = null;
-	
+
 	/**
 	 * Constructs a servlet and makes a connection to the database. 
 	 * It also writes all user names on the console for test purpose. 
 	 */
-    public servletBase() {
+    public ServletBase() {
     	try{
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
