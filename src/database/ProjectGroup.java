@@ -1,7 +1,9 @@
-package src.database;
+package database;
 
 import java.sql.Connection;
 import java.util.List;
+
+import data.Roles;
 
 /**
  *	This class represents a Project Group in the system, and thus
@@ -19,7 +21,7 @@ import java.util.List;
  */
 
 public class ProjectGroup implements DatabaseInterface {
-	private int id;
+	private long id;
 	private String name;
 	private Connection conn;
 	
@@ -32,7 +34,7 @@ public class ProjectGroup implements DatabaseInterface {
 	 * @param id The id of the project group
 	 * @param name The name of the project group
 	 */
-	public ProjectGroup(Connection conn, int id, String name) {
+	public ProjectGroup(Connection conn, long id, String name) {
 		this.conn = conn;
 		this.id = id;
 		this.name = name;
@@ -74,6 +76,17 @@ public class ProjectGroup implements DatabaseInterface {
 	 * are yet available
 	 */
 	public List<TimeReport> getTimeReports() {
+		return null;
+	}
+	
+	/**
+	 * Retrieves a time report from the database based on
+	 * an given id of the time report
+	 * 
+	 * @param reportId The id of the time report to be fetched
+	 * @return The time report if it exists, otherwise null
+	 */
+	public TimeReport getTimeReport(long reportId) {
 		return null;
 	}
 	

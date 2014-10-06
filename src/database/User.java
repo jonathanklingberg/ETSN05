@@ -25,8 +25,8 @@ public class User implements DatabaseInterface {
 	private Connection conn;
 	private String name;
 	private String password;
-	private int userID;
-	private int groupID;
+	private long userID;
+	private long groupID;
 	private String role;
 	private String sessionID; 
 	
@@ -44,7 +44,7 @@ public class User implements DatabaseInterface {
 	 * @param isOnline Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
-			int userID, int groupID, String role, String isOnline) {}
+			long userID, long groupID, String role, String isOnline) {}
 
 	/**
 	 * Constructor which only should be used when the user is about
@@ -56,7 +56,7 @@ public class User implements DatabaseInterface {
 	 * @param groupID The user's  group ID.
 	 */
 	public User(String name, String password, 
-			String role, int groupID) {}
+			String role, long groupID) {}
 	
 	/**
 	 * Getter for the username
@@ -81,7 +81,7 @@ public class User implements DatabaseInterface {
 	 * Getter for the userID
 	 * @return The user id of the user
 	 */
-	public int getUserId() {
+	public long getUserId() {
 		return userID;
 	}
 	
@@ -89,7 +89,7 @@ public class User implements DatabaseInterface {
 	 * Getter for the groupID
 	 * @return The group id of the group the user is a part of
 	 */
-	public int getGroupId() {
+	public long getGroupId() {
 		return groupID;
 	}
 	

@@ -24,12 +24,12 @@ import java.util.List;
  */
 public class TimeReport implements DatabaseInterface {
 	private Connection conn;
-	private int id;
-	private int groupId;
-	private int userId;
+	private long id;
+	private long groupId;
+	private long userId;
 	private int type;
-	private int duration;
-	private int week;
+	private long duration;
+	private long week;
 	private Date date;
 	private boolean signed;
 	
@@ -48,8 +48,8 @@ public class TimeReport implements DatabaseInterface {
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
-	public TimeReport(Connection conn, int id, int userId, int groupId, 
-			int type, int duration, int week, Date date, boolean signed) {}
+	public TimeReport(Connection conn, long id, long userId, long groupId, 
+			long type, long duration, long week, Date date, boolean signed) {}
 	
 	/**
 	 * Constructor which only should be used when the time report is about
@@ -63,8 +63,8 @@ public class TimeReport implements DatabaseInterface {
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
-	public TimeReport(int userId, int groupId, int type, 
-			int duration, int week, Date date, boolean signed) {}
+	public TimeReport(long userId, long groupId, long type, 
+			long duration, long week, Date date, boolean signed) {}
 	
 	
 	/**
@@ -92,7 +92,7 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @return The id of the report.
 	 */
-	public int getId() {
+	public long getId() {
 		return -1;
 	}
 	
@@ -100,7 +100,7 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @return The group id to which the report belong.
 	 */
-	public int getGroupId() {
+	public long getGroupId() {
 		return -1;
 	}
 	
@@ -108,7 +108,7 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @return The user id to which the report belong.
 	 */
-	public int getUserId() {
+	public long getUserId() {
 		return -1;
 	}
 	
@@ -140,7 +140,7 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @return The week which the time report concerns.
 	 */
-	public int getWeek() {
+	public long getWeek() {
 		return -1;
 	}
 	
@@ -154,21 +154,21 @@ public class TimeReport implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @param Id The Id to change to.
+	 * @param id The Id to change to.
 	 */
-	public void setId(int Id) {}
+	public void setId(long id) {}
 	
 	/**
 	 * 
-	 * @param UserId The userId to change to.
+	 * @param userId The userId to change to.
 	 */
-	public void setUserId(int UserId) {}
+	public void setUserId(long userId) {}
 	
 	/**
 	 * 
 	 * @param groupId The groupId to change to.
 	 */
-	public void setGroupId(int groupId) {}
+	public void setGroupId(long groupId) {}
 	
 	/**
 	 * 
@@ -180,13 +180,13 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @param duration The duration to change to.
 	 */
-	public void setDuration(int duration) {}
+	public void setDuration(long duration) {}
 	
 	/**
 	 * 
 	 * @param week The week to change to.
 	 */
-	public void setWeek(int week) {}
+	public void setWeek(long week) {}
 	
 	/**
 	 * 
