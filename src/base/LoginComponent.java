@@ -1,3 +1,5 @@
+package base;
+
 import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,26 +13,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LogIn
+ * Servlet implementation class LoginComponent
  * 
  * A log-in page. 
  * 
  * The first thing that happens is that the user is logged out if he/she is logged in. 
  * Then the user is asked for name and password. 
- * If the user is logged in he/she is directed to the functionality page. 
+ * If the user is logged in he/she is directed to the page corresponding to his rights
+ * in the system. (Administrator, Project Manager, Project Worker). 
  * 
- * @author Martin Host
- * @version 1.0
+ * @author SG
+ * @version 0.1
+ *
  * 
  */
-@WebServlet("/LogIn")
-public class LogIn extends servletBase {
+
+
+@WebServlet("/LoginComponent")
+public class LoginComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LogIn() {
+    public LoginComponent() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -87,13 +93,9 @@ public class LogIn extends servletBase {
 
     
     
-	/**
-	 * Implementation of all input to the servlet. All post-messages are forwarded to this method. 
+    /**
+	 * Handles input from the user and displays information for login. 
 	 * 
-	 * First logout the user, then check if he/she has provided a username and a password. 
-	 * If he/she has, it is checked with the database and if it matches then the session state is 
-	 * changed to login, the username that is saved in the session is updated, and the user is 
-	 * relocated to the functionality page. 
 	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */

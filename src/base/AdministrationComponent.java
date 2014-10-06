@@ -1,3 +1,5 @@
+package base;
+
 
 
 import java.io.IOException;
@@ -19,28 +21,30 @@ import java.util.Random;
  * Servlet implementation class Administration. 
  * Constructs a page for administration purpose. 
  * Checks first if the user is logged in and then if it is the administrator. 
- * If that is OK it displays all users and a form for adding new users.
+ * The validation whether a user is allowed to perform a specific 
+ * action should be carried out in this class, whereas the format
+ * on the input should not be taken care of here.
  * 
- *  @author Martin Host
- *  @version 1.0
+ *  @author SG
+ *  @version 0.1
  */
-@WebServlet("/Administration")
-public class Administration extends servletBase {
+@WebServlet("/administrationComponent")
+public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
        
     /**
      * @see servletBase#servletBase()
      */
-    public Administration() {
+    public AdministrationComponent() {
         super();
         // TODO Auto-generated constructor stub
     }
     
-    /**
-     * generates a form for adding new users
-     * @return HTML code for the form
-     */
+//    /**
+//     * generates a form for adding new users
+//     * @return HTML code for the form
+//     */
     private String addUserForm() {
     	String html;
     	html = "<p> <form name=" + formElement("input");
@@ -51,11 +55,11 @@ public class Administration extends servletBase {
     	return html;
     }
     
-    /**
-     * Checks if a username corresponds to the requirements for user names. 
-     * @param name The investigated username
-     * @return True if the username corresponds to the requirements
-     */
+//    /**
+//     * Checks if a username corresponds to the requirements for user names. 
+//     * @param name The investigated username
+//     * @return True if the username corresponds to the requirements
+//     */
     private boolean checkNewName(String name) {
     	int length = name.length();
     	boolean ok = (length>=5 && length<=10);
@@ -72,10 +76,10 @@ public class Administration extends servletBase {
     	return ok;
     }
     
-    /**
-     * Creates a random password.
-     * @return a randomly chosen password
-     */
+//    /**
+//     * Creates a random password.
+//     * @return a randomly chosen password
+//     */
     private String createPassword() {
     	String result = "";
     	Random r = new Random();
@@ -85,12 +89,12 @@ public class Administration extends servletBase {
     }
     
     
-    /**
-     * Adds a user and a randomly generated password to the database.
-     * @param name Name to be added
-     * @return true if it was possible to add the name. False if it was not, e.g. 
-     * because the name already exist in the database. 
-     */
+//    /**
+//     * Adds a user and a randomly generated password to the database.
+//     * @param name Name to be added
+//     * @return true if it was possible to add the name. False if it was not, e.g. 
+//     * because the name already exist in the database. 
+//     */
     private boolean addUser(String name) {
     	boolean resultOk = true;
     	try{
@@ -110,11 +114,11 @@ public class Administration extends servletBase {
     	return resultOk;
     }
     
-    /**
-     * Deletes a user from the database. 
-     * If the user does not exist in the database nothing happens. 
-     * @param name name of user to be deleted. 
-     */
+//    /**
+//     * Deletes a user from the database. 
+//     * If the user does not exist in the database nothing happens. 
+//     * @param name name of user to be deleted. 
+//     */
     private void deleteUser(String name) {
     	try{
 			Statement stmt = conn.createStatement();
@@ -132,14 +136,7 @@ public class Administration extends servletBase {
 
 
 	/**
-	 * Handles input from the user and displays information for administration. 
-	 * 
-	 * First it is checked if the user is logged in and that it is the administrator. 
-	 * If that is the case all users are listed in a table and then a form for adding new users is shown. 
-	 * 
-	 * Inputs are given with two HTTP input types: 
-	 * addname: name to be added to the database (provided by the form)
-	 * deletename: name to be deleted from the database (provided by the URLs in the table)
+	 * Handles input from the administrator and displays information for administration. 
 	 * 
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -155,7 +152,7 @@ public class Administration extends servletBase {
     	System.out.println("MyName: "+ myName);
 		// check that the user is logged in
 		if (!loggedIn(request))
-			response.sendRedirect("LogIn");
+			response.sendRedirect("LoginComponent");
 		else
 			if (myName.equals("admin")) {
 				out.println("<h1>Administration page " + "</h1>");
@@ -233,7 +230,8 @@ public class Administration extends servletBase {
 	}
 
 	/**
-	 *
+	 * Handles input from the administrator and displays information for administration. 
+	 * 
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
