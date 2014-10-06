@@ -149,9 +149,10 @@ public class Administration extends servletBase {
 		String myName = "";
     	HttpSession session = request.getSession(true);
     	Object nameObj = session.getAttribute("name");
-    	if (nameObj != null)
+    	if (nameObj != null){
     		myName = (String)nameObj;  // if the name exists typecast the name to a string
-		
+    	}
+    	System.out.println("MyName: "+ myName);
 		// check that the user is logged in
 		if (!loggedIn(request))
 			response.sendRedirect("LogIn");
