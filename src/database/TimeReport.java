@@ -162,13 +162,13 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @param UserId The userId to change to.
 	 */
-	public void getUserId(int UserId) {}
+	public void setUserId(int UserId) {}
 	
 	/**
 	 * 
 	 * @param groupId The groupId to change to.
 	 */
-	public void getGroupId(int groupId) {}
+	public void setGroupId(int groupId) {}
 	
 	/**
 	 * 

@@ -1,4 +1,4 @@
-package database;
+package src.database;
 
 import java.sql.Connection;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
  *  @version 0.1
  */
 
-public class Project implements DatabaseInterface {
+public class ProjectGroup implements DatabaseInterface {
 	private int id;
 	private String name;
 	private Connection conn;
@@ -32,7 +32,7 @@ public class Project implements DatabaseInterface {
 	 * @param id The id of the project group
 	 * @param name The name of the project group
 	 */
-	public Project(Connection conn, int id, String name) {
+	public ProjectGroup(Connection conn, int id, String name) {
 		this.conn = conn;
 		this.id = id;
 		this.name = name;
@@ -45,7 +45,7 @@ public class Project implements DatabaseInterface {
 	 * @param conn The connection to the database
 	 * @param name The name of the project group
 	 */
-	public Project(String name) {
+	public ProjectGroup(String name) {
 		this.name = name;
 	}
 	

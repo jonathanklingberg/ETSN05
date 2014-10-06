@@ -152,7 +152,7 @@ public class User implements DatabaseInterface {
 	 *  @return True if the user is successfully moved to the
 	 *  specified project, otherwise false
 	 */
-	public boolean moveUser(Project project) {
+	public boolean moveUser(ProjectGroup project) {
 		//Should be sufficient to do an update table
 		//instead of having to use "Add" and "Remove"
 		//methods in the two different projects

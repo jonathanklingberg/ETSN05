@@ -48,23 +48,23 @@ public class WorkspaceInstance implements DatabaseInterface {
 	}
 	
 	/**
- 	* Retrieves all projects in the database
+ 	* Retrieves all project groups in the database
  	* 
- 	* @return A list of all the projects associated with this database,
- 	* or an empty list if no projects exist.
+ 	* @return A list of all the project groupss associated with this database,
+ 	* or an empty list if no project groups exist.
  	*/
-	public synchronized List<Project> getProjects() {
+	public synchronized List<ProjectGroup> getProjectGroups() {
 		return null;
 	}
 
 	/**
-	 * Adds a project to the database
+	 * Adds a project group to the database
 	 * 
-	 * @param project The project to add to the database.
-	 * @return True if the project is successfully added to the database,
+	 * @param projectGroup The project group to add to the database.
+	 * @return True if the project group is successfully added to the database,
 	 * otherwise false
 	 */
-	public synchronized boolean addProject(Project project) {
+	public synchronized boolean addProjectGroup(ProjectGroup projectGroup) {
 		return false;
 	}
 
@@ -113,18 +113,18 @@ public class WorkspaceInstance implements DatabaseInterface {
 	}
 
 	/**
-	 * Retrieves a specific project from the database
+	 * Retrieves a specific project group from the database
 	 * 
-	 * @param id The id of the project to retrieve
-	 * @return The project that maps to id in the database, or 
-	 * null if no such project is found
+	 * @param id The id of the project group to retrieve
+	 * @return The project group that maps to id in the database, or 
+	 * null if no such project group is found
 	 */
-	public synchronized Project getProject(int id) {
+	public synchronized ProjectGroup getProjectGroup(int id) {
 		return null;
 	}
 	
 	/**
-	 * @param user The user who wants to print a project.
+	 * @param user The user who wants to print a project group.
 	 * @return Returns the user in HTML representation.
 	 */
 	public synchronized String toHTML(User user) {
