@@ -148,7 +148,7 @@ public class TimeReport implements DatabaseInterface {
 	 * 
 	 * @return True if the report is signed, false otherwise.
 	 */
-	public boolean getSigned() {
+	public boolean isSigned() {
 		return false;
 	}
 	
@@ -196,9 +196,9 @@ public class TimeReport implements DatabaseInterface {
 	
 	/**
 	 * 
-	 * @param signed The signedStatus to change to.
+	 * @param signed The signStatus to change to.
 	 */
-	public void getSignedStatus(boolean signed) {}
+	public void setSignStatus(boolean sign) {}
 
 	/**
 	 * Will produce an HTML representation of the time report depending on the
