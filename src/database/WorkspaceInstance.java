@@ -163,6 +163,23 @@ public class WorkspaceInstance {
 	}
 		return resultOK;
 	}
+
+	public boolean deleteUser(String name) {
+		boolean userDeleted = false;
+		try{
+			Statement stmt = conn.createStatement();
+			String statement = "delete from users where name='" + name + "'"; 
+			System.out.println(statement);
+		    stmt.executeUpdate(statement); 
+		    stmt.close();
+			userDeleted = true;
+		} catch (SQLException ex) {
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		return userDeleted;
+	}
 	
 //	/**
 //	 * Method for generating the overall structure for the different

@@ -125,19 +125,21 @@ public class AdministrationComponent extends ServletBase {
 //     * If the user does not exist in the database nothing happens. 
 //     * @param name name of user to be deleted. 
 //     */
-    private void deleteUser(String name) {
-    	try{
-			Statement stmt = conn.createStatement();
-			String statement = "delete from users where name='" + name + "'"; 
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
-			
-		} catch (SQLException ex) {
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
+    private boolean deleteUser(String name) {
+    	return WorkspaceInstance.getInstance(conn)
+    			.deleteUser(name);
+//    	try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "delete from users where name='" + name + "'"; 
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
+//			
+//		} catch (SQLException ex) {
+//		    System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
     }
 
 
