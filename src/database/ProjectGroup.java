@@ -44,7 +44,6 @@ public class ProjectGroup extends DatabaseInterface {
 	 * Constructor which should only be used when the project group is about
 	 * to be created in the database.
 	 * 
-	 * @param conn The connection to the database
 	 * @param name The name of the project group
 	 */
 	public ProjectGroup(String name) {

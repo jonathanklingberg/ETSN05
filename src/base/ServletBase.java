@@ -44,18 +44,10 @@ public class ServletBase extends HttpServlet {
     	try{
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
-			           "user=puss1403&password=9dpa2oan");			
-			       
-						
-			// Display the contents of the database in the console. 
-			// This should be removed in the final version
+			           "user=puss1403&password=9dpa2oan");
 			Statement stmt = conn.createStatement();		    
 		    ResultSet rs = stmt.executeQuery("select * from users"); 
-		    while (rs.next( )) {
-		    	String name = rs.getString("name"); 
-		    	System.out.println("base " + name);
-		    	}
-
+		    System.out.println("Successfully connected to database!"); // Success message	
 		    stmt.close();
 			
 		} catch (SQLException ex) {
@@ -79,7 +71,7 @@ public class ServletBase extends HttpServlet {
      * @param request The HTTP Servlet request (so that the session can be found)
      * @return true if the user is logged in, otherwise false.
      */
-    protected boolean loggedIn(HttpServletRequest request) {
+    protected boolean isLoggedIn(HttpServletRequest request) {
     	HttpSession session = request.getSession(true);
     	Object objectState = session.getAttribute("state");
     	int state = LOGIN_FALSE;
