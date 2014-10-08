@@ -24,7 +24,8 @@ import java.util.List;
  * @version 0.2
  * 
  */
-public class WorkspaceInstance implements DatabaseInterface {
+
+public class WorkspaceInstance {
 	private static WorkspaceInstance instance = null;
 	private static Connection conn;
 	
@@ -127,52 +128,45 @@ public class WorkspaceInstance implements DatabaseInterface {
 		return null;
 	}
 	
-	/**
-	 * Method for generating the overall structure for the different
-	 * component classes. Will typically differ depending on the user who
-	 * is sent as input.
-	 * 
-	 * @param user The user who wants to print a project group.
-	 * @return Returns the components of the page in HTML representation.
-	 */
-	public synchronized String toHTML(User user) {
-		return null;
-		//If administrator, getProjects and getUsers should be called
-		//and then for each on each of those objects and call toHTML()
-		//on them. If project worker, call appropriate methods to
-		//generate this page instead, etc.
-		
-		//If the administrator would like to get the view of a project
-		//manager (which should be possible since the administrator also
-		//has the same rights as project manager), an 'ugly' solution
-		//is proposed here, but feel free to refine it if you find it too 
-		//ugly.
-		
-		//Simply change the role for the user (who is the administrator)
-		//to "ProjectManager" (before calling this method), 
-		//and then check what role the user has in this method. That is,
-		//always check the role to determine which page that should be generated
-		
-		//Problem if done this way is that the administrator does not have any
-		//role defined, however, then it should be null, so if the role is null
-		//we can be certain that the user is the administrator who wants 
-		//the administrator page. But as stated earlier, this is kind of
-		//ugly so there might be a better way to solve it!
-		
-		//Moreover the setRole(ProjectManager) for the administrator object should not
-		//have any effect on the database, thus a control needs to be done in
-		//setRole which checks if it is the administrator who the role is set for,
-		//if so, just set the attribute internally for the class, but do not
-		//update the database.	
-		
-	}
+//	/**
+//	 * Method for generating the overall structure for the different
+//	 * component classes. Will typically differ depending on the user who
+//	 * is sent as input.
+//	 * 
+//	 * @param user The user who wants to print a project group.
+//	 * @return Returns the components of the page in HTML representation.
+//	 */
+//	public synchronized String toHTML(User user) {
+//		return null;
+//		//If administrator, getProjects and getUsers should be called
+//		//and then for each on each of those objects and call toHTML()
+//		//on them. If project worker, call appropriate methods to
+//		//generate this page instead, etc.
+//		
+//		//If the administrator would like to get the view of a project
+//		//manager (which should be possible since the administrator also
+//		//has the same rights as project manager), an 'ugly' solution
+//		//is proposed here, but feel free to refine it if you find it too 
+//		//ugly.
+//		
+//		//Simply change the role for the user (who is the administrator)
+//		//to "ProjectManager" (before calling this method), 
+//		//and then check what role the user has in this method. That is,
+//		//always check the role to determine which page that should be generated
+//		
+//		//Problem if done this way is that the administrator does not have any
+//		//role defined, however, then it should be null, so if the role is null
+//		//we can be certain that the user is the administrator who wants 
+//		//the administrator page. But as stated earlier, this is kind of
+//		//ugly so there might be a better way to solve it!
+//		
+//		//Moreover the setRole(ProjectManager) for the administrator object should not
+//		//have any effect on the database, thus a control needs to be done in
+//		//setRole which checks if it is the administrator who the role is set for,
+//		//if so, just set the attribute internally for the class, but do not
+//		//update the database.	
+//		
+//	}
 
-	/**
-	 * Should not be implemented!
-	 * @return False.
-	 */
-	public boolean removeMe() {
-		return false;
-	}
 
 }
