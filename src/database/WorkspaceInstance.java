@@ -2,6 +2,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -114,8 +115,27 @@ public class WorkspaceInstance {
 	 * null
 	 */
 	public synchronized User getUser(String userName) {
-		return null;
-	}
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName = '" + userName + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long id = rs.getLong("id");
+			String password = rs.getString("password");
+			String sessionId = rs.getString("sessionId");
+			
+			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
+			rs = ps.executeQuery();
+			rs.next();
+			long groupId = rs.getLong("groupId");
+			String role = rs.getString("role");
+			
+			return new User(conn, userName, password, id, groupId, role, sessionId);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;	
+		
+		}
 
 	/**
 	 * Retrieves a specific project group from the database
