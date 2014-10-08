@@ -24,7 +24,7 @@ import java.util.List;
  * @version 0.2
  * 
  */
-public class WorkspaceInstance implements DatabaseInterface {
+public class WorkspaceInstance {
 	private static WorkspaceInstance instance = null;
 	private static Connection conn;
 	
@@ -167,12 +167,5 @@ public class WorkspaceInstance implements DatabaseInterface {
 		
 	}
 
-	/**
-	 * Should not be implemented!
-	 * @return False.
-	 */
-	public boolean removeMe() {
-		return false;
-	}
 
 }

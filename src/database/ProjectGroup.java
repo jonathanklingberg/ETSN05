@@ -20,10 +20,8 @@ import data.Roles;
  *  @version 0.2
  */
 
-public class ProjectGroup implements DatabaseInterface {
-	private long id;
+public class ProjectGroup extends DatabaseInterface {
 	private String name;
-	private Connection conn;
 	
 	/**
 	 * Constructor which should be used when the project group
@@ -35,6 +33,7 @@ public class ProjectGroup implements DatabaseInterface {
 	 * @param name The name of the project group
 	 */
 	public ProjectGroup(Connection conn, long id, String name) {
+		super();
 		this.conn = conn;
 		this.id = id;
 		this.name = name;
