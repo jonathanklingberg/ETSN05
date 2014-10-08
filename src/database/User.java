@@ -2,6 +2,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,7 +45,15 @@ public class User implements DatabaseInterface {
 	 * @param isOnline Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
-			long userID, long groupID, String role, String isOnline) {}
+			long userID, long groupID, String role, String isOnline) {
+		this.conn = conn;
+		this.name = name;
+		this.password = password;
+		this.userID = userID;
+		this.groupID = groupID;
+		this.role = role;
+		this.sessionID = isOnline;
+	}
 
 	/**
 	 * Constructor which only should be used when the user is about
@@ -56,7 +65,12 @@ public class User implements DatabaseInterface {
 	 * @param groupID The user's  group ID.
 	 */
 	public User(String name, String password, 
-			String role, long groupID) {}
+			String role, long groupID) {
+		this.name = name;
+		this.password = password;
+		this.role = role;
+		this.groupID = groupID;
+	}
 	
 	/**
 	 * Getter for the username
@@ -64,7 +78,7 @@ public class User implements DatabaseInterface {
 	 * @return The username of the user.
 	 */
 	public String getName() {
-		return null;
+		return name;
 	}
 	
 	/**
@@ -74,7 +88,20 @@ public class User implements DatabaseInterface {
 	 * @return True if it succeeds, false otherwise
 	 */
 	public boolean setName(String name) {
-		return false;
+		int length = name.length();
+		boolean ok = true;
+		if(length >= 5 && length <= 10){
+			for(int i = 0; i < length; i++){
+				int c = (int)name.charAt(i);
+				if(!((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122))){
+					ok = false;
+				}
+			}
+			if(ok){
+				this.name = name;
+			}	
+		}
+		return ok;
 	}
 	
 	/**
@@ -101,7 +128,7 @@ public class User implements DatabaseInterface {
 	 * @return The session ID if it exists, otherwise null
 	 */
 	public String getSessionId() {
-		return null;
+		return sessionID;
 	}
 	
 	
@@ -113,7 +140,7 @@ public class User implements DatabaseInterface {
 	 * @return True if they match, false otherwise
 	 */
 	public boolean comparePassword(String pw) {
-		return false;
+		return password == pw;
 	}
 	
 	/**
@@ -123,7 +150,21 @@ public class User implements DatabaseInterface {
 	 * @return True if it succeeds, false otherwise.
 	 */
 	public boolean setPassword(String password) {
-		return false;
+		boolean ok = false;
+		if(password.length() == 6){
+			ok = true;
+			for(int i = 0; i < password.length(); i++){
+				int c = (int)name.charAt(i);
+				if(!(c >= 97 && c <= 122)){
+					ok = false;
+				}
+			}
+			if(ok){
+				this.password = password;
+			}
+		
+		}
+		return ok;
 	}
 	
 	/**
@@ -132,7 +173,7 @@ public class User implements DatabaseInterface {
 	 * @return The user role 
 	 */
 	public String getRole() {
-		return null;
+		return role;
 	}
 	
 	/**
@@ -173,6 +214,20 @@ public class User implements DatabaseInterface {
 		//Don't forget to kill the user's session since he should
 		//be logged out after this operation has been done
 		
+		//The user maintains his role from his previous project
+		
+//		boolean successfullyMoved = false;
+//		PreparedStatement ps;
+//		try {
+//			ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
+//				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
+//			ps.executeUpdate();
+//			successfullyMoved = true;
+//		} catch (SQLException e) {
+//			successfullyMoved = false;
+//			e.printStackTrace();
+//		}
+//		return successfullyMoved;
 		return false;
 	}
 		
