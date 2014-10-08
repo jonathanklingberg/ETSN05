@@ -1,10 +1,15 @@
 package base;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import database.User;
+import database.WorkspaceInstance;
 
 /**
  * This class will be used by project workers in order to
@@ -30,7 +35,24 @@ public class WorkerComponent extends ServletBase {
 	  * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	  */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+				PrintWriter out = response.getWriter();
+				out.println(getPageIntro());
+
+				// Get the session
+				HttpSession session = request.getSession(true);
+				
+				
+				
+				String userName = (String) session.getAttribute("name");
+
+				
+				long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
+				
+								
+				out.println("<p> Logged in as: " + userName + " </p>");
+				
+				out.println("<p> Assigned to project: project group" + projectGroup + " </p>");
+
 	}
 	
 
