@@ -23,6 +23,7 @@ import java.sql.Statement;
  * 
  */
 public class User extends DatabaseInterface {
+	private long userID;
 	private String name;
 	private String password;
 	private long groupID;
@@ -109,7 +110,7 @@ public class User extends DatabaseInterface {
 	 * @return The user id of the user
 	 */
 	public long getUserId() {
-		return id;
+		return userID;
 	}
 	
 	/**

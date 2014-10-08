@@ -22,6 +22,7 @@ import data.Roles;
 
 public class ProjectGroup extends DatabaseInterface {
 	private String name;
+	private long id;
 	
 	/**
 	 * Constructor which should be used when the project group
@@ -43,7 +44,6 @@ public class ProjectGroup extends DatabaseInterface {
 	 * Constructor which should only be used when the project group is about
 	 * to be created in the database.
 	 * 
-	 * @param conn The connection to the database
 	 * @param name The name of the project group
 	 */
 	public ProjectGroup(String name) {
