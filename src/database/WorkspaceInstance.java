@@ -189,12 +189,14 @@ public class WorkspaceInstance {
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			rs.next();
 			long id = rs.getLong("id");
 			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			rs.next();
 			String role = rs.getString("role");
-			isManager = role.equals("Project manager");			
-		} catch (SQLException e) {
-			
+			isManager = role.equals("Project manager");	
+			stmt.close();
+		} catch (SQLException e) {			
 			e.printStackTrace();
 		}		
 		return isManager;
@@ -257,6 +259,9 @@ public class WorkspaceInstance {
 		try{
 		  Statement stmt = conn.createStatement();		    
 		  rs = stmt.executeQuery("select * from users order by name asc");
+		  rs.next();
+		  
+		  stmt.close();
 		} catch (SQLException e){
 			System.err.println(e);
 		}
@@ -268,13 +273,30 @@ public class WorkspaceInstance {
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			rs.next();
 			long id = rs.getLong("id");
 			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			rs.next();
 			groupId = rs.getLong("groupId");
+			stmt.close();
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}		
 		return groupId;
+	}
+
+	public String getProjectName(long groupId) {
+		String groupName = "";
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from ProjectGroups where id='"+groupId +"'");
+			rs.next();	
+			rs.getString("groupName");
+			stmt.close();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}				
+		return groupName;
 	}
 	
 //	/**

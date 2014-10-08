@@ -52,9 +52,11 @@ public class ProjectManagerComponent extends ServletBase {
 					.userIsProjectManager(myName)) {
 //			if (WorkspaceInstance.getInstance(conn)
 //					.userIsProjectManager(myName) || myName.equals("admin")) {
-				out.println("<h1>Project management page " + "</h1>");
+				//out.println("<h1>Project management page " + "</h1>");
 				long groupId = WorkspaceInstance.getInstance(conn).getGroupIdOfUser(myName);
-				out.println("<p>Users in project group " + groupId + ":</p>");
+				out.println("<p>Signed in as: Project Manager</p>");
+				out.println("<p>Assigned to project: "+WorkspaceInstance.getInstance(conn).getProjectName(groupId) +"</p>");
+				out.println("<p>Members in project</p>");
 			    out.println("<table border=" + formElement("1") + ">");
 			    out.println("<tr><td>NAME</td><td>PASSWORD</td><td>STATUS</td><td></td><td></td></tr>");
 				
