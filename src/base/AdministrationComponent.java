@@ -194,8 +194,10 @@ public class AdministrationComponent extends ServletBase {
 				}
 				
 				try {
-					Statement stmt = conn.createStatement();		    
-				    ResultSet rs = stmt.executeQuery("select * from users order by name asc");
+					//Statement stmt = conn.createStatement();		    
+				  //  ResultSet rs = stmt.executeQuery("select * from users order by name asc");
+					ResultSet rs = WorkspaceInstance.getInstance(conn)
+							.getUsersResultSet();
 				    out.println("<p>Registered users:</p>");
 				    out.println("<table border=" + formElement("1") + ">");
 				    out.println("<tr><td>NAME</td><td>PASSWORD</td><td></td></tr>");
@@ -222,7 +224,7 @@ public class AdministrationComponent extends ServletBase {
 				    	out.println("</tr>");
 				    }
 				    out.println("</table>");
-				    stmt.close();
+				    //stmt.close();
 				} catch (SQLException ex) {
 				    System.out.println("SQLException: " + ex.getMessage());
 				    System.out.println("SQLState: " + ex.getSQLState());

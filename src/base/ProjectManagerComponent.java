@@ -52,8 +52,14 @@ public class ProjectManagerComponent extends ServletBase {
 					.userIsProjectManager(myName) || myName.equals("admin")) {
 				out.println("<h1>Project management page " + "</h1>");
 				
-				//Do alot of stuff according to the STLDD
-				
+				/*Do alot of stuff according to the SRS:
+				 *See all members of his group
+				 * See all groupmembers timereports
+				 * See summation of timereports. (time, role, activity etc etc) See SRS 6.7) (footable)
+				 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
+				 * Sign and unsign all groupmembers' timereports
+				 * Assign and change roles in the project to group members
+				 * */
 				
 				
 				
