@@ -21,11 +21,9 @@ import java.sql.Statement;
  * @version 0.2
  * 
  */
-public class User implements DatabaseInterface {
-	private Connection conn;
+public class User extends DatabaseInterface {
 	private String name;
 	private String password;
-	private long userID;
 	private long groupID;
 	private String role;
 	private String sessionID; 
@@ -83,7 +81,7 @@ public class User implements DatabaseInterface {
 	 * @return The user id of the user
 	 */
 	public long getUserId() {
-		return userID;
+		return id;
 	}
 	
 	/**
