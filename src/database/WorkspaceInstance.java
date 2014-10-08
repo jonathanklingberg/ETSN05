@@ -195,6 +195,17 @@ public class WorkspaceInstance {
 		}
 		return resultOk;
 	}
+
+	public ResultSet getUsersResultSet() {
+		ResultSet rs = null;
+		try{
+		  Statement stmt = conn.createStatement();		    
+		  rs = stmt.executeQuery("select * from users order by name asc");
+		} catch (SQLException e){
+			System.err.println(e);
+		}
+		return rs;
+	}
 	
 //	/**
 //	 * Method for generating the overall structure for the different
