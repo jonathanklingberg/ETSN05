@@ -3,7 +3,6 @@ package base;
 
 
 import java.io.IOException;
-
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,6 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import database.WorkspaceInstance;
 
 import java.util.Random;
 
@@ -97,22 +98,26 @@ public class AdministrationComponent extends ServletBase {
 //     * because the name already exist in the database. 
 //     */
     private boolean addUser(String name) {
-    	boolean resultOk = true;
-    	try{
-			Statement stmt = conn.createStatement();
-			String statement = "insert into users (name, password) values('" + name + "', '" + 
-			                     createPassword() + "')";
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
+    	
+    	return WorkspaceInstance.getInstance(conn)
+    			.addUser(name, createPassword());
+//    	try{
+    		
+//			Statement stmt = conn.createStatement();
+//			String statement = "insert into users (name, password) values('" + name + "', '" + 
+//			                     createPassword() + "')";
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
 			
-		} catch (SQLException ex) {
-		    resultOk = false;
-		    // System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-    	return resultOk;
+//		} catch (SQLException ex) {
+//		    resultOk = false;
+//		    System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+    	
+		
     }
     
 //    /**

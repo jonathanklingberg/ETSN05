@@ -46,7 +46,7 @@ public class ProjectManagerComponent extends ServletBase {
 										// to a string
 		}
 		if (!isLoggedIn(request)) {
-			response.sendRedirect("LoginComponent");
+			response.sendRedirect("logincomponent");
 		} else {
 			if (WorkspaceInstance.getInstance(conn)
 					.userIsProjectManager(myName) || myName.equals("admin")) {
