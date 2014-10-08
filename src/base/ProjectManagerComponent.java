@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * The validation whether a user is allowed to perform a specific 
  * action should be carried out in this class, whereas the format
- * on the input should not be taken care of here.
+ * of the input should not be taken care of here.
  * 
  * @author SG
  * @version 0.2
@@ -34,7 +34,7 @@ public class ProjectManagerComponent extends ServletBase {
 			throws ServletException, IOException {
 		//Don't forget that the administrator should be allowed to perform
 		//all actions here as well, since he should have the same rights
-		//as the administrator
+		//as the project manager
 	
 	}
 	
