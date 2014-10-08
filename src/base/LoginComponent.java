@@ -68,10 +68,7 @@ public class LoginComponent extends ServletBase {
     private boolean checkUser(String name, String password) {
     	return WorkspaceInstance.getInstance(conn)
 		.getUser(name).comparePassword(password);
-    	
-    	
-    	
-    	
+  	
 //		boolean userOk = false;
 //		boolean userChecked = false;
 //		
