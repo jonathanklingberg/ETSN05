@@ -45,7 +45,7 @@ public class ProjectManagerComponent extends ServletBase {
 			myName = (String) nameObj; // if the name exists typecast the name
 										// to a string
 		}
-		if (!loggedIn(request)) {
+		if (!isLoggedIn(request)) {
 			response.sendRedirect("LoginComponent");
 		} else {
 			if (WorkspaceInstance.getInstance(conn)
