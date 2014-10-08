@@ -34,7 +34,7 @@ public class ProjectManagerComponent extends ServletBase {
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+		HttpServletResponse response) throws ServletException, IOException {
 		String myName = "";
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
@@ -46,7 +46,7 @@ public class ProjectManagerComponent extends ServletBase {
 										// to a string
 		}
 		if (!isLoggedIn(request)) {
-			response.sendRedirect("LoginComponent");
+			response.sendRedirect("logincomponent");
 		} else {
 			if (WorkspaceInstance.getInstance(conn)
 					.userIsProjectManager(myName) || myName.equals("admin")) {

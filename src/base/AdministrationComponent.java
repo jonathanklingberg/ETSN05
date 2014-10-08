@@ -3,7 +3,6 @@ package base;
 
 
 import java.io.IOException;
-
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,6 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import database.WorkspaceInstance;
 
 import java.util.Random;
 
@@ -97,22 +98,26 @@ public class AdministrationComponent extends ServletBase {
 //     * because the name already exist in the database. 
 //     */
     private boolean addUser(String name) {
-    	boolean resultOk = true;
-    	try{
-			Statement stmt = conn.createStatement();
-			String statement = "insert into users (name, password) values('" + name + "', '" + 
-			                     createPassword() + "')";
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
+    	
+    	return WorkspaceInstance.getInstance(conn)
+    			.addUser(name, createPassword());
+//    	try{
+    		
+//			Statement stmt = conn.createStatement();
+//			String statement = "insert into users (name, password) values('" + name + "', '" + 
+//			                     createPassword() + "')";
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
 			
-		} catch (SQLException ex) {
-		    resultOk = false;
-		    // System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-    	return resultOk;
+//		} catch (SQLException ex) {
+//		    resultOk = false;
+//		    System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+    	
+		
     }
     
 //    /**
@@ -121,18 +126,20 @@ public class AdministrationComponent extends ServletBase {
 //     * @param name name of user to be deleted. 
 //     */
     private void deleteUser(String name) {
-    	try{
-			Statement stmt = conn.createStatement();
-			String statement = "delete from users where name='" + name + "'"; 
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
-			
-		} catch (SQLException ex) {
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
+    	WorkspaceInstance.getInstance(conn)
+    			.deleteUser(name);
+//    	try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "delete from users where name='" + name + "'"; 
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
+//			
+//		} catch (SQLException ex) {
+//		    System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
     }
 
 
@@ -238,21 +245,24 @@ public class AdministrationComponent extends ServletBase {
 		// TODO Auto-generated method stub
 	}
 	
-	private boolean inactivateUser(String username) {
-		boolean resultOk = true;
-		try{
-			Statement stmt = conn.createStatement();
-			String statement = "update users set is_active = 0 where name = '" + username + "'";
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
-		} catch (SQLException ex) {
-		    resultOk = false;
-		    // System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		return resultOk;
+	private boolean inactivateUser(String name) {
+		return WorkspaceInstance.getInstance(conn)
+		.inactivateUser(name);
+		
+//		boolean resultOk = true;
+//		try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "update users set is_active = 0 where name = '" + name + "'";
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
+//		} catch (SQLException ex) {
+//		    resultOk = false;
+//		    // System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+//		return resultOk;
 	}
 
 }
