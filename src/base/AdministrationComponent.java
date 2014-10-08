@@ -35,7 +35,7 @@ public class AdministrationComponent extends ServletBase {
 	private static final int PASSWORD_LENGTH = 6;
        
     /**
-     * @see servletBase#servletBase()
+     * @see ServletBase#ServletBase()
      */
     public AdministrationComponent() {
         super();
