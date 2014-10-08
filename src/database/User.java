@@ -26,6 +26,7 @@ public class User extends DatabaseInterface {
 	private String name;
 	private String password;
 	private long groupID;
+	private long userID;
 	private String role;
 	private String sessionID; 
 	
@@ -194,6 +195,26 @@ public class User extends DatabaseInterface {
 		//project management rights. This is as stated in WorkspaceInstance
 		//->toHTML() an ugly solution, but it should work. But feel free to
 		//refine it.
+		
+		boolean roleChanged = false;
+
+		if(role == null){
+			this.role = role;
+			roleChanged = true;
+		}else{
+			try {
+				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET role = '" + role + "' WHERE userId = '" + this.userID + "'");
+				ps.executeUpdate();
+				roleChanged = true;
+				ps = conn.prepareStatement("UPDATE Users SET sessionId = NULL WHERE userId = '" + this.userID + "'");
+				this.sessionID = null;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return roleChanged;
+		}
+		
+		
 		return false;
 	}
 	
@@ -214,19 +235,18 @@ public class User extends DatabaseInterface {
 		
 		//The user maintains his role from his previous project
 		
-//		boolean successfullyMoved = false;
-//		PreparedStatement ps;
-//		try {
-//			ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
-//				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
-//			ps.executeUpdate();
-//			successfullyMoved = true;
-//		} catch (SQLException e) {
-//			successfullyMoved = false;
-//			e.printStackTrace();
-//		}
-//		return successfullyMoved;
-		return false;
+		boolean successfullyMoved = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
+				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
+			ps.executeUpdate();
+			sessionID = null;
+			successfullyMoved = true;
+		} catch (SQLException e) {
+			successfullyMoved = false;
+			e.printStackTrace();
+		}
+		return successfullyMoved;
 	}
 		
 	
@@ -245,8 +265,8 @@ public class User extends DatabaseInterface {
 	}
 
 	/**
-	 * Will remove the user from the database as well as from the
-	 * project group the user is active in. However the user's
+	 * Will remove the user from the database (as well as from the
+	 * project group the user is active in). However the user's
 	 * time reports will be kept in the system
 	 * 
 	 * @return True if the object manages to remove itself, otherwise false
@@ -254,7 +274,20 @@ public class User extends DatabaseInterface {
 	public boolean removeMe() {
 		//Don't forget to set 'activeInGroup' to false
 		//when removing the user
-		return false;
+		boolean successfullyRemoved = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("REMOVE FROM Users WHERE id = '" + userID + "'");
+			ps.executeUpdate();
+			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = '" + userID + "'");
+			ps.executeUpdate();
+			sessionID = null;
+			successfullyRemoved = true;
+		} catch (SQLException e) {
+			successfullyRemoved = false;
+			e.printStackTrace();
+		}
+		return successfullyRemoved;
+	
 	}
 
 }
