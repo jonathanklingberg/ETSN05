@@ -22,9 +22,7 @@ import java.util.List;
  * @author SG
  * @version 0.2
  */
-public class TimeReport implements DatabaseInterface {
-	private Connection conn;
-	private long id;
+public class TimeReport extends DatabaseInterface {
 	private long groupId;
 	private long userId;
 	private int type;

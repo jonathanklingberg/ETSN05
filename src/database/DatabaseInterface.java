@@ -1,5 +1,7 @@
 package database;
 
+import java.sql.Connection;
+
 /** 
  * A simple interface with two methods which all non-components 
  * classes will implement, thus all classes interacting with 
@@ -9,8 +11,9 @@ package database;
  * @version 0.2
  *
  */
-public interface DatabaseInterface {
-	
+public abstract class DatabaseInterface {
+	protected long id;
+	protected Connection conn;
 	/**
 	 * Creates an HTML representation of the object depending on
 	 * what object and which user that asks for it
@@ -18,7 +21,7 @@ public interface DatabaseInterface {
 	 * @param user The user who wants to print the object in HTML.
 	 * @return  A HTML representation of the object.
 	 */
-	public String toHTML(User user);
+	public abstract String toHTML(User user);
 	
 	/**
 	 * Removes the object completely from the database. What actually
@@ -28,5 +31,5 @@ public interface DatabaseInterface {
 	 * @return True if the object is able to remove itself,
 	 * otherwise false
 	 */
-	public boolean removeMe();
+	public abstract boolean removeMe();
 }
