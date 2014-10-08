@@ -125,8 +125,8 @@ public class AdministrationComponent extends ServletBase {
 //     * If the user does not exist in the database nothing happens. 
 //     * @param name name of user to be deleted. 
 //     */
-    private boolean deleteUser(String name) {
-    	return WorkspaceInstance.getInstance(conn)
+    private void deleteUser(String name) {
+    	WorkspaceInstance.getInstance(conn)
     			.deleteUser(name);
 //    	try{
 //			Statement stmt = conn.createStatement();

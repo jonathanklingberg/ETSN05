@@ -34,7 +34,7 @@ public class ProjectManagerComponent extends ServletBase {
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+		HttpServletResponse response) throws ServletException, IOException {
 		String myName = "";
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
