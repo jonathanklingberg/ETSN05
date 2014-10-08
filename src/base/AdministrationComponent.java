@@ -29,7 +29,7 @@ import java.util.Random;
  *  @author SG
  *  @version 0.2
  */
-@WebServlet("/administrationComponent")
+@WebServlet("/administrationcomponent")
 public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
@@ -152,8 +152,8 @@ public class AdministrationComponent extends ServletBase {
     	}
     	System.out.println("MyName: "+ myName);
 		// check that the user is logged in
-		if (!loggedIn(request))
-			response.sendRedirect("LoginComponent");
+		if (!isLoggedIn(request))
+			response.sendRedirect("logincomponent");
 		else
 			if (myName.equals("admin")) {
 				out.println("<h1>Administration page " + "</h1>");
@@ -195,11 +195,11 @@ public class AdministrationComponent extends ServletBase {
 				    while (rs.next( )) {
 				    	String name = rs.getString("name");
 				    	String pw = rs.getString("password");
-				    	String deleteURL = "Administration?deletename="+name;
+				    	String deleteURL = "administrationcomponent?deletename="+name;
 				    	String deleteCode = "<a href=" + formElement(deleteURL) +
 				    			            " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + 
 				    			            "> delete </a>";
-				    	String inactivateURL = "Administration?inactivatename="+name;
+				    	String inactivateURL = "administrationcomponent?inactivatename="+name;
 				    	String inactivateCode = "<a href=" + formElement(inactivateURL) +
 	    			            " onclick="+formElement("return confirm('Are you sure you want to inactivate "+name+"?')") + 
 	    			            "> inactivate </a>";
@@ -224,7 +224,7 @@ public class AdministrationComponent extends ServletBase {
 				out.println(addUserForm());
 				
 				out.println("<p><a href =" + formElement("functionality.html") + "> Functionality selection page </p>");
-				out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
+				out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 				out.println("</body></html>");
 			} else  // name not admin
 				response.sendRedirect("functionality.html");

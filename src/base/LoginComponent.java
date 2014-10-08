@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 
-@WebServlet("/LoginComponent")
+@WebServlet("/logincomponent")
 public class LoginComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
        
@@ -112,7 +112,7 @@ public class LoginComponent extends ServletBase {
 		String name;
 		String password;
 		
-		if (loggedIn(request)) {
+		if (isLoggedIn(request)) {
 			session.setAttribute("state", LOGIN_FALSE);
 			out.println("<p>You are now logged out</p>");
 		}
