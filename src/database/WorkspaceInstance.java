@@ -206,6 +206,20 @@ public class WorkspaceInstance {
 		}
 		return rs;
 	}
+
+	public long getGroupIdOfUser(String name) {
+		long groupId = 0;
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			long id = rs.getLong("id");
+			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			groupId = rs.getLong("groupId");
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}		
+		return groupId;
+	}
 	
 //	/**
 //	 * Method for generating the overall structure for the different

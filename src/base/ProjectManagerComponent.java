@@ -49,17 +49,25 @@ public class ProjectManagerComponent extends ServletBase {
 			response.sendRedirect("logincomponent");
 		} else {
 			if (WorkspaceInstance.getInstance(conn)
-					.userIsProjectManager(myName) || myName.equals("admin")) {
+					.userIsProjectManager(myName)) {
+//			if (WorkspaceInstance.getInstance(conn)
+//					.userIsProjectManager(myName) || myName.equals("admin")) {
 				out.println("<h1>Project management page " + "</h1>");
+				long groupId = WorkspaceInstance.getInstance(conn).getGroupIdOfUser(myName);
+				out.println("<p>Users in project group " + groupId + ":</p>");
+			    out.println("<table border=" + formElement("1") + ">");
+			    out.println("<tr><td>NAME</td><td>PASSWORD</td><td>STATUS</td><td></td><td></td></tr>");
 				
-				/*Do alot of stuff according to the SRS:
-				 *See all members of his group
+				
+				/* Do alot of stuff according to the SRS:
+				 * See all members of his group
 				 * See all groupmembers timereports
 				 * See summation of timereports. (time, role, activity etc etc) See SRS 6.7) (footable)
 				 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
 				 * Sign and unsign all groupmembers' timereports
 				 * Assign and change roles in the project to group members
-				 * */
+				 * 
+				 */
 				
 				
 				
