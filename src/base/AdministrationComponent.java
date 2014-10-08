@@ -245,21 +245,24 @@ public class AdministrationComponent extends ServletBase {
 		// TODO Auto-generated method stub
 	}
 	
-	private boolean inactivateUser(String username) {
-		boolean resultOk = true;
-		try{
-			Statement stmt = conn.createStatement();
-			String statement = "update users set is_active = 0 where name = '" + username + "'";
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
-		} catch (SQLException ex) {
-		    resultOk = false;
-		    // System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		return resultOk;
+	private boolean inactivateUser(String name) {
+		return WorkspaceInstance.getInstance(conn)
+		.inactivateUser(name);
+		
+//		boolean resultOk = true;
+//		try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "update users set is_active = 0 where name = '" + name + "'";
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
+//		} catch (SQLException ex) {
+//		    resultOk = false;
+//		    // System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+//		return resultOk;
 	}
 
 }

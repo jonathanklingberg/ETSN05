@@ -178,6 +178,23 @@ public class WorkspaceInstance {
 		}
 		
 	}
+
+	public boolean inactivateUser(String name) {
+		boolean resultOk = true;
+		try{
+			Statement stmt = conn.createStatement();
+			String statement = "update users set is_active = 0 where name = '" + name + "'";
+			System.out.println(statement);
+		    stmt.executeUpdate(statement); 
+		    stmt.close();
+		} catch (SQLException ex) {
+		    resultOk = false;
+		    // System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		return resultOk;
+	}
 	
 //	/**
 //	 * Method for generating the overall structure for the different
