@@ -130,6 +130,16 @@ public class User extends DatabaseInterface {
 		return sessionID;
 	}
 	
+	/**
+	 * Getter for password
+	 * 
+	 * @return The password if it exists, otherwise null
+	 */
+	public String getPassword() {
+		return password;
+	}
+	
+	
 	
 	/**
 	 * Compares the given password with the one
@@ -276,7 +286,7 @@ public class User extends DatabaseInterface {
 		//when removing the user
 		boolean successfullyRemoved = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("REMOVE FROM Users WHERE id = '" + userID + "'");
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM Users WHERE id = '" + userID + "'");
 			ps.executeUpdate();
 			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = '" + userID + "'");
 			ps.executeUpdate();

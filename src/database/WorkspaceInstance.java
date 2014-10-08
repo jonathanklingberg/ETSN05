@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,11 +57,26 @@ public class WorkspaceInstance {
 	/**
  	* Retrieves all project groups in the database
  	* 
- 	* @return A list of all the project groupss associated with this database,
+ 	* @return A list of all the project groups associated with this database,
  	* or an empty list if no project groups exist.
  	*/
 	public synchronized List<ProjectGroup> getProjectGroups() {
-		return null;
+		List<ProjectGroup> pgList = new ArrayList<ProjectGroup>();
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()){
+				long id = rs.getLong("id");
+				String groupName = rs.getString("groupName");
+				pgList.add(new ProjectGroup(conn, id, groupName));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return pgList;
 	}
 
 	/**
@@ -71,7 +87,17 @@ public class WorkspaceInstance {
 	 * otherwise false
 	 */
 	public synchronized boolean addProjectGroup(ProjectGroup projectGroup) {
-		return false;
+		boolean wasAdded = false;
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(id, groupName) VALUES ("+ projectGroup.id + ", '" + projectGroup.name + "')" );
+			ps.executeUpdate();
+			wasAdded = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return wasAdded;
 	}
 
 	/**
@@ -93,7 +119,17 @@ public class WorkspaceInstance {
 		//we would like to change later on, just keep it in mind when
 		//implementing for now though
 		
-		return false;
+		boolean wasAdded = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("INSERT into Users(id, userName, password, sessionId) VALUES('', '" + user.getName() + "', '" + user.getPassword() + "', '" + user.getSessionId() + "')" );
+			ps.executeUpdate();
+			wasAdded = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return wasAdded;
 	}	
 	
 	/**
