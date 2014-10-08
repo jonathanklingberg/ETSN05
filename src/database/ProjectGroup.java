@@ -22,6 +22,7 @@ import data.Roles;
 
 public class ProjectGroup extends DatabaseInterface {
 	private String name;
+	private long id;
 	
 	/**
 	 * Constructor which should be used when the project group

@@ -2,6 +2,7 @@ package base;
 
 import java.sql.Connection;
 
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,6 @@ import java.sql.Statement;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 
 /**
  *  This class is the superclass for all servlets in the application. 

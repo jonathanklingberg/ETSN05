@@ -127,6 +127,22 @@ public class WorkspaceInstance {
 	public synchronized ProjectGroup getProjectGroup(long id) {
 		return null;
 	}
+
+	public boolean userIsProjectManager(String name) {
+		boolean isManager = false;
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			long id = rs.getLong("id");
+			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			String role = rs.getString("role");
+			isManager = role.equals("Project manager");			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}		
+		return isManager;
+	}
 	
 //	/**
 //	 * Method for generating the overall structure for the different
