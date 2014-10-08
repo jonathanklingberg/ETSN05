@@ -1,6 +1,8 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import data.Roles;
@@ -74,7 +76,7 @@ public class ProjectGroup extends DatabaseInterface {
 	 * are yet available
 	 */
 	public List<TimeReport> getTimeReports() {
-		return null;
+		return new ArrayList<TimeReport>();
 	}
 	
 	/**
@@ -86,6 +88,10 @@ public class ProjectGroup extends DatabaseInterface {
 	 */
 	public TimeReport getTimeReport(long reportId) {
 		return null;
+	}
+	
+	public long getId() {
+		return -1;
 	}
 	
 	/**
@@ -147,6 +153,14 @@ public class ProjectGroup extends DatabaseInterface {
 	public String toHTML(User user) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * Will return the name of the project group.
+	 * @return The name of the project group.
+	 */
+	public String getProjectName(){
+		return name;
 	}
 
 	/**

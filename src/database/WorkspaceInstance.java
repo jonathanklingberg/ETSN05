@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,7 +60,7 @@ public class WorkspaceInstance {
  	* or an empty list if no project groups exist.
  	*/
 	public synchronized List<ProjectGroup> getProjectGroups() {
-		return null;
+		return new ArrayList<ProjectGroup>();
 	}
 
 	/**
@@ -126,6 +127,10 @@ public class WorkspaceInstance {
 	 */
 	public synchronized ProjectGroup getProjectGroup(long id) {
 		return null;
+	}
+
+	public boolean changeGroupName(long groupNumber, String newGroupName) {
+		return false;
 	}
 	
 //	/**
