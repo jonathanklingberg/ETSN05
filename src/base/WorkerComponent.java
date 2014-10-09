@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,9 +28,13 @@ import database.WorkspaceInstance;
  * @version 0.2
  * 
  */
+@WebServlet("/workercomponent")
 public class WorkerComponent extends ServletBase {
-	
-	 /**
+
+	private static final long serialVersionUID = 1L;
+
+
+	/**
 	  * Handles input from the worker and displays information. 
 	  * 
 	  * 

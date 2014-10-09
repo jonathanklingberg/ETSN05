@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.http.HttpSession;
+
 /**
  *	This class represents a User in the system, and thus
  *	contains methods which are applicable for users such
@@ -28,7 +30,7 @@ public class User extends DatabaseInterface {
 	private long groupID;
 	private long userID;
 	private String role;
-	private String sessionID; 
+	private String sessionID;
 	
 	/**
 	 * Constructor which should be used when the user
@@ -44,14 +46,14 @@ public class User extends DatabaseInterface {
 	 * @param isOnline Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
-			long userID, long groupID, String role, String isOnline) {
+			long userID, long groupID, String role, String sessionID) {
 		this.conn = conn;
 		this.name = name;
 		this.password = password;
 		this.userID = userID;
 		this.groupID = groupID;
 		this.role = role;
-		this.sessionID = isOnline;
+		this.sessionID = sessionID;
 	}
 
 	/**
@@ -250,6 +252,7 @@ public class User extends DatabaseInterface {
 			PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
 				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
 			ps.executeUpdate();
+			// TODO update sessionID to null in db /Jonathan
 			sessionID = null;
 			successfullyMoved = true;
 		} catch (SQLException e) {
