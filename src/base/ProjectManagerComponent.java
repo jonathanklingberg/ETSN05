@@ -102,4 +102,10 @@ public class ProjectManagerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 	}
 
+	@Override
+	protected String getUserTableHeading() {
+		
+		return 	"<p>Members in project:</p>";
+	}
+
 }
