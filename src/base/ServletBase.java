@@ -102,9 +102,11 @@ public abstract class ServletBase extends HttpServlet {
      * @return String with html code for the header. 
      */
     protected String getPageIntro() {
-    	String intro = "<html>" +
-                       "<head><title> The Base Block System </title></head>" +
-                       "<body>";
+    	//TODO include Footable js
+    	String intro = "<html><head>" + 
+    						"<script src=\"js/jquery-1.11.1.js\"></script>" +
+							"<script src=\"js/epuss.js\"></script>" +
+    						"<title> The Base Block System </title></head><body>";
     	return intro;
     }
     

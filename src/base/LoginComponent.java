@@ -82,6 +82,8 @@ public class LoginComponent extends ServletBase {
 		
 		if (isLoggedIn(request)) {
 			session.setAttribute("state", LOGIN_FALSE);
+			session.invalidate(); // "session.destroy()"
+			System.out.println("Session.destroy()");
 			out.println("<p>You are now logged out</p>");
 		}
 		
