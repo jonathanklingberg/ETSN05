@@ -2,12 +2,14 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.User;
 import database.WorkspaceInstance;
 
 /**
@@ -58,8 +60,14 @@ public class ProjectManagerComponent extends ServletBase {
 				out.println("<p>Assigned to project: "+WorkspaceInstance.getInstance(conn).getProjectName(groupId) +"</p>");
 				out.println("<p>Members in project</p>");
 			    out.println("<table border=" + formElement("1") + ">");
-			    out.println("<tr><td>NAME</td><td>PASSWORD</td><td>STATUS</td><td></td><td></td></tr>");
-				
+			    out.println("<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>");
+			    
+			    ArrayList<User> usersInGroup = WorkspaceInstance.getInstance(conn).getUsersInGroup(groupId);
+			    for(User u : usersInGroup) {
+			    	
+			    }
+			    
+			    
 				
 				/* Do alot of stuff according to the SRS:
 				 * See all members of his group
