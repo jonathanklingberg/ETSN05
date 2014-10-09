@@ -255,7 +255,7 @@ public class AdministrationComponent extends ServletBase {
 		out.print("<script>" + code + "</script>");
 	}
 
-	protected String getUserTableHeading() {
+	protected String getUserTableName() {
 		return null;
 	}
 

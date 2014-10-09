@@ -138,7 +138,7 @@ public class LoginComponent extends ServletBase {
 	}
 
 	// Never actually lists users, thus does not need a heading for such a table
-	protected String getUserTableHeading() {
+	protected String getUserTableName() {
 		return "";
 	}
 
@@ -147,10 +147,12 @@ public class LoginComponent extends ServletBase {
 		return "";
 	}
 	
+	//Never used
 	protected boolean isAdminOrProjectManager() {
 		return false;
 	}
-
+	
+	//Never used
 	protected boolean isAdmin() {
 		return false;
 	}

@@ -89,7 +89,7 @@ public class WorkerComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	protected String getUserTableHeading() {		
+	protected String getUserTableName() {		
 		return "<p>Members in project:</p>";
 	}
 

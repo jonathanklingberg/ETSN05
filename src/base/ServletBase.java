@@ -116,9 +116,9 @@ public abstract class ServletBase extends HttpServlet {
     	return "";
     }
     
-    // Print User Table according to 
+    // Print User Table according to mockup design in SRS
 	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
-		out.println(getUserTableHeading());
+		out.println(getUserTableName());
 	    out.println("<table border=" + formElement("1") + ">");
 	    out.println(getUserTable());		
 		for(int i = 0; i < userList.size(); i++) {			
@@ -145,10 +145,9 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</table>");
 	}
 
-
 	protected abstract boolean isAdminOrProjectManager();
 	protected abstract boolean isAdmin();
 	protected abstract String getUserTable();
-	protected abstract String getUserTableHeading();
+	protected abstract String getUserTableName();
 
 }
