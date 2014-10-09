@@ -101,21 +101,19 @@ public class ProjectManagerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	protected String getUserTableHeading() {
-		
+	protected String getUserTableHeading() {		
 		return 	"<p>Members in project:</p>";
 	}
 
 	protected String getUserTable() {
-
 		return "<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>";
 	}
 
-	protected boolean shouldPrintGroupNameInUserTable() {
-		return false;
+	protected boolean isAdminOrProjectManager() {
+		return true;
 	}
 
-	protected boolean shouldPrintPasswordInUserTable() {
+	protected boolean isAdmin() {
 		return false;
 	}
 

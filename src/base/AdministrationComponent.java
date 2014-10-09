@@ -263,11 +263,11 @@ public class AdministrationComponent extends ServletBase {
 		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
 	}
 
-	protected boolean shouldPrintGroupNameInUserTable() {
+	protected boolean isAdminOrProjectManager() {
 		return true;
 	}
 
-	protected boolean shouldPrintPasswordInUserTable() {
+	protected boolean isAdmin() {
 		return true;
 	}
 }

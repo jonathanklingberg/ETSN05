@@ -97,11 +97,11 @@ public class WorkerComponent extends ServletBase {
 		return "<tr><td>Name</td><td>Role</td></tr>";
 	}
 
-	protected boolean shouldPrintGroupNameInUserTable() {
+	protected boolean isAdminOrProjectManager() {
 		return false;
 	}
 
-	protected boolean shouldPrintPasswordInUserTable() {
+	protected boolean isAdmin() {
 		return false;
 	}
 
