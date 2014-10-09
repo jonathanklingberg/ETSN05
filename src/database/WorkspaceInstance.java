@@ -74,14 +74,11 @@ public class WorkspaceInstance {
 				long id = rs.getLong("id");
 				String groupName = rs.getString("groupName");
 				pgList.add(new ProjectGroup(conn, id, groupName));
-				ps.close();
-				rs.close();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return pgList;
 	}
 
