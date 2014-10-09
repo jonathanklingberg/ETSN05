@@ -30,16 +30,19 @@ UNIQUE KEY (groupName)
 );
 
 CREATE TABLE RoleInGroup(
-id INT UNSIGNED NOT NULL AUTO_INCREMENT, userId INT UNSIGNED,
+id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+userId INT UNSIGNED,
 groupId INT UNSIGNED NOT NULL,
 role VARCHAR(20) NOT NULL,
+isActiveInGroup TINYINT(1),
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
 FOREIGN KEY (role) REFERENCES Roles(role)
 );
 
 CREATE TABLE TimeReports(
-id INT UNSIGNED NOT NULL AUTO_INCREMENT, userId INT UNSIGNED NOT NULL,
+id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+userId INT UNSIGNED NOT NULL,
 groupId INT UNSIGNED NOT NULL,
 date DATE NOT NULL,
 duration INT UNSIGNED NOT NULL,
@@ -48,7 +51,7 @@ week INT UNSIGNED NOT NULL,
 signed TINYINT(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
- FOREIGN KEY (type) REFERENCES Types(type)
+FOREIGN KEY (type) REFERENCES Types(type)
 );
 
 -- Create default admin user
@@ -63,7 +66,7 @@ INSERT INTO Roles VALUES('Admin');
 -- Create AdminGroup
 INSERT INTO ProjectGroups (id, groupName) VALUES ('', 'AdminGroup');
 -- Add admin to RoleInGroup
-INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', '1', '1', 'Admin');
+INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', '1', '1', 'Admin', 1);
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);
