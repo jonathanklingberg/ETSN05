@@ -68,32 +68,6 @@ public class LoginComponent extends ServletBase {
     private boolean checkUser(String name, String password) {
     	return WorkspaceInstance.getInstance(conn)
 		.getUser(name).comparePassword(password);
-  	
-//		boolean userOk = false;
-//		boolean userChecked = false;
-//		
-//		try{
-//			Statement stmt = conn.createStatement();		    
-//		    ResultSet rs = stmt.executeQuery("select * from users"); 
-//		    while (rs.next( ) && !userChecked) {
-//		    	String nameSaved = rs.getString("name"); 
-//		    	String passwordSaved = rs.getString("password");
-//		    	int isActive = rs.getInt("is_active");
-//		    	System.out.println("is_active: " + isActive);
-//		    	if (name.equals(nameSaved)) {
-//		    		userChecked = true;
-//		    		if(password.equals(passwordSaved) && isActive == 1){
-//	    				userOk = true;
-//		    		}
-//		    	}
-//		    }
-//		    stmt.close();
-//		} catch (SQLException ex) {
-//		    System.out.println("SQLException: " + ex.getMessage());
-//		    System.out.println("SQLState: " + ex.getSQLState());
-//		    System.out.println("VendorError: " + ex.getErrorCode());
-//		}
-//		return userOk;
 	}
 
     
