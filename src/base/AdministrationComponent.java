@@ -187,7 +187,7 @@ public class AdministrationComponent extends ServletBase {
 				String deleteGroup = request.getParameter("deletegroup");
 				if (deleteGroup != null) {
 					long groupNumber = Long.parseLong(deleteGroup);
-					instance.getProjectGroup(groupNumber).removeMe();
+					System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
 				}
 				
 				String editGroup = request.getParameter("editgroup");
@@ -266,13 +266,13 @@ public class AdministrationComponent extends ServletBase {
 		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
 		 List<ProjectGroup> projectGroups = instance.getProjectGroups();		 
 		 for(int i = 0; i < projectGroups.size(); i++) {
-			 long id = projectGroups.get(i).getId();
-			 String name = projectGroups.get(i).getProjectName();
+			long id = projectGroups.get(i).getId();
+			String name = projectGroups.get(i).getProjectName();
 			 
-			 String deleteURL = "administrationcomponent?deletegroup="+id;
-		     String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-			 String editURL = "administrationcomponent?editgroup="+id;
-		     String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
+			String deleteURL = "administrationcomponent?deletegroup="+id;
+		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+			String editURL = "administrationcomponent?editgroup="+id;
+		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
 			out.println("<tr>");
 	    	out.println("<td>" + name + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
