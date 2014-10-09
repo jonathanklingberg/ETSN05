@@ -184,6 +184,10 @@ public class WorkspaceInstance {
 		return null;
 	}
 
+	public boolean changeGroupName(long groupNumber, String newGroupName) {
+		return false;
+	}
+
 	public boolean userIsProjectManager(String name) {
 		boolean isManager = false;
 		try {
