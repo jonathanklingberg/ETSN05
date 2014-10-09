@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -87,5 +88,25 @@ public class WorkerComponent extends ServletBase {
 	  * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	  */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	}
+
+
+	@Override
+	protected String getUserTableHeading() {
+		
+		return "<p>Members in project:</p>";
+	}
+
+
+	@Override
+	protected String generateUserTable() {
+		
+		return "<tr><td>Name</td><td>Role</td></tr>";
+	}
+
+
+	@Override
+	protected Role getRole() {
+		return Role.Worker;
 	}
 }

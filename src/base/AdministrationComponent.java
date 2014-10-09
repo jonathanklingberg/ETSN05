@@ -2,10 +2,6 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
-import java.util.ArrayList;
 import database.ProjectGroup;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -36,7 +33,6 @@ public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
 
-	private WorkspaceInstance instance = WorkspaceInstance.getInstance(conn);
        
 //    /**
 //     * generates a form for adding new users
@@ -97,34 +93,9 @@ public class AdministrationComponent extends ServletBase {
 		return result;
 	}
 
-	// /**
-	// * Adds a user and a randomly generated password to the database.
-	// * @param name Name to be added
-	// * @return true if it was possible to add the name. False if it was not,
-	// e.g.
-	// * because the name already exist in the database.
-	// */
 	private boolean addUser(String name) {
-
-		return WorkspaceInstance.getInstance(conn).addUser(name,
+		return instance.addUser(name,
 				createPassword());
-		// try{
-
-		// Statement stmt = conn.createStatement();
-		// String statement = "insert into users (name, password) values('" +
-		// name + "', '" +
-		// createPassword() + "')";
-		// System.out.println(statement);
-		// stmt.executeUpdate(statement);
-		// stmt.close();
-
-		// } catch (SQLException ex) {
-		// resultOk = false;
-		// System.out.println("SQLException: " + ex.getMessage());
-		// System.out.println("SQLState: " + ex.getSQLState());
-		// System.out.println("VendorError: " + ex.getErrorCode());
-		// }
-
 	}
 
 	// /**
@@ -133,19 +104,7 @@ public class AdministrationComponent extends ServletBase {
 	// * @param name name of user to be deleted.
 	// */
 	private void deleteUser(String name) {
-		WorkspaceInstance.getInstance(conn).deleteUser(name);
-		// try{
-		// Statement stmt = conn.createStatement();
-		// String statement = "delete from users where name='" + name + "'";
-		// System.out.println(statement);
-		// stmt.executeUpdate(statement);
-		// stmt.close();
-		//
-		// } catch (SQLException ex) {
-		// System.out.println("SQLException: " + ex.getMessage());
-		// System.out.println("SQLState: " + ex.getSQLState());
-		// System.out.println("VendorError: " + ex.getErrorCode());
-		// }
+		instance.deleteUser(name);
 	}
 
 	/**
@@ -187,13 +146,13 @@ public class AdministrationComponent extends ServletBase {
 				String deleteGroup = request.getParameter("deletegroup");
 				if (deleteGroup != null) {
 					long groupNumber = Long.parseLong(deleteGroup);
-					instance.getProjectGroup(groupNumber).removeMe();
+					System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
 				}
 				
 				String editGroup = request.getParameter("editgroup");
 				if (editGroup != null) {
 					long groupNumber = Long.parseLong(editGroup);
-					String newGroupName = request.getParameter("name");
+					String newGroupName = request.getParameter("groupname");
 					if(newGroupName != null){
 						boolean res = instance.changeGroupName(groupNumber, newGroupName);	
 						if(!res) {
@@ -205,27 +164,71 @@ public class AdministrationComponent extends ServletBase {
 						}
 					}
 				}
-				
+				String createNewGroup = request.getParameter("addNewGroup");
+				if(createNewGroup != null) {
+					boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
+					if(res) {
+						String code ="alert(\"Group has been added!\")";
+						script(out, code);
+					} else {
+						String code ="alert(\"Group name already taken, please try a new one\")";
+						script(out, code);
+					}
+				}
 				String deleteUser = request.getParameter("deleteuser");
 				if(deleteUser != null) {
 					instance.getUser(deleteUser).removeMe();
 				}
-//				listUsers(out);
+				
+				
+				ArrayList<User> users = instance.getUsers();
+				listUsers(out, users);
 				listGroups(out);
 				out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 				out.println("</body></html>");
+				
+				
 			} else  // name not admin
 				response.sendRedirect("functionality.html");	
 		}
 	
-	public void listUsers(PrintWriter out) {
-		out.println("<p>Registered users:</p>");
+	public void listGroups(PrintWriter out) { 
+		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
+		javascriptCode += "function createGroup(link) { var name = prompt('Please enter a name for the new group.');  if (name != null) { link.href = link.href+name; return true; } return false;}";
+		script(out, javascriptCode);
+		out.println("<p> Groups </p>");
+		 out.println("<table border=" + formElement("1") + ">");
+		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
+		 List<ProjectGroup> projectGroups = instance.getProjectGroups();		 
+		 for(int i = 0; i < projectGroups.size(); i++) {
+			long id = projectGroups.get(i).getId();
+			String name = projectGroups.get(i).getProjectName();
+			 
+			String deleteURL = "administrationcomponent?deletegroup="+id;
+		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+			String editURL = "administrationcomponent?editgroup="+id;
+		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
+			out.println("<tr>");
+	    	out.println("<td>" + name + "</td>");
+	    	out.println("<td>" + editCode + "</td>");
+	    	out.println("<td>" + deleteCode + "</td>");
+	    	out.println("</tr>");
+		 }
+		 out.println("</table>");
+		 out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
+	}
+
+	public void listUsers(PrintWriter out, ArrayList<User> users) {
+		String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
+		script(out, javascriptCode);
+		out.println("<p>System users:</p>");
 	    out.println("<table border=" + formElement("1") + ">");
 	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
-		List<User> users = instance.getUsers();
+		
 		for(int i = 0; i < users.size(); i++) {
 	    	String name = users.get(i).getName();
-	    	String pw = "null"; // users.get(i).password();
+	    	System.out.println(name);
+	    	String pw = users.get(i).getPassword();
 	    	String role = users.get(i).getRole();
 	    	String group = instance.getProjectGroup(users.get(i).getGroupId()).getProjectName();
 	    	String editURL = "administrationcomponent?edituser="+name;
@@ -244,45 +247,29 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
 		}
+		out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 		out.println("</table>");
-	}
-	
-	public void listGroups(PrintWriter out) { 
-		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); link.href= link.href+\"&name=\"+name; return true; } return false;}";
-		javascriptCode += "function createGroup() { var name = prompt('Please enter a name for the new group.');  if (name != null) { var theUrl = \"administrationcomponent?addNewGroup=\"+name; var xmlHttp = new XMLHttpRequest();xmlHttp.open( \"GET\", theUrl, false );xmlHttp.send( null );}}";
-		script(out, javascriptCode);
-		out.println("<p> Groups </p>");
-		 out.println("<table border=" + formElement("1") + ">");
-		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
-		 List<ProjectGroup> projectGroups = instance.getProjectGroups();
-		 
-		 String editURL2 = "administrationcomponent?editgroup="+"1";
-	     String editCode2 = "<a href=" + formElement(editURL2) +
-	    			            " id=\"1\" onclick="+formElement("return editGroup(this);") + 
-	    			            "> edit </a>";
-		out.println("<tr>");
-    	out.println("<td>" + editCode2 + "</td>");
-		 
-		 for(int i = 0; i < projectGroups.size(); i++) {
-			 long id = projectGroups.get(i).getId();
-			 String name = projectGroups.get(i).getProjectName();
-			 
-			 String deleteURL = "administrationcomponent?deletegroup="+id;
-		     String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-			 String editURL = "administrationcomponent?editgroup="+id;
-		     String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
-			out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
-	    	out.println("<td>" + editCode + "</td>");
-	    	out.println("<td>" + deleteCode + "</td>");
-	    	out.println("</tr>");
-		 }
-		 out.println("</table>");
-		 out.println("<button type=\"button\" onclick=" + formElement("return createGroup();") + ">Add new</button>");
 	}
 	
 	private void script(PrintWriter out, String code){
 		out.print("<script>" + code + "</script>");
 	}
 
+	@Override
+	protected String getUserTableHeading() {
+		return null;
+	}
+<<<<<<< HEAD
+=======
+
+	protected String generateUserTable() {
+		
+		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
+	}
+
+	protected Role getRole() {
+		return Role.Admin;
+	}
+
+>>>>>>> branch 'master' of https://github.com/jonathanklingberg/ETSN05.git
 }

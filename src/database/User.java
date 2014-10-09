@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import data.Role;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -270,7 +271,8 @@ public class User extends DatabaseInterface {
 	 * @param user A user in the system who wants to display this user.
 	 * @return Returns the user in HTML representation.
 	 */
-	public String toHTML(User user) {
+	public String toHTML(Role requestingUserRole) {
+		
 		//If the administrator asks password and everything 
 		//should be displayed and if a project worker asks
 		//not that much should be displayed etc..
@@ -302,5 +304,4 @@ public class User extends DatabaseInterface {
 		return successfullyRemoved;
 	
 	}
-
 }

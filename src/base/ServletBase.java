@@ -1,16 +1,21 @@
 package base;
 
+import java.io.PrintWriter;
 import java.sql.Connection;
-
-
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import data.Role;
+import database.User;
+import database.WorkspaceInstance;
 
 /**
  *  This class is the superclass for all servlets in the application. 
@@ -27,15 +32,16 @@ import javax.servlet.http.HttpSession;
  *  @version 1.0
  *  
  */
-public class ServletBase extends HttpServlet {
+public abstract class ServletBase extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
 	// Define states
 	protected static final int LOGIN_FALSE = 0;
 	protected static final int LOGIN_TRUE = 1;	
-	protected Connection conn = null;
-
+	
+	protected Connection conn;
+	protected WorkspaceInstance instance;
 	/**
 	 * Constructs a servlet and makes a connection to the database. 
 	 * It also writes all user names on the console for test purpose. 
@@ -45,6 +51,7 @@ public class ServletBase extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
+			instance = WorkspaceInstance.getInstance(conn);
 			Statement stmt = conn.createStatement();		    
 		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
 		    System.out.println("Successfully connected to database!"); // Success message in console
@@ -108,5 +115,42 @@ public class ServletBase extends HttpServlet {
     protected String getViewLayoutSEnd(){
     	return "";
     }
+
+<<<<<<< HEAD
+=======
+	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
+		out.println(getUserTableHeading());
+	    out.println("<table border=" + formElement("1") + ">");
+	    out.println(generateUserTable());
+	    //out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
+		
+		for(int i = 0; i < userList.size(); i++) {
+			out.println(userList.get(i).toHTML(getRole()));
+	    	String name = userList.get(i).getName();
+	    	String pw = "null"; // users.get(i).getPassword();
+	    	String role = userList.get(i).getRole();
+	    	String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
+	    	String editURL = "administrationcomponent?edituser="+name;
+	    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
+	    	String deleteURL = "administrationcomponent?deleteuser="+name;
+	    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+	    	if (name.equals("admin")){
+	    		deleteCode = "";
+	    	}
+	    	out.println("<tr>");
+	    	out.println("<td>" + name + "</td>");
+	    	out.println("<td>" + group + "</td>");
+	    	out.println("<td>" + role + "</td>");
+	    	out.println("<td>" + pw + "</td>");
+	    	out.println("<td>" + editCode + "</td>");
+	    	out.println("<td>" + deleteCode + "</td>");
+	    	out.println("</tr>");
+		}
+		out.println("</table>");
+	}
+	protected abstract Role getRole();
+	protected abstract String generateUserTable();
+>>>>>>> branch 'master' of https://github.com/jonathanklingberg/ETSN05.git
+	protected abstract String getUserTableHeading();
 
 }

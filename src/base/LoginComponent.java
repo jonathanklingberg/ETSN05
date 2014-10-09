@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -134,6 +135,22 @@ public class LoginComponent extends ServletBase {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+
+	// Never actually lists users, thus does not need a heading for such a table
+	protected String getUserTableHeading() {
+		return "";
+	}
+
+	//Never used
+	protected String generateUserTable() {
+		
+		return "";
+	}
+
+	//never used
+	protected Role getRole() {
+		return Role.Unspecified;
 	}
 	
 //	protected boolean setActive(String username){

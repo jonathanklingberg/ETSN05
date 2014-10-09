@@ -3,10 +3,13 @@ package database;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
+import data.Role;
 
 /**
  *	This class represents a Time report in the system, and thus
@@ -26,7 +29,7 @@ public class TimeReport extends DatabaseInterface {
 	private long id;
 	private long groupId;
 	private long userId;
-	private int type;
+	private long type;
 	private long duration;
 	private long week;
 	private Date date;
@@ -48,7 +51,17 @@ public class TimeReport extends DatabaseInterface {
 	 * @param signed A boolean stating whether the time report is signed
 	 */
 	public TimeReport(Connection conn, long id, long userId, long groupId, 
-			long type, long duration, long week, Date date, boolean signed) {}
+			long type, long duration, long week, Date date, boolean signed) {
+			this.conn = conn;
+			this.id = id;
+			this.userId = userId;
+			this.groupId = groupId;
+			this.type = type;
+			this.duration = duration;
+			this.week = week;
+			this.date = date;
+			this.signed = signed;
+	}
 	
 	/**
 	 * Constructor which only should be used when the time report is about
@@ -73,7 +86,16 @@ public class TimeReport extends DatabaseInterface {
 	 * @return True if the time report was signed successfully, false otherwise.
 	 */
 	public boolean signTimeReport() {
-		return false;
+		boolean wasSigned = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed=1 WHERE id=" + id +";");
+			ResultSet rs = ps.executeQuery();
+			wasSigned=true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return wasSigned;
 	}
 	
 	/**
@@ -245,10 +267,10 @@ public class TimeReport extends DatabaseInterface {
 	 * Will produce an HTML representation of the time report depending on the
 	 * user asking for it
 	 * 
-	 * @param user A user in the system who wants to display this time report.
+	 * @param requestingUserRole A user in the system who wants to display this time report.
 	 * @return Returns the time report in HTML representation.
 	 */
-	public String toHTML(User user) {
+	public String toHTML(Role requestingUserRole) {
 		return null;
 	}
 	
