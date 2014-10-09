@@ -182,14 +182,14 @@ public class WorkspaceInstance {
 	public synchronized User getUser(String userName) {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName = '" + userName + "'");
+			//TODO change to join
 //			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
 			String sessionId = rs.getString("sessionId");
-//			HttpSession session = request.getSession(true);
-//			String sessionId = session.getId();
+			System.out.println("sessionId:" + sessionId);
 			
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			rs = ps.executeQuery();

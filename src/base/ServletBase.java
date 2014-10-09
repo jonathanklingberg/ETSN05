@@ -115,7 +115,7 @@ public abstract class ServletBase extends HttpServlet {
     protected String getViewLayoutSEnd(){
     	return "";
     }
-
+    
 	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableHeading());
 	    out.println("<table border=" + formElement("1") + ">");
