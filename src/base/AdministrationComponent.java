@@ -173,7 +173,17 @@ public class AdministrationComponent extends ServletBase {
 						}
 					}
 				}
-				
+				String createNewGroup = request.getParameter("addNewGroup");
+				if(createNewGroup != null) {
+					boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
+					if(res) {
+						String code ="alert(\"Group has been added!\")";
+						script(out, code);
+					} else {
+						String code ="alert(\"Group name already taken, please try a new one\")";
+						script(out, code);
+					}
+				}
 				String deleteUser = request.getParameter("deleteuser");
 				if(deleteUser != null) {
 					instance.getUser(deleteUser).removeMe();
@@ -217,7 +227,7 @@ public class AdministrationComponent extends ServletBase {
 	
 	public void listGroups(PrintWriter out) { 
 		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); link.href= link.href+\"&name=\"+name; return true; } return false;}";
-		javascriptCode += "function createGroup() { var name = prompt('Please enter a name for the new group.');  if (name != null) { var theUrl = \"administrationcomponent?addNewGroup=\"+name; var xmlHttp = new XMLHttpRequest();xmlHttp.open( \"GET\", theUrl, false );xmlHttp.send( null );}}";
+		javascriptCode += "function createGroup() { var name = prompt('Please enter a name for the new group.');  if (name != null) { var theUrl = \"administrationcomponent?addNewGroup=\"+name; var xmlHttp = new XMLHttpRequest();xmlHttp.open( \"GET\", theUrl, false );xmlHttp.send();}}";
 		script(out, javascriptCode);
 		out.println("<p> Groups </p>");
 		 out.println("<table border=" + formElement("1") + ">");

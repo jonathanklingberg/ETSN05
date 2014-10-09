@@ -91,9 +91,8 @@ public class WorkspaceInstance {
 	 */
 	public synchronized boolean addProjectGroup(ProjectGroup projectGroup) {
 		boolean wasAdded = false;
-		
 		try {
-			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(id, groupName) VALUES ("+ projectGroup.id + ", '" + projectGroup.name + "')" );
+			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(groupName) VALUES ('" + projectGroup.name + "')" );
 			ps.executeUpdate();
 			wasAdded = true;
 		} catch (SQLException e) {
