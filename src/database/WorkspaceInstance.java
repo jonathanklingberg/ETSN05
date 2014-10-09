@@ -155,7 +155,7 @@ public class WorkspaceInstance {
 				groupIdList.add(rs.getLong("groupId"));
 			}
 			for (int i = 0; i < idList.size(); i++) {
-				rs = ps.executeQuery("select * from Users order by userName asc where id="+ idList.get(i));
+				rs = ps.executeQuery("select * from Users where id='" + idList.get(i) + "' order by userName asc");
 				rs.next();
 				String name = rs.getString("userName");
 				String password = rs.getString("password");
@@ -345,7 +345,7 @@ public class WorkspaceInstance {
 		ResultSet rs = null;
 		try{
 		  Statement stmt = conn.createStatement();		    
-		  rs = stmt.executeQuery("select * from Users order by name asc");
+		  rs = stmt.executeQuery("select * from Users order by userName asc");
 		  rs.next();
 		  
 		  stmt.close();

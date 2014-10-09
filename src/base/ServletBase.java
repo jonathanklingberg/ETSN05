@@ -149,4 +149,5 @@ public abstract class ServletBase extends HttpServlet {
 	protected abstract Role getRole();
 	protected abstract String generateUserTable();
 	protected abstract String getUserTableHeading();
+
 }
