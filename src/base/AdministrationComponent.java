@@ -104,24 +104,7 @@ public class AdministrationComponent extends ServletBase {
     private boolean addUser(String name) {
     	
     	return WorkspaceInstance.getInstance(conn)
-    			.addUser(name, createPassword());
-//    	try{
-    		
-//			Statement stmt = conn.createStatement();
-//			String statement = "insert into users (name, password) values('" + name + "', '" + 
-//			                     createPassword() + "')";
-//			System.out.println(statement);
-//		    stmt.executeUpdate(statement); 
-//		    stmt.close();
-			
-//		} catch (SQLException ex) {
-//		    resultOk = false;
-//		    System.out.println("SQLException: " + ex.getMessage());
-//		    System.out.println("SQLState: " + ex.getSQLState());
-//		    System.out.println("VendorError: " + ex.getErrorCode());
-//		}
-    	
-		
+    			.addUser(name, createPassword());  	
     }
     
 
@@ -133,18 +116,6 @@ public class AdministrationComponent extends ServletBase {
     private void deleteUser(String name) {
     	WorkspaceInstance.getInstance(conn)
     			.deleteUser(name);
-//    	try{
-//			Statement stmt = conn.createStatement();
-//			String statement = "delete from users where name='" + name + "'"; 
-//			System.out.println(statement);
-//		    stmt.executeUpdate(statement); 
-//		    stmt.close();
-//			
-//		} catch (SQLException ex) {
-//		    System.out.println("SQLException: " + ex.getMessage());
-//		    System.out.println("SQLState: " + ex.getSQLState());
-//		    System.out.println("VendorError: " + ex.getErrorCode());
-//		}
     }
 
 
