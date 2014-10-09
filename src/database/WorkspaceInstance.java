@@ -220,11 +220,11 @@ public class WorkspaceInstance {
 	 */
 	public synchronized ProjectGroup getProjectGroup(long id) {
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where id =" + id);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where id =" + id + ";");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			String username = rs.getString("groupName");
-			return new ProjectGroup(conn, id, username);
+			String groupName = rs.getString("groupName");
+			return new ProjectGroup(conn, id, groupName);
 		}catch (SQLException e) {
 			return null;
 		}
@@ -258,6 +258,21 @@ public class WorkspaceInstance {
 	}
 	
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
+		try{
+			System.out.println(newGroupName);
+			PreparedStatement p = conn.prepareStatement("select * from ProjectGroups where groupName='" + newGroupName + "'");
+			ResultSet rs = p.executeQuery();
+			if(!rs.next()) {
+				PreparedStatement ps2 = conn.prepareStatement("update ProjectGroups set groupName='" + newGroupName + "'" + "where id= '" + groupNumber + "'");
+				ps2.executeUpdate();
+				ps2.close();
+				p.close();
+				rs.close();
+				return true;
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 		return false;
 	}
 

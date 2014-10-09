@@ -193,7 +193,7 @@ public class AdministrationComponent extends ServletBase {
 				String editGroup = request.getParameter("editgroup");
 				if (editGroup != null) {
 					long groupNumber = Long.parseLong(editGroup);
-					String newGroupName = request.getParameter("name");
+					String newGroupName = request.getParameter("groupname");
 					if(newGroupName != null){
 						boolean res = instance.changeGroupName(groupNumber, newGroupName);	
 						if(!res) {
@@ -258,7 +258,7 @@ public class AdministrationComponent extends ServletBase {
 	}
 	
 	public void listGroups(PrintWriter out) { 
-		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); link.href= link.href+\"&name=\"+name; return true; } return false;}";
+		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
 		javascriptCode += "function createGroup(link) { var name = prompt('Please enter a name for the new group.');  if (name != null) { link.href = link.href+name; return true; } return false;}";
 		script(out, javascriptCode);
 		out.println("<p> Groups </p>");
