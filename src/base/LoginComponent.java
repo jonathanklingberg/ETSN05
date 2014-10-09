@@ -52,7 +52,7 @@ public class LoginComponent extends ServletBase {
     	String html = "<p>Please enter your name and password in order to log in:</p>";
     	html += "<p> <form name=" + formElement("input");
     	html += " method=" + formElement("post");
-    	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("user") + '>'; 
+    	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("userName") + '>'; 
     	html += "<p> Password: <input type=" + formElement("password") + " name=" + formElement("password") + '>';  
     	html += "<p> <input type=" + formElement("submit") + "value=" + formElement("Submit") + '>';
     	return html;
@@ -121,8 +121,11 @@ public class LoginComponent extends ServletBase {
 			out.println("<p>You are now logged out</p>");
 		}
 		
-		name = request.getParameter("user"); // get the string that the user entered in the form
+		name = request.getParameter("userName"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
+        
+        System.out.println("User:" + name);
+        System.out.println("password:" + password);
         if (name != null && password != null) {
         	if (checkUser(name, password)) {
 	        		state = LOGIN_TRUE;

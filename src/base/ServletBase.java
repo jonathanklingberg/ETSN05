@@ -46,7 +46,7 @@ public class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			Statement stmt = conn.createStatement();		    
-		    ResultSet rs = stmt.executeQuery("select * from users"); // Just for testing purposes
+		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
 		    System.out.println("Successfully connected to database!"); // Success message in console
 		    stmt.close();
 			
