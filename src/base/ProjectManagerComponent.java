@@ -50,21 +50,20 @@ public class ProjectManagerComponent extends ServletBase {
 		if (!isLoggedIn(request)) {
 			response.sendRedirect("logincomponent");
 		} else {
-			if (WorkspaceInstance.getInstance(conn)
-					.userIsProjectManager(myName)) {
-//			if (WorkspaceInstance.getInstance(conn)
+			if (instance.userIsProjectManager(myName)) {
+//			if (instance
 //					.userIsProjectManager(myName) || myName.equals("admin")) {
 				//out.println("<h1>Project management page " + "</h1>");
-				long groupId = WorkspaceInstance.getInstance(conn).getGroupIdOfUser(myName);
+				long groupId = instance.getGroupIdOfUser(myName);
 				out.println("<p>Signed in as: Project Manager</p>");
-				out.println("<p>Assigned to project: "+WorkspaceInstance.getInstance(conn).getProjectName(groupId) +"</p>");
+				out.println("<p>Assigned to project: "+instance.getProjectName(groupId) +"</p>");
 				out.println("<p>Members in project</p>");
 			    out.println("<table border=" + formElement("1") + ">");
 			    out.println("<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>");
 			    
-			    ArrayList<User> usersInGroup = WorkspaceInstance.getInstance(conn).getUsersInGroup(groupId);
+			    ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			    for(User user : usersInGroup) {
-			    	//user.toHTML();
+			    	user.toHTML(instance.getUser(myName));
 			    }
 			    
 			    

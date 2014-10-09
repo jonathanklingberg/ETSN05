@@ -2,10 +2,6 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import database.User;
 import database.WorkspaceInstance;
-import java.util.ArrayList;
 import database.ProjectGroup;
 import java.util.List;
 import java.util.Random;
@@ -36,7 +31,6 @@ public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
 
-	private WorkspaceInstance instance = WorkspaceInstance.getInstance(conn);
        
 //    /**
 //     * generates a form for adding new users
