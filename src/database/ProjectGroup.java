@@ -154,7 +154,19 @@ public class ProjectGroup extends DatabaseInterface {
 	 * otherwise false
 	 */
 	public boolean addTimeReport(TimeReport report) {
-		return false;
+		boolean wasAdded = false;
+		try {
+			int signed = report.isSigned() ? 1 : 0;
+			PreparedStatement ps = conn.prepareStatement("INSERT into TimeReports(id, userId, groupId, date, duration, type, week, signed) "
+					+ "VALUES('', '" + report.getUserId() + "', '" + report.getGroupId() + "', '" + report.getDate() + "', '" + report.getDuration() + "',"
+							+ " '" + report.getType() + "', '" + report.getWeek() + "', '" + signed + ")" );
+			ps.executeUpdate();
+			wasAdded = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return wasAdded;
 	}
 	
 	/**
@@ -166,7 +178,17 @@ public class ProjectGroup extends DatabaseInterface {
 	 */
 	public boolean removeTimeReport(TimeReport report) {
 		//Don't forget to check that the time report is unsigned!
-		return false;
+		boolean wasRemoved = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = '" + report.getId() + "' AND signed = 0");
+			if(ps.executeUpdate() == 1){
+				wasRemoved = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return wasRemoved;
 	}
 	
 	/**
