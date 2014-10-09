@@ -82,6 +82,8 @@ public class ProjectGroup extends DatabaseInterface {
 				String role = rs.getString("role");
 				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
 			}
+			ps.close();
+			rs.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -111,6 +113,8 @@ public class ProjectGroup extends DatabaseInterface {
 				boolean signed = rs.getBoolean("signed");		
 				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed));
 			}
+			ps.close();
+			rs.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -134,7 +138,10 @@ public class ProjectGroup extends DatabaseInterface {
 			long duration = rs.getLong("duration");
 			long week = rs.getLong("week");
 			Date date = rs.getDate("date");
-			boolean signed = rs.getBoolean("signed");		
+			boolean signed = rs.getBoolean("signed");
+			ps.close();
+			rs.close();
+			
 			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed);
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -162,6 +169,7 @@ public class ProjectGroup extends DatabaseInterface {
 							+ " '" + report.getType() + "', '" + report.getWeek() + "', '" + signed + ")" );
 			ps.executeUpdate();
 			wasAdded = true;
+			ps.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -184,6 +192,7 @@ public class ProjectGroup extends DatabaseInterface {
 			if(ps.executeUpdate() == 1){
 				wasRemoved = true;
 			}
+			ps.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -201,9 +210,26 @@ public class ProjectGroup extends DatabaseInterface {
 	public boolean addUser(User user) {
 		//Don't forget to check that the user is not
 		//the administrator, since he isn't allowed to
-		//be a part of a group
+		//be a part of a group. 
 		
-		return false;
+		//Does the users' sessionId
+		//need to be set to NULL? 
+		//Do we need to set isActive to 1? 
+		boolean wasAdded = false;
+		if(!user.getName().equals("admin")){
+			try {
+				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
+					"groupId = " + id +" WHERE userId = '" + user.getUserId() + "'");
+				if(ps.executeUpdate() == 1){
+					wasAdded = true;
+				}
+				ps.close();
+			} catch (SQLException e) {
+				wasAdded = false;
+				e.printStackTrace();
+			}
+		}
+		return wasAdded;
 	}
 	
 	/**
@@ -213,9 +239,11 @@ public class ProjectGroup extends DatabaseInterface {
 	 * @return True if the user was successfully removed,
 	 * otherwise false
 	 */
-	public boolean removeUser(User user) {
-		return false;
-	}
+	//TODO This method should not be necessary since a user has to be in a group, he/she must be moved instead (which is done in the user class).
+//	public boolean removeUser(User user) {
+//		boolean wasRemoved = false;
+//		return wasRemoved;
+//	}
 	
 	/**
 	 * Will produce an HTML representation of the project depending on the
@@ -250,6 +278,30 @@ public class ProjectGroup extends DatabaseInterface {
 		//on them, as well as on all users it's probably easier to
 		//just execute the correct SQL here directly instead of taking
 		//the detour of creating all objects
+
+//		boolean wasRemoved = false;
+//		try {
+//			PreparedStatement ps = conn.prepareStatement("DELETE FROM TimeReports WHERE groupId = '" + id);
+//			ps.executeUpdate();
+//			
+//			ps = conn.prepareStatement("DELETE FROM Users INNER JOIN RoleInGroup ON RoleInGroup.userId = Users.id WHERE RoleInGroup.groupId = '" + id);
+//			ps.executeUpdate();
+//			
+//			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = '" + id);
+//			ps.executeUpdate();
+//			
+//			ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE groupId = '" + id);
+//			ps.executeUpdate();
+//			
+//			if(ps.executeUpdate() == 1){
+//				wasRemoved = true;
+//			}
+//			ps.close();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return wasRemoved;
 		return false;
 	}
 
