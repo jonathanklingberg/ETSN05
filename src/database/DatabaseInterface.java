@@ -12,7 +12,6 @@ import java.sql.Connection;
  *
  */
 public abstract class DatabaseInterface {
-	protected long id;
 	protected Connection conn;
 	/**
 	 * Creates an HTML representation of the object depending on

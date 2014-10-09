@@ -102,24 +102,50 @@ public class AdministrationComponent extends ServletBase {
 //     * because the name already exist in the database. 
 //     */
     private boolean addUser(String name) {
-    	boolean resultOk = true;
-    	try{
-			Statement stmt = conn.createStatement();
-			String statement = "insert into users (name, password) values('" + name + "', '" + 
-			                     createPassword() + "')";
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
+    	
+    	return WorkspaceInstance.getInstance(conn)
+    			.addUser(name, createPassword());
+//    	try{
+    		
+//			Statement stmt = conn.createStatement();
+//			String statement = "insert into users (name, password) values('" + name + "', '" + 
+//			                     createPassword() + "')";
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
 			
-		} catch (SQLException ex) {
-		    resultOk = false;
-		    // System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-    	return resultOk;
+//		} catch (SQLException ex) {
+//		    resultOk = false;
+//		    System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+    	
+		
     }
     
+
+//    /**
+//     * Deletes a user from the database. 
+//     * If the user does not exist in the database nothing happens. 
+//     * @param name name of user to be deleted. 
+//     */
+    private void deleteUser(String name) {
+    	WorkspaceInstance.getInstance(conn)
+    			.deleteUser(name);
+//    	try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "delete from users where name='" + name + "'"; 
+//			System.out.println(statement);
+//		    stmt.executeUpdate(statement); 
+//		    stmt.close();
+//			
+//		} catch (SQLException ex) {
+//		    System.out.println("SQLException: " + ex.getMessage());
+//		    System.out.println("SQLState: " + ex.getSQLState());
+//		    System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+    }
 
 
 	/**

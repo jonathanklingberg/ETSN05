@@ -2,6 +2,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,11 +57,26 @@ public class WorkspaceInstance {
 	/**
  	* Retrieves all project groups in the database
  	* 
- 	* @return A list of all the project groupss associated with this database,
+ 	* @return A list of all the project groups associated with this database,
  	* or an empty list if no project groups exist.
  	*/
 	public synchronized List<ProjectGroup> getProjectGroups() {
-		return new ArrayList<ProjectGroup>();
+		List<ProjectGroup> pgList = new ArrayList<ProjectGroup>();
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()){
+				long id = rs.getLong("id");
+				String groupName = rs.getString("groupName");
+				pgList.add(new ProjectGroup(conn, id, groupName));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return pgList;
 	}
 
 	/**
@@ -71,7 +87,17 @@ public class WorkspaceInstance {
 	 * otherwise false
 	 */
 	public synchronized boolean addProjectGroup(ProjectGroup projectGroup) {
-		return false;
+		boolean wasAdded = false;
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(id, groupName) VALUES ("+ projectGroup.id + ", '" + projectGroup.name + "')" );
+			ps.executeUpdate();
+			wasAdded = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return wasAdded;
 	}
 
 	/**
@@ -93,7 +119,17 @@ public class WorkspaceInstance {
 		//we would like to change later on, just keep it in mind when
 		//implementing for now though
 		
-		return false;
+		boolean wasAdded = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("INSERT into Users(id, userName, password, sessionId) VALUES('', '" + user.getName() + "', '" + user.getPassword() + "', '" + user.getSessionId() + "')" );
+			ps.executeUpdate();
+			wasAdded = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return wasAdded;
 	}	
 	
 	/**
@@ -115,8 +151,27 @@ public class WorkspaceInstance {
 	 * null
 	 */
 	public synchronized User getUser(String userName) {
-		return null;
-	}
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName = '" + userName + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long id = rs.getLong("id");
+			String password = rs.getString("password");
+			String sessionId = rs.getString("sessionId");
+			
+			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
+			rs = ps.executeQuery();
+			rs.next();
+			long groupId = rs.getLong("groupId");
+			String role = rs.getString("role");
+			
+			return new User(conn, userName, password, id, groupId, role, sessionId);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;	
+		
+		}
 
 	/**
 	 * Retrieves a specific project group from the database
@@ -131,6 +186,121 @@ public class WorkspaceInstance {
 
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		return false;
+	}
+
+	public boolean userIsProjectManager(String name) {
+		boolean isManager = false;
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			rs.next();
+			long id = rs.getLong("id");
+			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			rs.next();
+			String role = rs.getString("role");
+			isManager = role.equals("Project manager");	
+			stmt.close();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}		
+		return isManager;
+	}
+
+	public boolean addUser(String name, String password) {
+		boolean resultOK = false;
+	
+		try{
+		Statement stmt = conn.createStatement();
+		String statement = "insert into users (name, password) values('" + name
+				+ "', '" + password + "')";
+		System.out.println(statement);
+		stmt.executeUpdate(statement);
+		stmt.close();
+		resultOK = true;
+		} catch (SQLException ex) {
+			resultOK = false;
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+		return resultOK;
+	}
+
+	public void deleteUser(String name) {
+		try{
+			Statement stmt = conn.createStatement();
+			String statement = "delete from users where name='" + name + "'"; 
+			System.out.println(statement);
+		    stmt.executeUpdate(statement); 
+		    stmt.close();
+			} catch (SQLException ex) {
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		
+	}
+
+	public boolean inactivateUser(String name) {
+		boolean resultOk = true;
+		try{
+			Statement stmt = conn.createStatement();
+			String statement = "update users set is_active = 0 where name = '" + name + "'";
+			System.out.println(statement);
+		    stmt.executeUpdate(statement); 
+		    stmt.close();
+		} catch (SQLException ex) {
+		    resultOk = false;
+		    // System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		return resultOk;
+	}
+
+	public ResultSet getUsersResultSet() {
+		ResultSet rs = null;
+		try{
+		  Statement stmt = conn.createStatement();		    
+		  rs = stmt.executeQuery("select * from users order by name asc");
+		  rs.next();
+		  
+		  stmt.close();
+		} catch (SQLException e){
+			System.err.println(e);
+		}
+		return rs;
+	}
+
+	public long getGroupIdOfUser(String name) {
+		long groupId = 0;
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			rs.next();
+			long id = rs.getLong("id");
+			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			rs.next();
+			groupId = rs.getLong("groupId");
+			stmt.close();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}		
+		return groupId;
+	}
+
+	public String getProjectName(long groupId) {
+		String groupName = "";
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from ProjectGroups where id='"+groupId +"'");
+			rs.next();	
+			rs.getString("groupName");
+			stmt.close();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}				
+		return groupName;
 	}
 	
 //	/**
