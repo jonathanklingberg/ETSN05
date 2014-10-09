@@ -2,6 +2,7 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,24 +36,42 @@ public class WorkerComponent extends ServletBase {
 	  * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	  */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				PrintWriter out = response.getWriter();
-				out.println(getPageIntro());
+		PrintWriter out = response.getWriter();
+		out.println(getPageIntro());
 
-				// Get the session
-				HttpSession session = request.getSession(true);
+		// Get session and username
+		HttpSession session = request.getSession(true);
+		String userName = (String) session.getAttribute("name");
+		
 				
+		if (!isLoggedIn(request)) {
+			response.sendRedirect("logincomponent");
+		} else {
+			if (!WorkspaceInstance.getInstance(conn).userIsProjectManager(userName) && !userName.equals("admin")) { // Check that the user is a "default user"
+				out.println("<h1> Workercomponent " + "<h1>");
 				
-				
-				String userName = (String) session.getAttribute("name");
-
-				
+				//Prints username and project group ID
 				long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
-				
-								
 				out.println("<p> Logged in as: " + userName + " </p>");
+				out.println("<p> Assigned to project group: " + projectGroup + " </p>");
 				
-				out.println("<p> Assigned to project: project group" + projectGroup + " </p>");
-
+				//Display all project members in project group
+				//Anropa en metod för att hämta alla medlemmar i en viss grupp. Metoden bör skapas i WorkspaceInstance 
+				out.println("<p>Group members</p>");
+				out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%>");
+				out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
+				out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
+				ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
+				for(int i = 0; i < groupMembers.size(); i++){
+					out.println("<tr><td><CENTER>" + " "  + "</CENTER></td>");
+					out.println("<td><CENTER>" + " "  + "</CENTER></td></tr>");
+				}
+				
+				
+			} else {
+					
+			}
+		}
 	}
 	
 

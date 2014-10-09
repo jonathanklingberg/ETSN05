@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 /**
  *  This class is a singleton and contains operations that act over the 
  *  entire database. It is typically used by the 'Component' classes
@@ -157,12 +159,16 @@ public class WorkspaceInstance {
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
 			String sessionId = rs.getString("sessionId");
+			HttpSession session;
+			String sessionId = session.getId();
 			
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				long groupId = rs.getLong("groupId");
 				String role = rs.getString("role");
+				System.out.println("groupId:" + groupId);
+				System.out.println("role:" + role);
 				return new User(conn, userName, password, id, groupId, role, sessionId);
 			}
 			return new User(conn, userName, password, id, 0, "", sessionId); 
@@ -171,7 +177,10 @@ public class WorkspaceInstance {
 		}
 		return null;	
 		
-		}
+		}//			String sessionId = rs.getString("sessionId");
+			HttpSession session;
+			String sessionId = session.getId();
+
 
 	/**
 	 * Retrieves a specific project group from the database
@@ -184,6 +193,33 @@ public class WorkspaceInstance {
 		return null;
 	}
 
+	
+	/**
+ 	* Retrieves all users from a specified project group
+ 	* 
+ 	*  @param id The id of the project group
+ 	* @return A list of all the project members in a given group,
+ 	* or an empty list if there are no members in the group.
+ 	*/
+	public synchronized ArrayList<User> getGroupMembers(long id){
+		ArrayList<User> membersList = new ArrayList<User>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				long userId = rs.getLong("id");
+				String username = rs.getString("userName");
+				String password = rs.getString("password");
+				String sessionId = rs.getString("sessionId");
+				String role = rs.getString("role");
+				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return membersList;
+	}
+	
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		return false;
 	}
