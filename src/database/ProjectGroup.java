@@ -274,35 +274,14 @@ public class ProjectGroup extends DatabaseInterface {
 	 * otherwise false
 	 */
 	public boolean removeMe() {
-		//Instead of fetching all time reports and doing 'removeMe'
-		//on them, as well as on all users it's probably easier to
-		//just execute the correct SQL here directly instead of taking
-		//the detour of creating all objects
-
-//		boolean wasRemoved = false;
-//		try {
-//			PreparedStatement ps = conn.prepareStatement("DELETE FROM TimeReports WHERE groupId = '" + id);
-//			ps.executeUpdate();
-//			
-//			ps = conn.prepareStatement("DELETE FROM Users INNER JOIN RoleInGroup ON RoleInGroup.userId = Users.id WHERE RoleInGroup.groupId = '" + id);
-//			ps.executeUpdate();
-//			
-//			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = '" + id);
-//			ps.executeUpdate();
-//			
-//			ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE groupId = '" + id);
-//			ps.executeUpdate();
-//			
-//			if(ps.executeUpdate() == 1){
-//				wasRemoved = true;
-//			}
-//			ps.close();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return wasRemoved;
-		return false;
+		try {
+			System.out.println(id);
+			PreparedStatement ps = conn.prepareStatement("DELETE from ProjectGroups where id =" + id);
+			ps.executeQuery();
+			ps.close();
+			return true;
+		}catch(SQLException e) {
+			return false;
+		}
 	}
-
 }
