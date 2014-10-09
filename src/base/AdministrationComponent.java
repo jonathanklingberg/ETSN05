@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import data.Roles;
 import database.User;
 import database.WorkspaceInstance;
 import database.ProjectGroup;

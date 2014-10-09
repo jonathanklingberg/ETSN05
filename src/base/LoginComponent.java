@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import data.Roles;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -153,6 +154,17 @@ public class LoginComponent extends ServletBase {
 	// Never actually lists users, thus does not need a heading for such a table
 	protected String getUserTableHeading() {
 		return "";
+	}
+
+	//Never used
+	protected String generateUserTable() {
+		
+		return "";
+	}
+
+	//never used
+	protected Roles getRole() {
+		return Roles.Unspecified;
 	}
 	
 //	protected boolean setActive(String username){

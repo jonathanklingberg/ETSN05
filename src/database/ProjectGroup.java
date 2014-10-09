@@ -249,10 +249,10 @@ public class ProjectGroup extends DatabaseInterface {
 	 * Will produce an HTML representation of the project depending on the
 	 * user asking for it
 	 * 
-	 * @param user A user in the system who wants to display this project.
+	 * @param requestingUserRole A user in the system who wants to display this project.
 	 * @return Returns the project in HTML representation.
 	 */
-	public String toHTML(User user) {
+	public String toHTML(Roles requestingUserRole) {
 		// TODO Auto-generated method stub
 		return null;
 	}
