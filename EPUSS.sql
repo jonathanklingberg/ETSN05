@@ -1,6 +1,6 @@
-drop schema base;
-CREATE DATABASE base;
-USE base;
+drop schema puss1403;
+CREATE DATABASE puss1403;
+USE puss1403;
 
 CREATE TABLE Users(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
