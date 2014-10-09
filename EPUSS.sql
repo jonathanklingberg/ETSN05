@@ -49,13 +49,18 @@ FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
 );
 
 -- Create default admin user
-INSERT INTO Users(id, userName, password, sessionId) VALUES('', ’admin’, ’adminpw’, NULL);
+INSERT INTO Users(id, userName, password, sessionId) VALUES('', 'admin', 'adminpw', NULL);
 -- Create default Roles
--- INSERT INTO Roles VALUES(’Project manager’);
-INSERT INTO Roles VALUES(’Developer’);
--- INSERT INTO Roles VALUES( ’System architect’ );
-INSERT INTO Roles VALUES(’Tester’);
-INSERT INTO Roles VALUES(’Unspecified’);
+INSERT INTO Roles VALUES('Project manager');
+INSERT INTO Roles VALUES('Developer');
+INSERT INTO Roles VALUES('System architect');
+INSERT INTO Roles VALUES('Tester');
+INSERT INTO Roles VALUES('Unspecified');
+INSERT INTO Roles VALUES('Admin');
+-- Create AdminGroup
+INSERT INTO ProjectGroups (id) VALUES ('0');
+-- Add admin to RoleInGroup
+INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', '1', '1', 'Admin');
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);
