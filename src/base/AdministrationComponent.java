@@ -178,7 +178,7 @@ public class AdministrationComponent extends ServletBase {
 				if(deleteUser != null) {
 					instance.getUser(deleteUser).removeMe();
 				}
-				listUsers(out);
+//				listUsers(out);
 				listGroups(out);
 				out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 				out.println("</body></html>");
@@ -213,19 +213,20 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("</tr>");
 		}
 		out.println("</table>");
-		out.println("<input type=\"button\" value=\"Add new\"</input>");
 	}
 	
 	public void listGroups(PrintWriter out) { 
-		out.println("<script> function onClick(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); document.getElementById('hidden').value = name; link.href= link.href+\"&name=\"+name; return true; } return false;}</script> ");
-		 out.println("<p> Groups </p>");
+		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); link.href= link.href+\"&name=\"+name; return true; } return false;}";
+		javascriptCode += "function createGroup() { var name = prompt('Please enter a name for the new group.');  if (name != null) { var theUrl = \"administrationcomponent?addNewGroup=\"+name; var xmlHttp = new XMLHttpRequest();xmlHttp.open( \"GET\", theUrl, false );xmlHttp.send( null );}}";
+		script(out, javascriptCode);
+		out.println("<p> Groups </p>");
 		 out.println("<table border=" + formElement("1") + ">");
 		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
 		 List<ProjectGroup> projectGroups = instance.getProjectGroups();
 		 
 		 String editURL2 = "administrationcomponent?editgroup="+"1";
 	     String editCode2 = "<a href=" + formElement(editURL2) +
-	    			            " id=\"1\" onclick="+formElement("return onClick(this);") + 
+	    			            " id=\"1\" onclick="+formElement("return editGroup(this);") + 
 	    			            "> edit </a>";
 		out.println("<tr>");
     	out.println("<td>" + editCode2 + "</td>");
@@ -237,7 +238,7 @@ public class AdministrationComponent extends ServletBase {
 			 String deleteURL = "administrationcomponent?deletegroup="+id;
 		     String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
 			 String editURL = "administrationcomponent?editgroup="+id;
-		     String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return onClick(this);") + "> edit </a>";
+		     String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
 			out.println("<tr>");
 	    	out.println("<td>" + name + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
@@ -245,7 +246,7 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("</tr>");
 		 }
 		 out.println("</table>");
-		 out.println("<input type=\"button\" value=\"Add new\"</input>");
+		 out.println("<button type=\"button\" onclick=" + formElement("return createGroup();") + ">Add new</button>");
 	}
 	
 	private void script(PrintWriter out, String code){

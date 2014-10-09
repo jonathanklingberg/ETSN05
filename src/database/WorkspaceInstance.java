@@ -30,7 +30,6 @@ import java.util.List;
 public class WorkspaceInstance {
 	private static WorkspaceInstance instance = null;
 	private static Connection conn;
-	
 	protected WorkspaceInstance(Connection conn) {
 		WorkspaceInstance.conn = conn;
 		//Food for thought: Will this connection live on forever,
@@ -161,11 +160,12 @@ public class WorkspaceInstance {
 			
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			rs = ps.executeQuery();
-			rs.next();
-			long groupId = rs.getLong("groupId");
-			String role = rs.getString("role");
-			
-			return new User(conn, userName, password, id, groupId, role, sessionId);
+			if(rs.next()) {
+				long groupId = rs.getLong("groupId");
+				String role = rs.getString("role");
+				return new User(conn, userName, password, id, groupId, role, sessionId);
+			}
+			return new User(conn, userName, password, id, 0, "", sessionId); 
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -211,7 +211,7 @@ public class WorkspaceInstance {
 	
 		try{
 		Statement stmt = conn.createStatement();
-		String statement = "insert into users (name, password) values('" + name
+		String statement = "insert into Users (name, password) values('" + name
 				+ "', '" + password + "')";
 		System.out.println(statement);
 		stmt.executeUpdate(statement);
@@ -229,7 +229,7 @@ public class WorkspaceInstance {
 	public void deleteUser(String name) {
 		try{
 			Statement stmt = conn.createStatement();
-			String statement = "delete from users where name='" + name + "'"; 
+			String statement = "delete from Users where name='" + name + "'"; 
 			System.out.println(statement);
 		    stmt.executeUpdate(statement); 
 		    stmt.close();
@@ -245,7 +245,7 @@ public class WorkspaceInstance {
 		boolean resultOk = true;
 		try{
 			Statement stmt = conn.createStatement();
-			String statement = "update users set is_active = 0 where name = '" + name + "'";
+			String statement = "update Users set is_active = 0 where name = '" + name + "'";
 			System.out.println(statement);
 		    stmt.executeUpdate(statement); 
 		    stmt.close();
@@ -262,7 +262,7 @@ public class WorkspaceInstance {
 		ResultSet rs = null;
 		try{
 		  Statement stmt = conn.createStatement();		    
-		  rs = stmt.executeQuery("select * from users order by name asc");
+		  rs = stmt.executeQuery("select * from Users order by name asc");
 		  rs.next();
 		  
 		  stmt.close();
