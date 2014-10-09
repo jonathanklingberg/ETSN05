@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *  This class is a singleton and contains operations that act over the 
@@ -245,11 +242,11 @@ public class WorkspaceInstance {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
-				String username = rs.getString("userName");
+				String userName = rs.getString("userName");
 				String password = rs.getString("password");
 				String sessionId = rs.getString("sessionId");
 				String role = rs.getString("role");
-				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
+				membersList.add(new User(conn, userName, password, userId, id, role, sessionId));
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
