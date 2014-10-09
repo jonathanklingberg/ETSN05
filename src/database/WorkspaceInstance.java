@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *  This class is a singleton and contains operations that act over the 
@@ -147,7 +144,7 @@ public class WorkspaceInstance {
 	public synchronized ArrayList<User> getUsers() {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup order by username asc");
+			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup");
 			ResultSet rs = ps.executeQuery();
 			ArrayList<Long> idList = new ArrayList<Long>();
 			ArrayList<String> roleList = new ArrayList<String>();
@@ -158,7 +155,7 @@ public class WorkspaceInstance {
 				groupIdList.add(rs.getLong("groupId"));
 			}
 			for (int i = 0; i < idList.size(); i++) {
-				rs = ps.executeQuery("select * from Users order by username asc where id="+ idList.get(i));
+				rs = ps.executeQuery("select * from Users order by userName asc where id="+ idList.get(i));
 				rs.next();
 				String name = rs.getString("userName");
 				String password = rs.getString("password");
@@ -245,11 +242,11 @@ public class WorkspaceInstance {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
-				String username = rs.getString("userName");
+				String userName = rs.getString("userName");
 				String password = rs.getString("password");
 				String sessionId = rs.getString("sessionId");
 				String role = rs.getString("role");
-				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
+				membersList.add(new User(conn, userName, password, userId, id, role, sessionId));
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
