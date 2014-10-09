@@ -91,34 +91,9 @@ public class AdministrationComponent extends ServletBase {
 		return result;
 	}
 
-	// /**
-	// * Adds a user and a randomly generated password to the database.
-	// * @param name Name to be added
-	// * @return true if it was possible to add the name. False if it was not,
-	// e.g.
-	// * because the name already exist in the database.
-	// */
 	private boolean addUser(String name) {
-
 		return instance.addUser(name,
 				createPassword());
-		// try{
-
-		// Statement stmt = conn.createStatement();
-		// String statement = "insert into users (name, password) values('" +
-		// name + "', '" +
-		// createPassword() + "')";
-		// System.out.println(statement);
-		// stmt.executeUpdate(statement);
-		// stmt.close();
-
-		// } catch (SQLException ex) {
-		// resultOk = false;
-		// System.out.println("SQLException: " + ex.getMessage());
-		// System.out.println("SQLState: " + ex.getSQLState());
-		// System.out.println("VendorError: " + ex.getErrorCode());
-		// }
-
 	}
 
 	// /**
@@ -128,18 +103,6 @@ public class AdministrationComponent extends ServletBase {
 	// */
 	private void deleteUser(String name) {
 		instance.deleteUser(name);
-		// try{
-		// Statement stmt = conn.createStatement();
-		// String statement = "delete from users where name='" + name + "'";
-		// System.out.println(statement);
-		// stmt.executeUpdate(statement);
-		// stmt.close();
-		//
-		// } catch (SQLException ex) {
-		// System.out.println("SQLException: " + ex.getMessage());
-		// System.out.println("SQLState: " + ex.getSQLState());
-		// System.out.println("VendorError: " + ex.getErrorCode());
-		// }
 	}
 
 	/**
@@ -187,7 +150,7 @@ public class AdministrationComponent extends ServletBase {
 				String editGroup = request.getParameter("editgroup");
 				if (editGroup != null) {
 					long groupNumber = Long.parseLong(editGroup);
-					String newGroupName = request.getParameter("name");
+					String newGroupName = request.getParameter("groupname");
 					if(newGroupName != null){
 						boolean res = instance.changeGroupName(groupNumber, newGroupName);	
 						if(!res) {
@@ -224,7 +187,7 @@ public class AdministrationComponent extends ServletBase {
 		}
 	
 	public void listGroups(PrintWriter out) { 
-		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); link.href= link.href+\"&name=\"+name; return true; } return false;}";
+		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
 		javascriptCode += "function createGroup(link) { var name = prompt('Please enter a name for the new group.');  if (name != null) { link.href = link.href+name; return true; } return false;}";
 		script(out, javascriptCode);
 		out.println("<p> Groups </p>");
@@ -253,8 +216,6 @@ public class AdministrationComponent extends ServletBase {
 	private void script(PrintWriter out, String code){
 		out.print("<script>" + code + "</script>");
 	}
-
-
 
 	@Override
 	protected String getUserTableHeading() {
