@@ -149,7 +149,7 @@ public class User extends DatabaseInterface {
 	 * @return True if they match, false otherwise
 	 */
 	public boolean comparePassword(String pw) {
-		return password == pw;
+		return password.equals(pw);
 	}
 	
 	/**

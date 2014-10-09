@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
  * 
  */
 
+
 public class WorkspaceInstance {
 	private static WorkspaceInstance instance = null;
 	private static Connection conn;
@@ -205,6 +206,7 @@ public class WorkspaceInstance {
 
 //			HttpSession session = request.getSession(true);
 //			String sessionId = session.getId();
+			
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			rs = ps.executeQuery();
 			rs.next();
@@ -288,13 +290,13 @@ public class WorkspaceInstance {
 
 	public boolean addUser(String name, String password) {
 		boolean resultOK = false;
-
 		try {
 			PreparedStatement ps = conn.prepareStatement("insert into users (name, password) values('"
 					+ name + "', '" + password + "')");
 			ps.executeUpdate();
 			ps.close();
 			resultOK = true;
+
 		} catch (SQLException ex) {
 			resultOK = false;
 			System.out.println("SQLException: " + ex.getMessage());
@@ -305,6 +307,7 @@ public class WorkspaceInstance {
 	}
 
 	public void deleteUser(String name) {
+
 		try {
 			PreparedStatement ps = conn.prepareStatement("delete from users where name='" + name + "'");
 			ps.executeUpdate();
@@ -318,6 +321,7 @@ public class WorkspaceInstance {
 
 	public boolean inactivateUser(String name) {
 		boolean resultOk = true;
+
 		try {
 			PreparedStatement ps = conn.prepareStatement("update users set is_active = 0 where name = '"
 					+ name + "'");
