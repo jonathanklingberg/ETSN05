@@ -1,6 +1,8 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import data.Roles;
@@ -21,7 +23,8 @@ import data.Roles;
  */
 
 public class ProjectGroup extends DatabaseInterface {
-	private String name;
+	protected String name;
+	protected long id;
 	
 	/**
 	 * Constructor which should be used when the project group
@@ -43,7 +46,6 @@ public class ProjectGroup extends DatabaseInterface {
 	 * Constructor which should only be used when the project group is about
 	 * to be created in the database.
 	 * 
-	 * @param conn The connection to the database
 	 * @param name The name of the project group
 	 */
 	public ProjectGroup(String name) {
@@ -75,7 +77,7 @@ public class ProjectGroup extends DatabaseInterface {
 	 * are yet available
 	 */
 	public List<TimeReport> getTimeReports() {
-		return null;
+		return new ArrayList<TimeReport>();
 	}
 	
 	/**
@@ -87,6 +89,10 @@ public class ProjectGroup extends DatabaseInterface {
 	 */
 	public TimeReport getTimeReport(long reportId) {
 		return null;
+	}
+	
+	public long getId() {
+		return -1;
 	}
 	
 	/**
@@ -148,6 +154,14 @@ public class ProjectGroup extends DatabaseInterface {
 	public String toHTML(User user) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * Will return the name of the project group.
+	 * @return The name of the project group.
+	 */
+	public String getProjectName(){
+		return name;
 	}
 
 	/**

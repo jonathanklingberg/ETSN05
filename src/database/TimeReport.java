@@ -23,6 +23,7 @@ import java.util.List;
  * @version 0.2
  */
 public class TimeReport extends DatabaseInterface {
+	private long id;
 	private long groupId;
 	private long userId;
 	private int type;
