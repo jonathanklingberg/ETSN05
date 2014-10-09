@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-import database.User;
 import database.WorkspaceInstance;
 import database.ProjectGroup;
+
 import java.util.List;
 import java.util.Random;
 
@@ -221,35 +220,6 @@ public class AdministrationComponent extends ServletBase {
 			} else  // name not admin
 				response.sendRedirect("functionality.html");	
 		}
-	
-	public void listUsers(PrintWriter out) {
-		out.println("<p>Registered users:</p>");
-	    out.println("<table border=" + formElement("1") + ">");
-	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
-		List<User> users = instance.getUsers();
-		for(int i = 0; i < users.size(); i++) {
-	    	String name = users.get(i).getName();
-	    	String pw = "null"; // users.get(i).password();
-	    	String role = users.get(i).getRole();
-	    	String group = instance.getProjectGroup(users.get(i).getGroupId()).getProjectName();
-	    	String editURL = "administrationcomponent?edituser="+name;
-	    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
-	    	String deleteURL = "administrationcomponent?deleteuser="+name;
-	    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-	    	if (name.equals("admin")){
-	    		deleteCode = "";
-	    	}
-	    	out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
-	    	out.println("<td>" + group + "</td>");
-	    	out.println("<td>" + role + "</td>");
-	    	out.println("<td>" + pw + "</td>");
-	    	out.println("<td>" + editCode + "</td>");
-	    	out.println("<td>" + deleteCode + "</td>");
-	    	out.println("</tr>");
-		}
-		out.println("</table>");
-	}
 	
 	public void listGroups(PrintWriter out) { 
 		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { alert(link.id); link.href= link.href+\"&name=\"+name; return true; } return false;}";
