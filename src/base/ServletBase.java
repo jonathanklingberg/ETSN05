@@ -46,8 +46,8 @@ public class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			Statement stmt = conn.createStatement();		    
-		    ResultSet rs = stmt.executeQuery("select * from users"); 
-		    System.out.println("Successfully connected to database!"); // Success message	
+		    ResultSet rs = stmt.executeQuery("select * from users"); // Just for testing purposes
+		    System.out.println("Successfully connected to database!"); // Success message in console
 		    stmt.close();
 			
 		} catch (SQLException ex) {
@@ -99,6 +99,14 @@ public class ServletBase extends HttpServlet {
                        "<head><title> The Base Block System </title></head>" +
                        "<body>";
     	return intro;
+    }
+    
+    protected String getViewLayoutStart(){
+    	return "";
+    }
+    
+    protected String getViewLayoutSEnd(){
+    	return "";
     }
 
 }

@@ -72,11 +72,10 @@ public class LoginComponent extends ServletBase {
 			Statement stmt = conn.createStatement();		    
 		    ResultSet rs = stmt.executeQuery("select * from users"); 
 		    while (rs.next( ) && !userChecked) {
-		    	String nameSaved = rs.getString("name"); 
-		    	String passwordSaved = rs.getString("password");
-		    	int isActive = rs.getInt("is_active");
-		    	System.out.println("is_active: " + isActive);
+		    	String nameSaved = rs.getString("name");
 		    	if (name.equals(nameSaved)) {
+		    		String passwordSaved = rs.getString("password");
+		    		int isActive = rs.getInt("is_active");
 		    		userChecked = true;
 		    		if(password.equals(passwordSaved) && isActive == 1){
 	    				userOk = true;
@@ -124,6 +123,8 @@ public class LoginComponent extends ServletBase {
 	        		state = LOGIN_TRUE;
 	       			session.setAttribute("state", state);  // save the state in the session
 	       			session.setAttribute("name", name);  // save the name in the session
+//	       			This will be needed as soon as the database has been created.
+//	       			saveRoleToSession(session);
 	       			response.sendRedirect("functionality.html");
        		}
        		else {
@@ -135,6 +136,28 @@ public class LoginComponent extends ServletBase {
        	}
         
 		out.println("</body></html>");
+	}
+	
+	/**
+	 * Performa another sql query to fetch the role of logged in user and store this info to session.
+	 */
+	private void saveRoleToSession(HttpSession session) {	
+		try{
+			Statement stmt = conn.createStatement();		    
+		    ResultSet rs = stmt.executeQuery("select role from RolesInGroup where userid='+ userID +'"); 
+		    while (rs.next()) {
+		    	String role = rs.getString("role");
+		    	if (role == null && session.getAttribute("name") == "admin") { // admin role=null in db, need special handling
+		    		role = "admin";
+		    	}
+		    	session.setAttribute("role", role);
+		    }
+		    stmt.close();
+		} catch (SQLException ex) {
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
 	}
 
 	/**
