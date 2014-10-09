@@ -184,6 +184,33 @@ public class WorkspaceInstance {
 		return null;
 	}
 
+	
+	/**
+ 	* Retrieves all users from a specified project group
+ 	* 
+ 	*  @param id The id of the project group
+ 	* @return A list of all the project members in a given group,
+ 	* or an empty list if there are no members in the group.
+ 	*/
+	public synchronized ArrayList<User> getGroupMembers(long id){
+		ArrayList<User> membersList = new ArrayList<User>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				long userId = rs.getLong("id");
+				String username = rs.getString("userName");
+				String password = rs.getString("password");
+				String sessionId = rs.getString("sessionId");
+				String role = rs.getString("role");
+				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return membersList;
+	}
+	
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		return false;
 	}

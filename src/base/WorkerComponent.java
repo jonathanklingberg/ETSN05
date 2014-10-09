@@ -2,6 +2,7 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,11 +60,12 @@ public class WorkerComponent extends ServletBase {
 				out.println("<p>Group members</p>");
 				out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%>");
 				out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
-				out.println("<tr><td><CENTER><B>ROLE</B></CENTER></td>");
-//				for(int i = 0; i < groupMembers.length(); i++){
-//					out.println("<tr><td><CENTER>" + " "  + "</CENTER></td>");
-//					out.println("<tr><td><CENTER>" + " "  + "</CENTER></td>");
-//				}
+				out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
+				ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
+				for(int i = 0; i < groupMembers.size(); i++){
+					out.println("<tr><td><CENTER>" + " "  + "</CENTER></td>");
+					out.println("<td><CENTER>" + " "  + "</CENTER></td></tr>");
+				}
 				
 				
 			} else {
