@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import data.Roles;
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -101,7 +101,7 @@ public class WorkerComponent extends ServletBase {
 
 
 	@Override
-	protected Roles getRole() {
-		return Roles.Worker;
+	protected Role getRole() {
+		return Role.Worker;
 	}
 }

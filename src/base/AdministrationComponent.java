@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import data.Roles;
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 import database.ProjectGroup;
@@ -259,4 +259,17 @@ public class AdministrationComponent extends ServletBase {
 	protected String getUserTableHeading() {
 		return null;
 	}
+<<<<<<< HEAD
+=======
+
+	protected String generateUserTable() {
+		
+		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
+	}
+
+	protected Role getRole() {
+		return Role.Admin;
+	}
+
+>>>>>>> branch 'master' of https://github.com/jonathanklingberg/ETSN05.git
 }

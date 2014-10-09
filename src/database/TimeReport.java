@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import data.Roles;
+import data.Role;
 
 /**
  *	This class represents a Time report in the system, and thus
@@ -270,7 +270,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @param requestingUserRole A user in the system who wants to display this time report.
 	 * @return Returns the time report in HTML representation.
 	 */
-	public String toHTML(Roles requestingUserRole) {
+	public String toHTML(Role requestingUserRole) {
 		return null;
 	}
 	
