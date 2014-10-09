@@ -100,7 +100,7 @@ public class AdministrationComponent extends ServletBase {
 	// */
 	private boolean addUser(String name) {
 
-		return WorkspaceInstance.getInstance(conn).addUser(name,
+		return instance.addUser(name,
 				createPassword());
 		// try{
 
@@ -127,7 +127,7 @@ public class AdministrationComponent extends ServletBase {
 	// * @param name name of user to be deleted.
 	// */
 	private void deleteUser(String name) {
-		WorkspaceInstance.getInstance(conn).deleteUser(name);
+		instance.deleteUser(name);
 		// try{
 		// Statement stmt = conn.createStatement();
 		// String statement = "delete from users where name='" + name + "'";
