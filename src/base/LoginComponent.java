@@ -140,19 +140,23 @@ public class LoginComponent extends ServletBase {
 	}
 
 	// Never actually lists users, thus does not need a heading for such a table
-	protected String getUserTableHeading() {
+	protected String getUserTableName() {
 		return "";
 	}
 
 	//Never used
-	protected String generateUserTable() {
-		
+	protected String getUserTable() {		
 		return "";
 	}
-
-	//never used
-	protected Role getRole() {
-		return Role.Unspecified;
+	
+	//Never used
+	protected boolean isAdminOrProjectManager() {
+		return false;
+	}
+	
+	//Never used
+	protected boolean isAdmin() {
+		return false;
 	}
 	
 //	protected boolean setActive(String username){

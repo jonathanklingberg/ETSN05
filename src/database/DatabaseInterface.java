@@ -22,6 +22,7 @@ public abstract class DatabaseInterface {
 	 * @param requestingUserRole The user who wants to print the object in HTML.
 	 * @return  A HTML representation of the object.
 	 */
+	// It is suspected that this is not an awesome solution...
 	public abstract String toHTML(Role requestingUserRole);
 	
 	/**
