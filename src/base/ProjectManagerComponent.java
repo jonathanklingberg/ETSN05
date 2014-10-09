@@ -115,4 +115,8 @@ public class ProjectManagerComponent extends ServletBase {
 		return false;
 	}
 
+	protected boolean shouldPrintPasswordInUserTable() {
+		return false;
+	}
+
 }

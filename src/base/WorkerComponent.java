@@ -101,4 +101,8 @@ public class WorkerComponent extends ServletBase {
 		return false;
 	}
 
+	protected boolean shouldPrintPasswordInUserTable() {
+		return false;
+	}
+
 }

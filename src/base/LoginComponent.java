@@ -143,12 +143,15 @@ public class LoginComponent extends ServletBase {
 	}
 
 	//Never used
-	protected String getUserTable() {
-		
+	protected String getUserTable() {		
 		return "";
 	}
-
+	//Never used
 	protected boolean shouldPrintGroupNameInUserTable() {
+		return false;
+	}
+	//Never used
+	protected boolean shouldPrintPasswordInUserTable() {
 		return false;
 	}
 	

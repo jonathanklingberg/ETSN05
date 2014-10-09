@@ -136,9 +136,9 @@ public abstract class ServletBase extends HttpServlet {
 	    	out.println("<tr>");
 	    	out.println("<td>" + name + "</td>");
 	    	out.println(shouldPrintGroupNameInUserTable()? ("<td>" + group + "</td>") : "");
-//	    	out.println("<td>" + group + "</td>");
 	    	out.println("<td>" + role + "</td>");
-	    	out.println("<td>" + pw + "</td>");
+	    	out.println(shouldPrintPasswordInUserTable()? ("<td>" + group + "</td>") : "");
+//	    	out.println("<td>" + pw + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
@@ -146,6 +146,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</table>");
 	}
 
+	protected abstract boolean shouldPrintPasswordInUserTable();
 	protected abstract boolean shouldPrintGroupNameInUserTable();
 	protected abstract String getUserTable();
 	protected abstract String getUserTableHeading();

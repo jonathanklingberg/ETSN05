@@ -266,4 +266,8 @@ public class AdministrationComponent extends ServletBase {
 	protected boolean shouldPrintGroupNameInUserTable() {
 		return true;
 	}
+
+	protected boolean shouldPrintPasswordInUserTable() {
+		return true;
+	}
 }
