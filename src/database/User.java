@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import data.Roles;
+
 /**
  *	This class represents a User in the system, and thus
  *	contains methods which are applicable for users such
@@ -267,7 +269,7 @@ public class User extends DatabaseInterface {
 	 * @param user A user in the system who wants to display this user.
 	 * @return Returns the user in HTML representation.
 	 */
-	public String toHTML(User requestingUser) {
+	public String toHTML(Roles requestingUserRole) {
 		
 		//If the administrator asks password and everything 
 		//should be displayed and if a project worker asks
@@ -300,5 +302,4 @@ public class User extends DatabaseInterface {
 		return successfullyRemoved;
 	
 	}
-
 }

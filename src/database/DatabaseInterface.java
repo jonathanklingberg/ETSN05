@@ -2,6 +2,8 @@ package database;
 
 import java.sql.Connection;
 
+import data.Roles;
+
 /** 
  * A simple interface with two methods which all non-components 
  * classes will implement, thus all classes interacting with 
@@ -17,10 +19,10 @@ public abstract class DatabaseInterface {
 	 * Creates an HTML representation of the object depending on
 	 * what object and which user that asks for it
 	 * 
-	 * @param user The user who wants to print the object in HTML.
+	 * @param requestingUserRole The user who wants to print the object in HTML.
 	 * @return  A HTML representation of the object.
 	 */
-	public abstract String toHTML(User user);
+	public abstract String toHTML(Roles requestingUserRole);
 	
 	/**
 	 * Removes the object completely from the database. What actually

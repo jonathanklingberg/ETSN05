@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import data.Roles;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -122,6 +123,7 @@ public abstract class ServletBase extends HttpServlet {
 	    //out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
 		
 		for(int i = 0; i < userList.size(); i++) {
+			out.println(userList.get(i).toHTML(getRole()));
 	    	String name = userList.get(i).getName();
 	    	String pw = "null"; // users.get(i).getPassword();
 	    	String role = userList.get(i).getRole();
@@ -144,9 +146,7 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		out.println("</table>");
 	}
-
+	protected abstract Roles getRole();
 	protected abstract String generateUserTable();
-
 	protected abstract String getUserTableHeading();
-
 }

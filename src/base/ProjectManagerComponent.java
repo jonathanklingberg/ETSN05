@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import data.Roles;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -62,9 +63,7 @@ public class ProjectManagerComponent extends ServletBase {
 			    out.println("<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>");
 			    
 			    ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
-			    for(User user : usersInGroup) {
-			    	user.toHTML(instance.getUser(myName));
-			    }
+			    
 			    
 			    
 				
@@ -112,6 +111,11 @@ public class ProjectManagerComponent extends ServletBase {
 	protected String generateUserTable() {
 
 		return "<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>";
+	}
+
+	@Override
+	protected Roles getRole() {
+		return Roles.ProjectManager;
 	}
 
 }

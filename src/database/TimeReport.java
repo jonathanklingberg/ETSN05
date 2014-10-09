@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import data.Roles;
+
 /**
  *	This class represents a Time report in the system, and thus
  *	contains methods which are applicable for time reports such
@@ -245,10 +247,10 @@ public class TimeReport extends DatabaseInterface {
 	 * Will produce an HTML representation of the time report depending on the
 	 * user asking for it
 	 * 
-	 * @param user A user in the system who wants to display this time report.
+	 * @param requestingUserRole A user in the system who wants to display this time report.
 	 * @return Returns the time report in HTML representation.
 	 */
-	public String toHTML(User user) {
+	public String toHTML(Roles requestingUserRole) {
 		return null;
 	}
 	
