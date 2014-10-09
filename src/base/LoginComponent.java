@@ -154,6 +154,12 @@ public class LoginComponent extends ServletBase {
 	protected String getUserTableHeading() {
 		return "";
 	}
+
+	//Never used
+	protected String generateUserTable() {
+		
+		return "";
+	}
 	
 //	protected boolean setActive(String username){
 //    	boolean resultOk = true;

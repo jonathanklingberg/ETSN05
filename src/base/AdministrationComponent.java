@@ -261,4 +261,12 @@ public class AdministrationComponent extends ServletBase {
 		return "<p>System users:</p>";
 	}
 
+
+
+	@Override
+	protected String generateUserTable() {
+		
+		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
+	}
+
 }

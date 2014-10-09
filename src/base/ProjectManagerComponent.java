@@ -108,4 +108,10 @@ public class ProjectManagerComponent extends ServletBase {
 		return 	"<p>Members in project:</p>";
 	}
 
+	@Override
+	protected String generateUserTable() {
+
+		return "<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>";
+	}
+
 }

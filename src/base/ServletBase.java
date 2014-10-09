@@ -118,11 +118,12 @@ public abstract class ServletBase extends HttpServlet {
 	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableHeading());
 	    out.println("<table border=" + formElement("1") + ">");
-	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
+	    out.println(generateUserTable());
+	    //out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
 		
 		for(int i = 0; i < userList.size(); i++) {
 	    	String name = userList.get(i).getName();
-	    	String pw = "null"; // users.get(i).password();
+	    	String pw = "null"; // users.get(i).getPassword();
 	    	String role = userList.get(i).getRole();
 	    	String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
 	    	String editURL = "administrationcomponent?edituser="+name;
@@ -143,6 +144,8 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		out.println("</table>");
 	}
+
+	protected abstract String generateUserTable();
 
 	protected abstract String getUserTableHeading();
 
