@@ -63,8 +63,8 @@ public class ProjectManagerComponent extends ServletBase {
 			    out.println("<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>");
 			    
 			    ArrayList<User> usersInGroup = WorkspaceInstance.getInstance(conn).getUsersInGroup(groupId);
-			    for(User u : usersInGroup) {
-			    	
+			    for(User user : usersInGroup) {
+			    	//user.toHTML();
 			    }
 			    
 			    

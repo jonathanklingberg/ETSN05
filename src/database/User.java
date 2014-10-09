@@ -267,7 +267,7 @@ public class User extends DatabaseInterface {
 	 * @param user A user in the system who wants to display this user.
 	 * @return Returns the user in HTML representation.
 	 */
-	public String toHTML(User user) {
+	public String toHTML(User requestingUser) {
 		//If the administrator asks password and everything 
 		//should be displayed and if a project worker asks
 		//not that much should be displayed etc..
