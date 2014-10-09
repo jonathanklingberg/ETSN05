@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
  * 
  */
 
+
 public class WorkspaceInstance {
 	private static WorkspaceInstance instance = null;
 	private static Connection conn;
