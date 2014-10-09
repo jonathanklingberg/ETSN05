@@ -254,4 +254,11 @@ public class AdministrationComponent extends ServletBase {
 		out.print("<script>" + code + "</script>");
 	}
 
+
+
+	@Override
+	protected String getUserTableHeading() {
+		return "<p>System users:</p>";
+	}
+
 }

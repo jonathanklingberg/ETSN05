@@ -149,6 +149,11 @@ public class LoginComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+
+	// Never actually lists users, thus does not need a heading for such a table
+	protected String getUserTableHeading() {
+		return "";
+	}
 	
 //	protected boolean setActive(String username){
 //    	boolean resultOk = true;

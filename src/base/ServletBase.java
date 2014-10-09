@@ -31,7 +31,7 @@ import database.WorkspaceInstance;
  *  @version 1.0
  *  
  */
-public class ServletBase extends HttpServlet {
+public abstract class ServletBase extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -116,7 +116,7 @@ public class ServletBase extends HttpServlet {
     }
 
 	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
-		out.println("<p>Registered users:</p>");
+		out.println(getUserTableHeading());
 	    out.println("<table border=" + formElement("1") + ">");
 	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
 		
@@ -143,5 +143,7 @@ public class ServletBase extends HttpServlet {
 		}
 		out.println("</table>");
 	}
+
+	protected abstract String getUserTableHeading();
 
 }
