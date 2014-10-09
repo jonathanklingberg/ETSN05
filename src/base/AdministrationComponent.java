@@ -259,8 +259,6 @@ public class AdministrationComponent extends ServletBase {
 	protected String getUserTableHeading() {
 		return null;
 	}
-<<<<<<< HEAD
-=======
 
 	protected String generateUserTable() {
 		
@@ -270,6 +268,4 @@ public class AdministrationComponent extends ServletBase {
 	protected Role getRole() {
 		return Role.Admin;
 	}
-
->>>>>>> branch 'master' of https://github.com/jonathanklingberg/ETSN05.git
 }

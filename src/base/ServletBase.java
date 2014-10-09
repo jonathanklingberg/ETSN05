@@ -115,9 +115,7 @@ public abstract class ServletBase extends HttpServlet {
     protected String getViewLayoutSEnd(){
     	return "";
     }
-
-<<<<<<< HEAD
-=======
+    
 	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableHeading());
 	    out.println("<table border=" + formElement("1") + ">");
@@ -150,7 +148,6 @@ public abstract class ServletBase extends HttpServlet {
 	}
 	protected abstract Role getRole();
 	protected abstract String generateUserTable();
->>>>>>> branch 'master' of https://github.com/jonathanklingberg/ETSN05.git
 	protected abstract String getUserTableHeading();
 
 }
