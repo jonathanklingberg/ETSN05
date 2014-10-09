@@ -116,14 +116,12 @@ public abstract class ServletBase extends HttpServlet {
     	return "";
     }
     
+    // Print User Table according to 
 	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableHeading());
 	    out.println("<table border=" + formElement("1") + ">");
-	    out.println(generateUserTable());
-	    //out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
-		
-		for(int i = 0; i < userList.size(); i++) {
-			out.println(userList.get(i).toHTML(getRole()));
+	    out.println(getUserTable());		
+		for(int i = 0; i < userList.size(); i++) {			
 	    	String name = userList.get(i).getName();
 	    	String pw = "null"; // users.get(i).getPassword();
 	    	String role = userList.get(i).getRole();
@@ -137,7 +135,8 @@ public abstract class ServletBase extends HttpServlet {
 	    	}
 	    	out.println("<tr>");
 	    	out.println("<td>" + name + "</td>");
-	    	out.println("<td>" + group + "</td>");
+	    	out.println(shouldPrintGroupNameInUserTable()? ("<td>" + group + "</td>") : "");
+//	    	out.println("<td>" + group + "</td>");
 	    	out.println("<td>" + role + "</td>");
 	    	out.println("<td>" + pw + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
@@ -146,8 +145,9 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		out.println("</table>");
 	}
-	protected abstract Role getRole();
-	protected abstract String generateUserTable();
+
+	protected abstract boolean shouldPrintGroupNameInUserTable();
+	protected abstract String getUserTable();
 	protected abstract String getUserTableHeading();
 
 }

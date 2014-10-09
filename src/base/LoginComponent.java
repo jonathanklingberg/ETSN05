@@ -143,14 +143,13 @@ public class LoginComponent extends ServletBase {
 	}
 
 	//Never used
-	protected String generateUserTable() {
+	protected String getUserTable() {
 		
 		return "";
 	}
 
-	//never used
-	protected Role getRole() {
-		return Role.Unspecified;
+	protected boolean shouldPrintGroupNameInUserTable() {
+		return false;
 	}
 	
 //	protected boolean setActive(String username){

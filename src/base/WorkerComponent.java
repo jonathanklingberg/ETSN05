@@ -79,7 +79,6 @@ public class WorkerComponent extends ServletBase {
 			}
 		}
 	}
-	
 
 	 /**
 	  * Handles input from the worker and displays information. 
@@ -90,23 +89,16 @@ public class WorkerComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
 
-
-	@Override
-	protected String getUserTableHeading() {
-		
+	protected String getUserTableHeading() {		
 		return "<p>Members in project:</p>";
 	}
 
-
-	@Override
-	protected String generateUserTable() {
-		
+	protected String getUserTable() {		
 		return "<tr><td>Name</td><td>Role</td></tr>";
 	}
 
-
-	@Override
-	protected Role getRole() {
-		return Role.Worker;
+	protected boolean shouldPrintGroupNameInUserTable() {
+		return false;
 	}
+
 }

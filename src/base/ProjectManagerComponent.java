@@ -101,21 +101,18 @@ public class ProjectManagerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	@Override
 	protected String getUserTableHeading() {
 		
 		return 	"<p>Members in project:</p>";
 	}
 
-	@Override
-	protected String generateUserTable() {
+	protected String getUserTable() {
 
 		return "<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>";
 	}
 
-	@Override
-	protected Role getRole() {
-		return Role.ProjectManager;
+	protected boolean shouldPrintGroupNameInUserTable() {
+		return false;
 	}
 
 }
