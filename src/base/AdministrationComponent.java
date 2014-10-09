@@ -2,10 +2,6 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import database.User;
 import database.WorkspaceInstance;
-import java.util.ArrayList;
 import database.ProjectGroup;
+
 import java.util.List;
 import java.util.Random;
 
@@ -36,7 +31,6 @@ public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
 
-	private WorkspaceInstance instance = WorkspaceInstance.getInstance(conn);
        
 //    /**
 //     * generates a form for adding new users
@@ -106,7 +100,7 @@ public class AdministrationComponent extends ServletBase {
 	// */
 	private boolean addUser(String name) {
 
-		return WorkspaceInstance.getInstance(conn).addUser(name,
+		return instance.addUser(name,
 				createPassword());
 		// try{
 
@@ -133,7 +127,7 @@ public class AdministrationComponent extends ServletBase {
 	// * @param name name of user to be deleted.
 	// */
 	private void deleteUser(String name) {
-		WorkspaceInstance.getInstance(conn).deleteUser(name);
+		instance.deleteUser(name);
 		// try{
 		// Statement stmt = conn.createStatement();
 		// String statement = "delete from users where name='" + name + "'";
@@ -220,42 +214,14 @@ public class AdministrationComponent extends ServletBase {
 				if(deleteUser != null) {
 					instance.getUser(deleteUser).removeMe();
 				}
-//				listUsers(out);
+				List<User> users = instance.getUsers();
+//				listUsers(out, users);
 				listGroups(out);
 				out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 				out.println("</body></html>");
 			} else  // name not admin
 				response.sendRedirect("functionality.html");	
 		}
-	
-	public void listUsers(PrintWriter out) {
-		out.println("<p>Registered users:</p>");
-	    out.println("<table border=" + formElement("1") + ">");
-	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
-		List<User> users = instance.getUsers();
-		for(int i = 0; i < users.size(); i++) {
-	    	String name = users.get(i).getName();
-	    	String pw = "null"; // users.get(i).password();
-	    	String role = users.get(i).getRole();
-	    	String group = instance.getProjectGroup(users.get(i).getGroupId()).getProjectName();
-	    	String editURL = "administrationcomponent?edituser="+name;
-	    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
-	    	String deleteURL = "administrationcomponent?deleteuser="+name;
-	    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-	    	if (name.equals("admin")){
-	    		deleteCode = "";
-	    	}
-	    	out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
-	    	out.println("<td>" + group + "</td>");
-	    	out.println("<td>" + role + "</td>");
-	    	out.println("<td>" + pw + "</td>");
-	    	out.println("<td>" + editCode + "</td>");
-	    	out.println("<td>" + deleteCode + "</td>");
-	    	out.println("</tr>");
-		}
-		out.println("</table>");
-	}
 	
 	public void listGroups(PrintWriter out) { 
 		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
@@ -286,6 +252,13 @@ public class AdministrationComponent extends ServletBase {
 	
 	private void script(PrintWriter out, String code){
 		out.print("<script>" + code + "</script>");
+	}
+
+
+
+	@Override
+	protected String getUserTableHeading() {
+		return "<p>System users:</p>";
 	}
 
 }

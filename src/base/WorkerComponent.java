@@ -83,4 +83,11 @@ public class WorkerComponent extends ServletBase {
 	  */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
+
+
+	@Override
+	protected String getUserTableHeading() {
+		
+		return "<p>Members in project:</p>";
+	}
 }
