@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -159,9 +160,9 @@ public class WorkspaceInstance {
 			rs.next();
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
-//			String sessionId = rs.getString("sessionId");
-			HttpSession session;
-			String sessionId = session.getId();
+			String sessionId = rs.getString("sessionId");
+//			HttpSession session = request.getSession(true);
+//			String sessionId = session.getId();
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			rs = ps.executeQuery();
 			rs.next();
@@ -169,7 +170,7 @@ public class WorkspaceInstance {
 			String role = rs.getString("role");
 			System.out.println("groupId:" + groupId);
 			System.out.println("role:" + role);
-			
+			ps.close();
 			return new User(conn, userName, password, id, groupId, role, sessionId);
 		}catch (SQLException e) {
 			e.printStackTrace();

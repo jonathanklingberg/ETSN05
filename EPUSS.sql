@@ -66,7 +66,7 @@ INSERT INTO Roles VALUES('Admin');
 -- Create AdminGroup
 INSERT INTO ProjectGroups (id, groupName) VALUES ('', 'AdminGroup');
 -- Add admin to RoleInGroup
-INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', '1', '1', 'Admin', 1);
+INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', 1, 1, 'Admin');
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);
