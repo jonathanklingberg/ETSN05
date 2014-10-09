@@ -52,7 +52,7 @@ public class LoginComponent extends ServletBase {
     	String html = "<p>Please enter your name and password in order to log in:</p>";
     	html += "<p> <form name=" + formElement("input");
     	html += " method=" + formElement("post");
-    	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("user") + '>'; 
+    	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("userName") + '>'; 
     	html += "<p> Password: <input type=" + formElement("password") + " name=" + formElement("password") + '>';  
     	html += "<p> <input type=" + formElement("submit") + "value=" + formElement("Submit") + '>';
     	return html;
@@ -121,13 +121,18 @@ public class LoginComponent extends ServletBase {
 			out.println("<p>You are now logged out</p>");
 		}
 		
-		name = request.getParameter("user"); // get the string that the user entered in the form
+		name = request.getParameter("userName"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
+        
+        System.out.println("User:" + name);
+        System.out.println("password:" + password);
         if (name != null && password != null) {
         	if (checkUser(name, password)) {
 	        		state = LOGIN_TRUE;
 	       			session.setAttribute("state", state);  // save the state in the session
 	       			session.setAttribute("name", name);  // save the name in the session
+//	       			This will be needed as soon as the database has been created.
+//	       			saveRoleToSession(session);
 	       			response.sendRedirect("functionality.html");
        		}
        		else {
@@ -139,6 +144,28 @@ public class LoginComponent extends ServletBase {
        	}
         
 		out.println("</body></html>");
+	}
+	
+	/**
+	 * Performa another sql query to fetch the role of logged in user and store this info to session.
+	 */
+	private void saveRoleToSession(HttpSession session) {	
+		try{
+			Statement stmt = conn.createStatement();		    
+		    ResultSet rs = stmt.executeQuery("select role from RolesInGroup where userid='+ userID +'"); 
+		    while (rs.next()) {
+		    	String role = rs.getString("role");
+		    	if (role == null && session.getAttribute("name") == "admin") { // admin role=null in db, need special handling
+		    		role = "admin";
+		    	}
+		    	session.setAttribute("role", role);
+		    }
+		    stmt.close();
+		} catch (SQLException ex) {
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		}
 	}
 
 	/**
