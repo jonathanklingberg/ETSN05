@@ -38,17 +38,18 @@ public class WorkspaceInstance {
 		WorkspaceInstance.conn = conn;
 		//Food for thought: Will this connection live on forever,
 		//or will it be closed when the session of the user who created is
-		//is closed? If so, there might be a need for a redesign, or setConnection
+		// is closed? If so, there might be a need for a redesign, or
+		// setConnection
 		//method
 	}
 	   
 	/**
-	 * Typical singleton method in order to retrieve the
-	 * instance of the object
+	 * Typical singleton method in order to retrieve the instance of the object
 	 * 
-	 * @param conn A connection to the database
-	 * @return The WorkspaceInstance which will be the same
-	 * in the entire system.
+	 * @param conn
+	 *            A connection to the database
+	 * @return The WorkspaceInstance which will be the same in the entire
+	 *         system.
 	 */
 	public static WorkspaceInstance getInstance(Connection conn) {  
 		if(instance == null) {
@@ -73,6 +74,8 @@ public class WorkspaceInstance {
 				long id = rs.getLong("id");
 				String groupName = rs.getString("groupName");
 				pgList.add(new ProjectGroup(conn, id, groupName));
+				ps.close();
+				rs.close();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -85,7 +88,8 @@ public class WorkspaceInstance {
 	/**
 	 * Adds a project group to the database
 	 * 
-	 * @param projectGroup The project group to add to the database.
+	 * @param projectGroup
+	 *            The project group to add to the database.
 	 * @return True if the project group is successfully added to the database,
 	 * otherwise false
 	 */
@@ -95,6 +99,7 @@ public class WorkspaceInstance {
 			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(groupName) VALUES ('" + projectGroup.name + "')" );
 			ps.executeUpdate();
 			wasAdded = true;
+			ps.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,9 +110,10 @@ public class WorkspaceInstance {
 	/**
 	 * Adds a user to the database
 	 * 
-	 * @param user The user to be added to the database
-	 * @return True if the user is successfully added to the database,
-	 * otherwise false
+	 * @param user
+	 *            The user to be added to the database
+	 * @return True if the user is successfully added to the database, otherwise
+	 *         false
 	 */
 	public synchronized boolean addUser(User user) {
 		//Since the user will contain the group id as well,
@@ -125,6 +131,7 @@ public class WorkspaceInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(id, userName, password, sessionId) VALUES('', '" + user.getName() + "', '" + user.getPassword() + "', '" + user.getSessionId() + "')" );
 			ps.executeUpdate();
+			ps.close();
 			wasAdded = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -137,20 +144,46 @@ public class WorkspaceInstance {
 	/**
 	 * Retrieves all users in the database
 	 * 
-	 * @return A list of all users in the database, or an empty list
-	 * if no users exist in the system.
+	 * @return A list of all users in the database, or an empty list if no users
+	 *         exist in the system.
 	 */
-	public synchronized List<User> getUsers() {
-		return null;
+	public synchronized ArrayList<User> getUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup order by name asc");
+			ResultSet rs = ps.executeQuery();
+			ArrayList<Long> idList = new ArrayList<Long>();
+			ArrayList<String> roleList = new ArrayList<String>();
+			ArrayList<Long> groupIdList = new ArrayList<Long>();
+			while (rs.next()) {
+				idList.add(rs.getLong("userId"));
+				roleList.add(rs.getString("role"));
+				groupIdList.add(rs.getLong("groupId"));
+			}
+			for (int i = 0; i < idList.size(); i++) {
+				rs = ps.executeQuery("select * from Users order by name asc where id="+ idList.get(i));
+				rs.next();
+				String name = rs.getString("userName");
+				String password = rs.getString("password");
+				String role = roleList.get(i);
+				long groupId = groupIdList.get(i);
+				users.add(new User(name, password, role, groupId));				
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.err.println(e);
+		}		
+		return users;
 	}
 	
 	/** 
 	 * Retrieves a specific user from the database
 	 * 
-	 * @param userName The username of the user that should be
-	 * fetched from the database
-	 * @return The user if it is found in the database, otherwise
-	 * null
+	 * @param userName
+	 *            The username of the user that should be fetched from the
+	 *            database
+	 * @return The user if it is found in the database, otherwise null
 	 */
 	public synchronized User getUser(String userName) {
 		try {
@@ -183,9 +216,10 @@ public class WorkspaceInstance {
 	/**
 	 * Retrieves a specific project group from the database
 	 * 
-	 * @param id The id of the project group to retrieve
-	 * @return The project group that maps to id in the database, or 
-	 * null if no such project group is found
+	 * @param id
+	 *            The id of the project group to retrieve
+	 * @return The project group that maps to id in the database, or null if no
+	 *         such project group is found
 	 */
 	public synchronized ProjectGroup getProjectGroup(long id) {
 		return null;
@@ -222,18 +256,21 @@ public class WorkspaceInstance {
 		return false;
 	}
 
-	public boolean userIsProjectManager(String name) {
+	public boolean userIsProjectManager(String userName) {
 		boolean isManager = false;
 		try {
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			PreparedStatement ps = conn.prepareStatement("select * from Users where userName='"
+					+ userName + "'");
+			ResultSet rs = ps.executeQuery();
 			rs.next();
-			long id = rs.getLong("id");
-			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			long userId = rs.getLong("id");
+			rs = ps.executeQuery("select * from RoleInGroup where userId='"
+					+ userId + "'");
 			rs.next();
 			String role = rs.getString("role");
 			isManager = role.equals("Project manager");	
-			stmt.close();
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}		
@@ -244,12 +281,10 @@ public class WorkspaceInstance {
 		boolean resultOK = false;
 	
 		try{
-		Statement stmt = conn.createStatement();
-		String statement = "insert into Users (name, password) values('" + name
-				+ "', '" + password + "')";
-		System.out.println(statement);
-		stmt.executeUpdate(statement);
-		stmt.close();
+			PreparedStatement ps = conn.prepareStatement("insert into users (name, password) values('"
+					+ name + "', '" + password + "')");
+			ps.executeUpdate();
+			ps.close();
 		resultOK = true;
 		} catch (SQLException ex) {
 			resultOK = false;
@@ -262,11 +297,9 @@ public class WorkspaceInstance {
 
 	public void deleteUser(String name) {
 		try{
-			Statement stmt = conn.createStatement();
-			String statement = "delete from Users where name='" + name + "'"; 
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
+			PreparedStatement ps = conn.prepareStatement("delete from users where name='" + name + "'");
+			ps.executeUpdate();
+			ps.close();
 			} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
@@ -278,11 +311,10 @@ public class WorkspaceInstance {
 	public boolean inactivateUser(String name) {
 		boolean resultOk = true;
 		try{
-			Statement stmt = conn.createStatement();
-			String statement = "update Users set is_active = 0 where name = '" + name + "'";
-			System.out.println(statement);
-		    stmt.executeUpdate(statement); 
-		    stmt.close();
+			PreparedStatement ps = conn.prepareStatement("update users set is_active = 0 where name = '"
+					+ name + "'");
+			ps.executeUpdate();
+			ps.close();
 		} catch (SQLException ex) {
 		    resultOk = false;
 		    // System.out.println("SQLException: " + ex.getMessage());
@@ -309,14 +341,17 @@ public class WorkspaceInstance {
 	public long getGroupIdOfUser(String name) {
 		long groupId = 0;
 		try {
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from Users where name='"+name +"'");
+			PreparedStatement ps = conn.prepareStatement("select * from Users where name='"
+					+ name + "'");
+			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
-			rs = stmt.executeQuery("select * from RoleInGroup where name='"+name +"'");
+			rs = ps.executeQuery("select * from RoleInGroup where name='"
+					+ name + "'");
 			rs.next();
 			groupId = rs.getLong("groupId");
-			stmt.close();
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}		
@@ -326,17 +361,30 @@ public class WorkspaceInstance {
 	public String getProjectName(long groupId) {
 		String groupName = "";
 		try {
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from ProjectGroups where id='"+groupId +"'");
+			PreparedStatement ps = conn.prepareStatement("select * from ProjectGroups where id='"
+					+ groupId + "'");
+			ResultSet rs = ps.executeQuery();
 			rs.next();	
 			rs.getString("groupName");
-			stmt.close();
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}				
 		return groupName;
 	}
 	
+	public ArrayList<User> getUsersInGroup(long groupId) {
+		ArrayList<User> usersInGroup = new ArrayList<User>();
+		for(User u : getUsers()) {
+			if(u.getGroupId() == groupId)
+			{
+				usersInGroup.add(u);
+			}
+		}
+		return usersInGroup;
+	}
+
 //	/**
 //	 * Method for generating the overall structure for the different
 //	 * component classes. Will typically differ depending on the user who
@@ -369,9 +417,11 @@ public class WorkspaceInstance {
 //		//the administrator page. But as stated earlier, this is kind of
 //		//ugly so there might be a better way to solve it!
 //		
-//		//Moreover the setRole(ProjectManager) for the administrator object should not
+	// //Moreover the setRole(ProjectManager) for the administrator object
+	// should not
 //		//have any effect on the database, thus a control needs to be done in
-//		//setRole which checks if it is the administrator who the role is set for,
+	// //setRole which checks if it is the administrator who the role is set
+	// for,
 //		//if so, just set the attribute internally for the class, but do not
 //		//update the database.	
 //		

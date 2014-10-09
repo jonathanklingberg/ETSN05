@@ -1,7 +1,5 @@
 package base;
 
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
@@ -15,38 +13,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import database.ProjectGroup;
+
 import database.User;
 import database.WorkspaceInstance;
-
+import java.util.ArrayList;
+import database.ProjectGroup;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Servlet implementation class Administration. 
- * Constructs a page for administration purpose. 
- * Checks first if the user is logged in and then if it is the administrator. 
- * The validation whether a user is allowed to perform a specific 
- * action should be carried out in this class, whereas the format
- * on the input should not be taken care of here.
+ * Servlet implementation class Administration. Constructs a page for
+ * administration purpose. Checks first if the user is logged in and then if it
+ * is the administrator. The validation whether a user is allowed to perform a
+ * specific action should be carried out in this class, whereas the format on
+ * the input should not be taken care of here.
  * 
- *  @author SG
- *  @version 0.2
+ * @author SG
+ * @version 0.2
  */
 @WebServlet("/administrationcomponent")
 public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
+
 	private WorkspaceInstance instance = WorkspaceInstance.getInstance(conn);
        
-    /**
-     * @see ServletBase#ServletBase()
-     */
-    public AdministrationComponent() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
 //    /**
 //     * generates a form for adding new users
 //     * @return HTML code for the form
@@ -60,80 +51,121 @@ public class AdministrationComponent extends ServletBase {
     	html += "</form>";
     	return html;
     }
-    
-//    /**
-//     * Checks if a username corresponds to the requirements for user names. 
-//     * @param name The investigated username
-//     * @return True if the username corresponds to the requirements
-//     */
-    private boolean checkNewName(String name) {
-    	int length = name.length();
-    	boolean ok = (length>=5 && length<=10);
-    	if (ok)
-    		for (int i=0; i<length; i++) {
-    			int ci = (int)name.charAt(i);
-    			boolean thisOk = ((ci>=48 && ci<=57) || 
-    					          (ci>=65 && ci<=90) ||
-    					          (ci>=97 && ci<=122));
-    			//String extra = (thisOk ? "OK" : "notOK");
-    			//System.out.println("bokst:" + name.charAt(i) + " " + (int)name.charAt(i) + " " + extra);
-    			ok = ok && thisOk;
-    		}    	
-    	return ok;
-    }
-    
-//    /**
-//     * Creates a random password.
-//     * @return a randomly chosen password
-//     */
-    private String createPassword() {
-    	String result = "";
-    	Random r = new Random();
-    	for (int i=0; i<PASSWORD_LENGTH; i++)
-    		result += (char)(r.nextInt(26)+97); // 122-97+1=26
-    	return result;
-    }
-    
-    
-//    /**
-//     * Adds a user and a randomly generated password to the database.
-//     * @param name Name to be added
-//     * @return true if it was possible to add the name. False if it was not, e.g. 
-//     * because the name already exist in the database. 
-//     */
-    private boolean addUser(String name) {
-    	
-    	return WorkspaceInstance.getInstance(conn)
-    			.addUser(name, createPassword());  	
-    }
-    
 
-//    /**
-//     * Deletes a user from the database. 
-//     * If the user does not exist in the database nothing happens. 
-//     * @param name name of user to be deleted. 
-//     */
-    private void deleteUser(String name) {
-    	WorkspaceInstance.getInstance(conn)
-    			.deleteUser(name);
-    }
 
 
 	/**
-	 * Handles input from the administrator and displays information for administration. 
+	 * @see ServletBase#ServletBase()
+	 */
+	public AdministrationComponent() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	// /**
+	// * Checks if a username corresponds to the requirements for user names.
+	// * @param name The investigated username
+	// * @return True if the username corresponds to the requirements
+	// */
+	private boolean checkNewName(String name) {
+		int length = name.length();
+		boolean ok = (length >= 5 && length <= 10);
+		if (ok)
+			for (int i = 0; i < length; i++) {
+				int ci = (int) name.charAt(i);
+				boolean thisOk = ((ci >= 48 && ci <= 57)
+						|| (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
+				// String extra = (thisOk ? "OK" : "notOK");
+				// System.out.println("bokst:" + name.charAt(i) + " " +
+				// (int)name.charAt(i) + " " + extra);
+				ok = ok && thisOk;
+			}
+		return ok;
+	}
+
+	// /**
+	// * Creates a random password.
+	// * @return a randomly chosen password
+	// */
+	private String createPassword() {
+		String result = "";
+		Random r = new Random();
+		for (int i = 0; i < PASSWORD_LENGTH; i++)
+			result += (char) (r.nextInt(26) + 97); // 122-97+1=26
+		return result;
+	}
+
+	// /**
+	// * Adds a user and a randomly generated password to the database.
+	// * @param name Name to be added
+	// * @return true if it was possible to add the name. False if it was not,
+	// e.g.
+	// * because the name already exist in the database.
+	// */
+	private boolean addUser(String name) {
+
+		return WorkspaceInstance.getInstance(conn).addUser(name,
+				createPassword());
+		// try{
+
+		// Statement stmt = conn.createStatement();
+		// String statement = "insert into users (name, password) values('" +
+		// name + "', '" +
+		// createPassword() + "')";
+		// System.out.println(statement);
+		// stmt.executeUpdate(statement);
+		// stmt.close();
+
+		// } catch (SQLException ex) {
+		// resultOk = false;
+		// System.out.println("SQLException: " + ex.getMessage());
+		// System.out.println("SQLState: " + ex.getSQLState());
+		// System.out.println("VendorError: " + ex.getErrorCode());
+		// }
+
+	}
+
+	// /**
+	// * Deletes a user from the database.
+	// * If the user does not exist in the database nothing happens.
+	// * @param name name of user to be deleted.
+	// */
+	private void deleteUser(String name) {
+		WorkspaceInstance.getInstance(conn).deleteUser(name);
+		// try{
+		// Statement stmt = conn.createStatement();
+		// String statement = "delete from users where name='" + name + "'";
+		// System.out.println(statement);
+		// stmt.executeUpdate(statement);
+		// stmt.close();
+		//
+		// } catch (SQLException ex) {
+		// System.out.println("SQLException: " + ex.getMessage());
+		// System.out.println("SQLState: " + ex.getSQLState());
+		// System.out.println("VendorError: " + ex.getErrorCode());
+		// }
+	}
+
+	/**
+	 * Handles input from the administrator and displays information for
+	 * administration.
 	 * 
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
-		
+
 		String myName = "";
-    	HttpSession session = request.getSession(true);
-    	Object nameObj = session.getAttribute("name");
-    	if (nameObj != null){
-    		myName = (String)nameObj;  // if the name exists typecast the name to a string
-    	}
-    	System.out.println("MyName: "+ myName);
+		HttpSession session = request.getSession(true);
+		Object nameObj = session.getAttribute("name");
+		if (nameObj != null) {
+			myName = (String) nameObj; // if the name exists typecast the name
+										// to a string
+		}
+		System.out.println("MyName: " + myName);
 		// check that the user is logged in
 		if (!isLoggedIn(request))
 			response.sendRedirect("logincomponent");
