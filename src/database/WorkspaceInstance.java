@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -154,33 +155,30 @@ public class WorkspaceInstance {
 	public synchronized User getUser(String userName) {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName = '" + userName + "'");
+//			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
 			String sessionId = rs.getString("sessionId");
-			HttpSession session;
-			String sessionId = session.getId();
+//			HttpSession session = request.getSession(true);
+//			String sessionId = session.getId();
 			
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			rs = ps.executeQuery();
-			if(rs.next()) {
-				long groupId = rs.getLong("groupId");
-				String role = rs.getString("role");
-				System.out.println("groupId:" + groupId);
-				System.out.println("role:" + role);
-				return new User(conn, userName, password, id, groupId, role, sessionId);
-			}
-			return new User(conn, userName, password, id, 0, "", sessionId); 
+			rs.next();
+			long groupId = rs.getLong("groupId");
+			String role = rs.getString("role");
+			System.out.println("groupId:" + groupId);
+			System.out.println("role:" + role);
+			ps.close();
+			return new User(conn, userName, password, id, groupId, role, sessionId);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;	
 		
-		}//			String sessionId = rs.getString("sessionId");
-			HttpSession session;
-			String sessionId = session.getId();
-
+		}
 
 	/**
 	 * Retrieves a specific project group from the database

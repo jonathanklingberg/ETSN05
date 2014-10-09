@@ -63,10 +63,10 @@ public class WorkerComponent extends ServletBase {
 				out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
 				ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
 				for(int i = 0; i < groupMembers.size(); i++){
-					out.println("<tr><td><CENTER>" + " "  + "</CENTER></td>");
-					out.println("<td><CENTER>" + " "  + "</CENTER></td></tr>");
+					out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
+					out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
 				}
-				
+				out.println("</table>");
 				
 			} else {
 					

@@ -7,4 +7,4 @@ package data;
  * @version 0.2
  *
  */
-public enum Roles { SystemArchitect, Developer, Tester, ProjectManager, Unspecified };
+public enum Roles { SystemArchitect, Developer, Tester, ProjectManager, Unspecified, Admin};

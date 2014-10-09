@@ -1,6 +1,10 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +69,23 @@ public class ProjectGroup extends DatabaseInterface {
 		//and "RoleInGroup", and select that the
 		//"activeInGroup" is yes, and project id is the id given
 		//in this class
-		return null;
+		ArrayList<User> membersList = new ArrayList<User>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role "
+					+ "FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id + " AND Users.isActive = 1");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				long userId = rs.getLong("id");
+				String username = rs.getString("userName");
+				String password = rs.getString("password");
+				String sessionId = rs.getString("sessionId");
+				String role = rs.getString("role");
+				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return membersList;
 	}
 	
 	
@@ -77,7 +97,24 @@ public class ProjectGroup extends DatabaseInterface {
 	 * are yet available
 	 */
 	public List<TimeReport> getTimeReports() {
-		return new ArrayList<TimeReport>();
+		ArrayList<TimeReport> timeReportList = new ArrayList<TimeReport>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from TimeReports where groupId =" + id);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				long reportId = rs.getLong("id");
+				long userId = rs.getLong("userId");
+				long type = rs.getLong("type");
+				long duration = rs.getLong("duration");
+				long week = rs.getLong("week");
+				Date date = rs.getDate("date");
+				boolean signed = rs.getBoolean("signed");		
+				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return timeReportList;
 	}
 	
 	/**
@@ -88,11 +125,25 @@ public class ProjectGroup extends DatabaseInterface {
 	 * @return The time report if it exists, otherwise null
 	 */
 	public TimeReport getTimeReport(long reportId) {
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from TimeReports where id =" + reportId);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long userId = rs.getLong("userId");
+			long type = rs.getLong("type");
+			long duration = rs.getLong("duration");
+			long week = rs.getLong("week");
+			Date date = rs.getDate("date");
+			boolean signed = rs.getBoolean("signed");		
+			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
 	public long getId() {
-		return -1;
+		return id;
 	}
 	
 	/**
