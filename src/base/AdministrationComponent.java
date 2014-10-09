@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.User;
 import database.WorkspaceInstance;
 import database.ProjectGroup;
 
@@ -213,7 +214,8 @@ public class AdministrationComponent extends ServletBase {
 				if(deleteUser != null) {
 					instance.getUser(deleteUser).removeMe();
 				}
-//				listUsers(out);
+				List<User> users = instance.getUsers();
+//				listUsers(out, users);
 				listGroups(out);
 				out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 				out.println("</body></html>");

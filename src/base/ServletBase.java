@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -114,16 +115,16 @@ public class ServletBase extends HttpServlet {
     	return "";
     }
 
-	protected void listUsers(PrintWriter out) {
+	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
 		out.println("<p>Registered users:</p>");
 	    out.println("<table border=" + formElement("1") + ">");
 	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
-		List<User> users = instance.getUsers();
-		for(int i = 0; i < users.size(); i++) {
-	    	String name = users.get(i).getName();
+		
+		for(int i = 0; i < userList.size(); i++) {
+	    	String name = userList.get(i).getName();
 	    	String pw = "null"; // users.get(i).password();
-	    	String role = users.get(i).getRole();
-	    	String group = instance.getProjectGroup(users.get(i).getGroupId()).getProjectName();
+	    	String role = userList.get(i).getRole();
+	    	String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
 	    	String editURL = "administrationcomponent?edituser="+name;
 	    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
 	    	String deleteURL = "administrationcomponent?deleteuser="+name;
