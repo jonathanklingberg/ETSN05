@@ -246,11 +246,14 @@ public class ProjectGroup extends DatabaseInterface {
 	 * otherwise false
 	 */
 	public boolean removeMe() {
-		//Instead of fetching all time reports and doing 'removeMe'
-		//on them, as well as on all users it's probably easier to
-		//just execute the correct SQL here directly instead of taking
-		//the detour of creating all objects
-		return false;
+		try {
+			System.out.println(id);
+			PreparedStatement ps = conn.prepareStatement("DELETE from ProjectGroups where id =" + id);
+			ps.executeQuery();
+			ps.close();
+			return true;
+		}catch(SQLException e) {
+			return false;
+		}
 	}
-
 }

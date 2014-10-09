@@ -147,7 +147,7 @@ public class WorkspaceInstance {
 	public synchronized ArrayList<User> getUsers() {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup order by name asc");
+			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup order by username asc");
 			ResultSet rs = ps.executeQuery();
 			ArrayList<Long> idList = new ArrayList<Long>();
 			ArrayList<String> roleList = new ArrayList<String>();
@@ -158,7 +158,7 @@ public class WorkspaceInstance {
 				groupIdList.add(rs.getLong("groupId"));
 			}
 			for (int i = 0; i < idList.size(); i++) {
-				rs = ps.executeQuery("select * from Users order by name asc where id="+ idList.get(i));
+				rs = ps.executeQuery("select * from Users order by username asc where id="+ idList.get(i));
 				rs.next();
 				String name = rs.getString("userName");
 				String password = rs.getString("password");
@@ -219,7 +219,15 @@ public class WorkspaceInstance {
 	 *         such project group is found
 	 */
 	public synchronized ProjectGroup getProjectGroup(long id) {
-		return null;
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where id =" + id);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			String username = rs.getString("groupName");
+			return new ProjectGroup(conn, id, username);
+		}catch (SQLException e) {
+			return null;
+		}
 	}
 
 	
