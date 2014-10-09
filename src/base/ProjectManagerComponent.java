@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import data.Roles;
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -114,8 +114,8 @@ public class ProjectManagerComponent extends ServletBase {
 	}
 
 	@Override
-	protected Roles getRole() {
-		return Roles.ProjectManager;
+	protected Role getRole() {
+		return Role.ProjectManager;
 	}
 
 }

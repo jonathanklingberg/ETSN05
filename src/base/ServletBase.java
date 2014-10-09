@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import data.Roles;
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -146,7 +146,7 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		out.println("</table>");
 	}
-	protected abstract Roles getRole();
+	protected abstract Role getRole();
 	protected abstract String generateUserTable();
 	protected abstract String getUserTableHeading();
 }

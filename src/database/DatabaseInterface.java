@@ -2,7 +2,7 @@ package database;
 
 import java.sql.Connection;
 
-import data.Roles;
+import data.Role;
 
 /** 
  * A simple interface with two methods which all non-components 
@@ -22,7 +22,7 @@ public abstract class DatabaseInterface {
 	 * @param requestingUserRole The user who wants to print the object in HTML.
 	 * @return  A HTML representation of the object.
 	 */
-	public abstract String toHTML(Roles requestingUserRole);
+	public abstract String toHTML(Role requestingUserRole);
 	
 	/**
 	 * Removes the object completely from the database. What actually

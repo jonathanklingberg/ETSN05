@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import data.Roles;
+import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -163,8 +163,8 @@ public class LoginComponent extends ServletBase {
 	}
 
 	//never used
-	protected Roles getRole() {
-		return Roles.Unspecified;
+	protected Role getRole() {
+		return Role.Unspecified;
 	}
 	
 //	protected boolean setActive(String username){

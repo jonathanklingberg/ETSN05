@@ -9,7 +9,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-import data.Roles;
+import data.Role;
 
 /**
  *	This class represents a Project Group in the system, and thus
@@ -252,7 +252,7 @@ public class ProjectGroup extends DatabaseInterface {
 	 * @param requestingUserRole A user in the system who wants to display this project.
 	 * @return Returns the project in HTML representation.
 	 */
-	public String toHTML(Roles requestingUserRole) {
+	public String toHTML(Role requestingUserRole) {
 		// TODO Auto-generated method stub
 		return null;
 	}
