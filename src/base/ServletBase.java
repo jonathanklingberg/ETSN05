@@ -148,7 +148,7 @@ public abstract class ServletBase extends HttpServlet {
 	}
 	
 	private void printUser(PrintWriter out, String name, String role, String group,
-			String editCode, String pw, String deleteCode) {
+		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td>" + name + "</td>");
 		out.println(isAdmin()? ("<td>" + group + "</td>") : "");
