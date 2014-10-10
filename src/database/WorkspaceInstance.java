@@ -291,28 +291,7 @@ public class WorkspaceInstance {
 		}
 		return false;
 	}
-
-	public boolean userIsProjectManager(String userName) {
-		boolean isManager = false;
-		try {
-			PreparedStatement ps = conn.prepareStatement("select * from Users where userName='"
-					+ userName + "'");
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			long userId = rs.getLong("id");
-			rs = ps.executeQuery("select * from RoleInGroup where userId='"
-					+ userId + "'");
-			rs.next();
-			String role = rs.getString("role");
-			isManager = role.equals("Project manager");	
-			rs.close();
-			ps.close();
-		} catch (SQLException e) {			
-			e.printStackTrace();
-		}		
-		return isManager;
-	}
-
+	
 	public boolean addUser(String name, String password) {
 		boolean resultOK = false;
 	
@@ -377,13 +356,13 @@ public class WorkspaceInstance {
 	public long getGroupIdOfUser(String name) {
 		long groupId = 0;
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from Users where name='"
+			PreparedStatement ps = conn.prepareStatement("select * from Users where userName='"
 					+ name + "'");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
-			rs = ps.executeQuery("select * from RoleInGroup where name='"
-					+ name + "'");
+			rs = ps.executeQuery("select * from RoleInGroup where userId='"
+					+ id + "'");
 			rs.next();
 			groupId = rs.getLong("groupId");
 			rs.close();
@@ -394,14 +373,14 @@ public class WorkspaceInstance {
 		return groupId;
 	}
 
-	public String getProjectName(long groupId) {
+	public String getGroupName(long groupId) {
 		String groupName = "";
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from ProjectGroups where id='"
-					+ groupId + "'");
+			PreparedStatement ps = conn.prepareStatement("select * from ProjectGroups where id="
+					+ groupId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();	
-			rs.getString("groupName");
+			groupName = rs.getString("groupName");
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {			
