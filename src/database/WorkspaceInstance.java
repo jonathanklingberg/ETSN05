@@ -126,13 +126,16 @@ public class WorkspaceInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
 			ps.executeUpdate();
-			ps.close();
-			wasAdded = true;
+			ps = conn.prepareStatement("select id from Users where userName='" + user.getName() +  "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			System.out.println("sd " + rs.getLong("id"));
+			User newUser = new User(conn, user.getName(), user.getPassword(), rs.getLong("id"), user.getGroupId(), user.getRole(), null);
+			wasAdded = getProjectGroup(newUser.getGroupId()).addUser(newUser);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return wasAdded;
 	}	
 	

@@ -65,7 +65,7 @@ public class WorkerComponent extends ServletBase {
 			//Display all project members in project group
 			//out.println("<div Style=\"display:inline-block\"> Group members");
 			ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
-			listUsers(out, groupMembers);
+			listUsers(out, groupMembers, null);
 //			out.println("<div>");
 //			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
 //			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");

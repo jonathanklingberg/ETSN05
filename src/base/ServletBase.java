@@ -121,13 +121,13 @@ public abstract class ServletBase extends HttpServlet {
     }
 
 // Print User Table according to mockup design in SRS
-	protected void listUsers(PrintWriter out, ArrayList<User> userList) {
+	protected void listUsers(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
 		out.println(getUserTableName());
 	    out.println("<table border=" + formElement("1") + ">");
 	    out.println(getUserTable());		
 		for(int i = 0; i < userList.size(); i++) {			
 	    	String name = userList.get(i).getName();
-	    	String pw = "null"; // users.get(i).getPassword();
+	    	String pw = userList.get(i).getPassword();
 	    	String role = userList.get(i).getRole();
 	    	String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
 	    	String editURL = "administrationcomponent?edituser="+name;
@@ -141,12 +141,14 @@ public abstract class ServletBase extends HttpServlet {
 	    	out.println("<td>" + name + "</td>");
 	    	out.println(isAdmin()? ("<td>" + group + "</td>") : "");
 	    	out.println("<td>" + role + "</td>");
-	    	out.println(isAdmin()? ("<td>" + group + "</td>") : "");
+	    	out.println(isAdmin()? ("<td>" + pw + "</td>") : "");
 	    	out.println(isAdminOrProjectManager()? ("<td>" + editCode + "</td>") : "");
 	    	out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
 	    	out.println("</tr>");
 		}
 		out.println("</table>");
+		if(userActionMessage != null)
+			out.print("<p>"+ userActionMessage +"</p>");
 	}
 
 	protected abstract boolean isAdminOrProjectManager();
