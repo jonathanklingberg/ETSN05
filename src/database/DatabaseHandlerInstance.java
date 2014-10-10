@@ -394,14 +394,7 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){	
-				long id = rs.getLong("id");
-				long groupId = rs.getLong("groupId"); 
-				Date date = rs.getDate("date");
-				long duration = rs.getLong("duration");
-				long type = rs.getLong("type");
-				long week = rs.getLong("week");
-				boolean signed = rs.getBoolean("signed");
-				list.add(new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed));
+			list.add(createTimeReport(rs));	
 			}			
 			rs.close();
 			ps.close();
@@ -413,6 +406,40 @@ public class DatabaseHandlerInstance {
 
 	public String getGroupNameOfUser(String userName) {
 		return getGroupName(getGroupIdOfUser(userName));
+	}
+
+	public ArrayList<TimeReport> getTimeReportsForGroup(long groupId) {
+		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE groupId = " + groupId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){	
+				list.add(createTimeReport(rs));
+			}			
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}				
+		return list;
+	}
+	private TimeReport createTimeReport(ResultSet rs){
+		TimeReport timeReport = null;
+		try{
+		long id = rs.getLong("id");
+		long groupId = rs.getLong("groupId");
+		long userId = rs.getLong("userId"); 
+		Date date = rs.getDate("date");
+		long duration = rs.getLong("duration");
+		long type = rs.getLong("type");
+		long week = rs.getLong("week");
+		boolean signed = rs.getBoolean("signed");
+		timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+		} catch(SQLException e){
+			System.err.println(e);
+		}
+		return timeReport;
+		
 	}
 	
 	

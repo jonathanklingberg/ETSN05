@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import data.Role;
+import database.TimeReport;
 import database.User;
 import database.DatabaseHandlerInstance;
 
@@ -86,9 +87,7 @@ public abstract class ServletBase extends HttpServlet {
 		if (objectState != null) 
 			state = (Integer) objectState; 
 		return (state == LOGIN_TRUE);
-
 	}
-
     
     /**
      * Can be used to construct form elements.
@@ -185,6 +184,9 @@ public abstract class ServletBase extends HttpServlet {
 			// to a string
 		}
 		return name;
+	}
+	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports){
+		
 	}
 
 	protected abstract boolean isAdminOrProjectManager();

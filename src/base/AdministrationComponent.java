@@ -2,7 +2,6 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,9 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.xml.internal.fastinfoset.tools.PrintTable;
-
-import data.Role;
 import database.ProjectGroup;
 import database.User;
 

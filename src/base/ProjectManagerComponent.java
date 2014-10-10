@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.Role;
+import database.TimeReport;
 import database.User;
 import database.DatabaseHandlerInstance;
 
@@ -59,6 +60,8 @@ public class ProjectManagerComponent extends ServletBase {
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			printUserTable(out, usersInGroup);
 			
+			ArrayList<TimeReport> timeReports = instance.getTimeReportsForGroup(groupId);
+			printTimeReportTable(out, timeReports);
 
 
 
