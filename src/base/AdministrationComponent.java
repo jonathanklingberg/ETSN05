@@ -2,6 +2,9 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,14 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import data.Role;
-import database.User;
-import database.WorkspaceInstance;
 import database.ProjectGroup;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import database.User;
 
 /**
  * Servlet implementation class Administration. Constructs a page for
@@ -32,23 +29,6 @@ import java.util.Random;
 public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
-
-       
-//    /**
-//     * generates a form for adding new users
-//     * @return HTML code for the form
-//     */
-    private String addUserForm() {
-    	String html;
-    	html = "<p> <form name=" + formElement("input");
-    	html += " method=" + formElement("get");
-    	html += "<p> Add user name: <input type=" + formElement("text") + " name=" + formElement("addname") + '>';    	
-    	html += "<input type=" + formElement("submit") + "value=" + formElement("Add user") + '>';
-    	html += "</form>";
-    	return html;
-    }
-
-
 
 	/**
 	 * @see ServletBase#ServletBase()
@@ -96,15 +76,6 @@ public class AdministrationComponent extends ServletBase {
 	private boolean addUser(String name) {
 		return instance.addUser(name,
 				createPassword());
-	}
-
-	// /**
-	// * Deletes a user from the database.
-	// * If the user does not exist in the database nothing happens.
-	// * @param name name of user to be deleted.
-	// */
-	private void deleteUser(String name) {
-		instance.deleteUser(name);
 	}
 
 	/**
