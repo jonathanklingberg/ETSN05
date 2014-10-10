@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.Role;
+import database.TimeReport;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -59,10 +60,13 @@ public class WorkerComponent extends ServletBase {
 			out.println("<p> Logged in as: " + userName + " </p>");
 			out.println("<p> Assigned to project group: " + projectGroup + " </p>");
 			
+			
+			 
+			
 			//Display all project members in project group
-			//Anropa en metod för att hämta alla medlemmar i en viss grupp. Metoden bör skapas i WorkspaceInstance 
-			out.println("<p>Group members</p>");
-			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=60%>");
+			//out.println("<div Style=\"display:inline-block\"> Group members");
+			out.println("<div>");
+			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
 			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
 			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
 			ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
@@ -71,6 +75,26 @@ public class WorkerComponent extends ServletBase {
 				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
 			}
 			out.println("</table>");
+			out.println("</div>");
+			out.println("<br>");
+			//Display all time reports belonging to the logged in user. 
+			//out.println("<div Style=\"DISPLAY:inline-block\"> Time Reports");
+			out.println("<div>");
+			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=60%> Time Reports");
+			out.println("<tr><td><CENTER><B>DATE</B></CENTER></td>");
+			out.println("<td><CENTER><B>WEEK</B></CENTER></td>");
+			out.println("<td><CENTER><B>TIME (MIN)</B></CENTER></td>");
+			out.println("<td><CENTER><B>TYPE</B></CENTER></td>");
+			out.println("<td><CENTER><B>STATE</B></CENTER></td>");
+			out.println("<td><CENTER><B>EDIT</B></CENTER></td>");
+			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
+//			ArrayList<TimeReport> timeReports = WorkspaceInstance.getInstance(conn).getUsersTimeReports(userId);
+			
+			out.println("</table>");
+			out.println("</div>");
+			
+
+			
 		} else {
 			System.err.println("Illigal action performed as: " + role + "; tried to access WorkerComponent.");
 			response.sendRedirect("logincomponent");
