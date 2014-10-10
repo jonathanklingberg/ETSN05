@@ -157,10 +157,7 @@ public class AdministrationComponent extends ServletBase {
 	}
 	
 	public void listGroups(PrintWriter out) { 
-		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
-		javascriptCode += "function createGroup(link) { var name = prompt('Please enter a name for the new group.');  if (name != null) { link.href = link.href+name; return true; } return false;}";
-		script(out, javascriptCode);
-		out.println("<p> Groups </p>");
+	 	 out.println("<p> Groups </p>");
 		 out.println("<table border=" + formElement("1") + ">");
 		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
 		 List<ProjectGroup> projectGroups = instance.getProjectGroups();		 
@@ -182,6 +179,7 @@ public class AdministrationComponent extends ServletBase {
 		 out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 	}
 
+	@Override
 	public void listUsers(PrintWriter out, ArrayList<User> users) {
 		String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
 		script(out, javascriptCode);
@@ -211,8 +209,8 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
 		}
-		out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 		out.println("</table>");
+		out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 	}
 	
 	private void script(PrintWriter out, String code){
