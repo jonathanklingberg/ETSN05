@@ -55,6 +55,7 @@ public class WorkerComponent extends ServletBase {
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
 			out.println("<h1> Workercomponent " + "</h1>");
 			String userName = (String) session.getAttribute("name");
+			Long userId = (Long) session.getAttribute("userId");
 			//Prints username and project group ID
 			long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
 			out.println("<p> Logged in as: " + userName + " </p>");
@@ -80,7 +81,7 @@ public class WorkerComponent extends ServletBase {
 			//Display all time reports belonging to the logged in user. 
 			//out.println("<div Style=\"DISPLAY:inline-block\"> Time Reports");
 			out.println("<div>");
-			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=60%> Time Reports");
+			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%> Time Reports");
 			out.println("<tr><td><CENTER><B>DATE</B></CENTER></td>");
 			out.println("<td><CENTER><B>WEEK</B></CENTER></td>");
 			out.println("<td><CENTER><B>TIME (MIN)</B></CENTER></td>");
@@ -88,11 +89,20 @@ public class WorkerComponent extends ServletBase {
 			out.println("<td><CENTER><B>STATE</B></CENTER></td>");
 			out.println("<td><CENTER><B>EDIT</B></CENTER></td>");
 			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
-//			ArrayList<TimeReport> timeReports = WorkspaceInstance.getInstance(conn).getUsersTimeReports(userId);
-			
+			ArrayList<TimeReport> timeReports = WorkspaceInstance.getInstance(conn).getUsersTimeReports(userId);
+			for(int i = 0; i < timeReports.size(); ++i){
+				out.println("<tr><td><CENTER>" + timeReports.get(i).getDate() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).getWeek() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).getDuration() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).getType() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).isSigned() + "</CENTER></td>");
+				out.println("<td><CENTER> EDIT BUTTON </CENTER></td>");
+				out.println("<td><CENTER> REMOVE BUTTON </CENTER></td></tr>");
+			}
 			out.println("</table>");
 			out.println("</div>");
 			
+			out.println("<button type=button>Add Time Report</button>");
 
 			
 		} else {

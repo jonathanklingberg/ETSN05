@@ -415,7 +415,7 @@ public class WorkspaceInstance {
  	* @return A list of all the time reports belonging to a specified user,
  	* or an empty list if there are no time reports.
  	*/
-	public List<TimeReport> getUsersTimeReports(long userId){
+	public ArrayList<TimeReport> getUsersTimeReports(long userId){
 		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
