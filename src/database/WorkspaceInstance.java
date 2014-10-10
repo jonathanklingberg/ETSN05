@@ -192,6 +192,7 @@ public class WorkspaceInstance {
 //			String sessionId = session.getId();
 			
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
+			System.out.println("id: " + id);
 			rs = ps.executeQuery();
 			rs.next();
 			long groupId = rs.getLong("groupId");

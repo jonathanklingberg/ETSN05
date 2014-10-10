@@ -55,10 +55,16 @@ FOREIGN KEY (type) REFERENCES Types(type)
 );
 
 -- Create default users
-INSERT INTO Users(id, userName, password, sessionId, isActive) VALUES('', 'admin', 'adminpw', NULL, 1);
-INSERT INTO Users(id, userName, password, sessionId, isActive) VALUES('', 'test', 'testpw', NULL, 1);
-INSERT INTO Users(id, userName, password, sessionId, isActive) VALUES('', 'dev', 'devpw', NULL, 1);
-INSERT INTO Users(id, userName, password, sessionId, isActive) VALUES('', 'pm', 'pmpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'adminpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('test', 'testpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('dev', 'devpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pm', 'pmpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('test2', 'testpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('dev2', 'devpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pm2', 'pmpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('test3', 'testpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('dev3', 'devpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pm3', 'pmpw', NULL, 1);
 -- Create default Roles
 INSERT INTO Roles VALUES('ProjectManager');
 INSERT INTO Roles VALUES('Developer');
@@ -67,13 +73,21 @@ INSERT INTO Roles VALUES('Tester');
 INSERT INTO Roles VALUES('Unspecified');
 INSERT INTO Roles VALUES('Admin');
 -- Create AdminGroup
-INSERT INTO ProjectGroups (id, groupName) VALUES ('', 'AdminGroup');
-INSERT INTO ProjectGroups (id, groupName) VALUES ('', 'Group2');
+INSERT INTO ProjectGroups (groupName) VALUES ('AdminGroup');
+INSERT INTO ProjectGroups (groupName) VALUES ('Group2');
+INSERT INTO ProjectGroups (groupName) VALUES ('Group3');
+INSERT INTO ProjectGroups (groupName) VALUES ('Group4');
 -- Add admin to RoleInGroup
-INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', 1, 1, 'Admin');
-INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', 2, 2, 'Tester');
-INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', 3, 2, 'Developer');
-INSERT INTO RoleInGroup (id, userId, groupId, role) VALUES ('', 4, 2, 'ProjectManager');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (1, 1, 'Admin');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (2, 2, 'Tester');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (3, 2, 'Developer');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (4, 2, 'ProjectManager');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (5, 3, 'Tester');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (6, 3, 'Developer');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (7, 3, 'ProjectManager');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (8, 4, 'Tester');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (9, 4, 'Developer');
+INSERT INTO RoleInGroup (userId, groupId, role) VALUES (10, 4, 'ProjectManager');
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);

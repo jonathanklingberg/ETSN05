@@ -144,9 +144,7 @@ public class AdministrationComponent extends ServletBase {
 			String deleteUser = request.getParameter("deleteuser");
 			if(deleteUser != null) {
 				instance.getUser(deleteUser).removeMe();
-			}
-			
-			
+			}			
 			ArrayList<User> users = instance.getUsers();
 			listUsers(out, users);
 			listGroups(out);
