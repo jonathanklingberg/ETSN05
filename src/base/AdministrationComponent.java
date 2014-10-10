@@ -112,7 +112,7 @@ public class AdministrationComponent extends ServletBase {
 			userActionMessage = deleteUser(request);
 			userActionMessage = addNewUser(request, out);
 			
-			ArrayList<User> users = instance.getUsers();
+			ArrayList<User> users = instance.getAllUsers();
 			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
@@ -134,17 +134,18 @@ public class AdministrationComponent extends ServletBase {
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");
-		String group = request.getParameter("group");
+		String groupName = request.getParameter("group");
 		boolean pmChecked = Boolean.parseBoolean(request.getParameter("pm"));
 		System.out.println(pmChecked);
 		if(username != null) {
 			if(checkNewName(username)) {
-				if(instance.getProjectId(group) != -1) {
+				long groupId = instance.getProjectGroup(groupName).getId();
+				if(groupId != -1) {
 					boolean res;
 					if(pmChecked) {
-						res = instance.addUser(new User(username, createPassword(), "ProjectManager", instance.getProjectId(group)));
+						res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
 	 				} else {
-						res = instance.addUser(new User(username, createPassword(), "Unspecified", instance.getProjectId(group)));
+						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
 	 				}
 					if(!res)
 						failMsg = "User already exists!";
@@ -209,7 +210,7 @@ public class AdministrationComponent extends ServletBase {
 	 	 out.println("<p> Groups </p>");
 		 out.println("<table border=" + formElement("1") + ">");
 		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
-		 List<ProjectGroup> projectGroups = instance.getProjectGroups();		 
+		 List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		 for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getProjectName();

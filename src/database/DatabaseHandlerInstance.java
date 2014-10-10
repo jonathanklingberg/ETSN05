@@ -62,7 +62,7 @@ public class DatabaseHandlerInstance {
  	* @return A list of all the project groups associated with this database,
  	* or an empty list if no project groups exist.
  	*/
-	public synchronized List<ProjectGroup> getProjectGroups() {
+	public synchronized List<ProjectGroup> getAllProjectGroups() {
 		List<ProjectGroup> pgList = new ArrayList<ProjectGroup>();
 		
 		try {
@@ -132,7 +132,6 @@ public class DatabaseHandlerInstance {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return wasAdded;
 	}	
 	
@@ -142,7 +141,7 @@ public class DatabaseHandlerInstance {
 	 * @return A list of all users in the database, or an empty list if no users
 	 *         exist in the system.
 	 */
-	public synchronized ArrayList<User> getUsers() {
+	public synchronized ArrayList<User> getAllUsers() {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup");
@@ -171,20 +170,7 @@ public class DatabaseHandlerInstance {
 		}	
 		return users;
 	}
-	
-	public long getProjectId(String projectName) {
-		PreparedStatement ps;
-		try {
-			ps = conn.prepareStatement("select * from ProjectGroups where groupName= + '" + projectName + "'");
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				return rs.getLong("id");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
+
 	
 	/** 
 	 * Retrieves a specific user from the database
@@ -251,10 +237,13 @@ public class DatabaseHandlerInstance {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			String groupName = rs.getString("groupName");
+			rs.close();
+			ps.close();
 			return new ProjectGroup(conn, id, groupName);
 		}catch (SQLException e) {
-			return null;
+			System.err.println(e);
 		}
+		return null;
 	}
 
 	
@@ -385,7 +374,7 @@ public class DatabaseHandlerInstance {
 	
 	public ArrayList<User> getUsersInGroup(long groupId) {
 		ArrayList<User> usersInGroup = new ArrayList<User>();
-		for(User u : getUsers()) {
+		for(User u : getAllUsers()) {
 			if(u.getGroupId() == groupId)
 			{
 				usersInGroup.add(u);
@@ -454,6 +443,21 @@ public class DatabaseHandlerInstance {
 		}
 		return timeReport;
 		
+	}
+
+	public ProjectGroup getProjectGroup(String groupName) {
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName =" + groupName + ";");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long id = rs.getLong("id");
+			rs.close();
+			ps.close();
+			return new ProjectGroup(conn, id, groupName);
+		}catch (SQLException e) {
+			System.err.println(e);
+		}
+		return null;
 	}
 
 	
