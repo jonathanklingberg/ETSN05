@@ -117,7 +117,13 @@ public class AdministrationComponent extends ServletBase {
 			
 			ArrayList<User> users = instance.getUsers();
 			listUsers(out, users);
-			out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
+			out.println("<div id=\"createUser\" title=\"Add a new user\">");
+			out.println("Username: <input type=\"text\" id=\"name\"></input>");
+			out.println("Password: <input type=\"text\" id=\"password\"></input>");
+			out.println("Group: <input type=\"text\" id=\"group\"></input>");
+			out.println("Project Manager: <input type=\"checkbox\" id=\"pm\">");
+			out.println("</div><br />");
+			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
 			listGroups(out);
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println("</body></html>");

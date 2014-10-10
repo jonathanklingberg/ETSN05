@@ -104,8 +104,10 @@ public abstract class ServletBase extends HttpServlet {
     protected String getPageIntro() {
     	//TODO include Footable js
     	String intro = "<html><head>" + 
-    						"<script src=\"js/jquery-1.11.1.js\"></script>" +
+    						"<script src=\"js/jquery-1.8.3.js\"></script>" +
+							"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
 							"<script src=\"js/epuss.js\"></script>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
     						"<title> The Base Block System </title></head><body>";
     	return intro;
     }
