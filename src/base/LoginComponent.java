@@ -93,7 +93,7 @@ public class LoginComponent extends ServletBase {
         if (name != null && password != null) {
         	System.out.println("User:" + name);
         	System.out.println("password:" + password);
-        	User currUser = DatabaseHandlerInstance.getInstance(conn).getUser(name);
+        	User currUser = instance.getUser(name);
         	if(currUser.comparePassword(password)){
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session

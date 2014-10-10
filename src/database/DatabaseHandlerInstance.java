@@ -40,7 +40,7 @@ public class DatabaseHandlerInstance {
 		// setConnection
 		//method
 	}
-	   
+
 	/**
 	 * Typical singleton method in order to retrieve the instance of the object
 	 * 
@@ -51,20 +51,19 @@ public class DatabaseHandlerInstance {
 	 */
 	public static DatabaseHandlerInstance getInstance(Connection conn) {  
 		if(instance == null) {
-	         instance = new DatabaseHandlerInstance(conn);
-	     }
-	      return instance;
+			instance = new DatabaseHandlerInstance(conn);
+		}
+		return instance;
 	}
-	
+
 	/**
- 	* Retrieves all project groups in the database
- 	* 
- 	* @return A list of all the project groups associated with this database,
- 	* or an empty list if no project groups exist.
- 	*/
+	 * Retrieves all project groups in the database
+	 * 
+	 * @return A list of all the project groups associated with this database,
+	 * or an empty list if no project groups exist.
+	 */
 	public synchronized List<ProjectGroup> getAllProjectGroups() {
-		List<ProjectGroup> pgList = new ArrayList<ProjectGroup>();
-		
+		List<ProjectGroup> pgList = new ArrayList<ProjectGroup>();		
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups");
 			ResultSet rs = ps.executeQuery();
@@ -115,13 +114,13 @@ public class DatabaseHandlerInstance {
 		//calls both to the "Users" table as well as the
 		//"RoleInGroup" table could (should?) be made here, since
 		//the user needs to be assigned to the group instantly.
-		
+
 		//Also note that according to the requirements in the base
 		//system, the password needs to be 6 characters long, and
 		//exactly 6 characters long. This might be a stupid requirement
 		//we would like to change later on, just keep it in mind when
 		//implementing for now though
-		
+
 		boolean wasAdded = false;
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
@@ -134,7 +133,7 @@ public class DatabaseHandlerInstance {
 		}
 		return wasAdded;
 	}	
-	
+
 	/**
 	 * Retrieves all users in the database
 	 * 
@@ -171,7 +170,7 @@ public class DatabaseHandlerInstance {
 		return users;
 	}
 
-	
+
 	/** 
 	 * Retrieves a specific user from the database
 	 * 
@@ -183,15 +182,15 @@ public class DatabaseHandlerInstance {
 	public synchronized User getUser(String userName) {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName = '" + userName + "'");
-//			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
+			//			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
 			String sessionId = rs.getString("sessionId");
-//			HttpSession session = request.getSession(true);
-//			String sessionId = session.getId();
-			
+			//			HttpSession session = request.getSession(true);
+			//			String sessionId = session.getId();
+
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
 			System.out.println("id: " + id);
 			rs = ps.executeQuery();
@@ -206,7 +205,7 @@ public class DatabaseHandlerInstance {
 			e.printStackTrace();
 		}
 		return null;			
-		}
+	}
 
 	public User getUser(long userId) {
 		try {
@@ -221,7 +220,7 @@ public class DatabaseHandlerInstance {
 		}
 		return null;
 	}
-	
+
 
 	/**
 	 * Retrieves a specific project group from the database
@@ -244,18 +243,33 @@ public class DatabaseHandlerInstance {
 			System.err.println(e);
 		}
 		return null;
+	}	
+
+	public ProjectGroup getProjectGroup(String groupName) {
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName =" + groupName + ";");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long id = rs.getLong("id");
+			rs.close();
+			ps.close();
+			return new ProjectGroup(conn, id, groupName);
+		}catch (SQLException e) {
+			System.err.println(e);
+		}
+		return null;
 	}
 
-	
+
 	/**
- 	* Retrieves all users from a specified project group
- 	* 
- 	*  @param id The id of the project group
- 	* @return A list of all the project members in a given group,
- 	* or an empty list if there are no members in the group.
- 	*/
-		
-	
+	 * Retrieves all users from a specified project group
+	 * 
+	 *  @param id The id of the project group
+	 * @return A list of all the project members in a given group,
+	 * or an empty list if there are no members in the group.
+	 */
+
+
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		try{
 			System.out.println(newGroupName);
@@ -274,22 +288,21 @@ public class DatabaseHandlerInstance {
 		}
 		return false;
 	}
-	
+
 	public boolean addUser(String name, String password) {
-		boolean resultOK = false;
-	
+		boolean resultOK = false;	
 		try{
 			PreparedStatement ps = conn.prepareStatement("insert into users (name, password) values('"
 					+ name + "', '" + password + "')");
 			ps.executeUpdate();
 			ps.close();
-		resultOK = true;
+			resultOK = true;
 		} catch (SQLException ex) {
 			resultOK = false;
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-	}
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
 		return resultOK;
 	}
 
@@ -298,12 +311,11 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("delete from users where name='" + name + "'");
 			ps.executeUpdate();
 			ps.close();
-			} catch (SQLException ex) {
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
 		}
-		
 	}
 
 	public boolean inactivateUser(String name) {
@@ -314,26 +326,12 @@ public class DatabaseHandlerInstance {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {
-		    resultOk = false;
-		    // System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
+			resultOk = false;
+			// System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
 		}
 		return resultOk;
-	}
-
-	public ResultSet getUsersResultSet() {
-		ResultSet rs = null;
-		try{
-		  Statement stmt = conn.createStatement();		    
-		  rs = stmt.executeQuery("select * from Users order by userName asc");
-		  rs.next();
-		  
-		  stmt.close();
-		} catch (SQLException e){
-			System.err.println(e);
-		}
-		return rs;
 	}
 
 	public long getGroupIdOfUser(String name) {
@@ -371,7 +369,7 @@ public class DatabaseHandlerInstance {
 		}				
 		return groupName;
 	}
-	
+
 	public ArrayList<User> getUsersInGroup(long groupId) {
 		ArrayList<User> usersInGroup = new ArrayList<User>();
 		for(User u : getAllUsers()) {
@@ -383,21 +381,21 @@ public class DatabaseHandlerInstance {
 		return usersInGroup;
 	}
 
-	
+
 	/**
- 	* Retrieves all time reports belonging to a specified user
- 	* 
- 	*  @param userId The id of the user
- 	* @return A list of all the time reports belonging to a specified user,
- 	* or an empty list if there are no time reports.
- 	*/
+	 * Retrieves all time reports belonging to a specified user
+	 * 
+	 *  @param userId The id of the user
+	 * @return A list of all the time reports belonging to a specified user,
+	 * or an empty list if there are no time reports.
+	 */
 	public ArrayList<TimeReport> getUsersTimeReports(long userId){
 		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){	
-			list.add(createTimeReport(rs));	
+				list.add(createTimeReport(rs));	
 			}			
 			rs.close();
 			ps.close();
@@ -429,80 +427,64 @@ public class DatabaseHandlerInstance {
 	private TimeReport createTimeReport(ResultSet rs){
 		TimeReport timeReport = null;
 		try{
-		long id = rs.getLong("id");
-		long groupId = rs.getLong("groupId");
-		long userId = rs.getLong("userId"); 
-		Date date = rs.getDate("date");
-		long duration = rs.getLong("duration");
-		long type = rs.getLong("type");
-		long week = rs.getLong("week");
-		boolean signed = rs.getBoolean("signed");
-		timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			long id = rs.getLong("id");
+			long groupId = rs.getLong("groupId");
+			long userId = rs.getLong("userId"); 
+			Date date = rs.getDate("date");
+			long duration = rs.getLong("duration");
+			long type = rs.getLong("type");
+			long week = rs.getLong("week");
+			boolean signed = rs.getBoolean("signed");
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
 		} catch(SQLException e){
 			System.err.println(e);
 		}
 		return timeReport;
-		
+
 	}
 
-	public ProjectGroup getProjectGroup(String groupName) {
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName =" + groupName + ";");
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			long id = rs.getLong("id");
-			rs.close();
-			ps.close();
-			return new ProjectGroup(conn, id, groupName);
-		}catch (SQLException e) {
-			System.err.println(e);
-		}
-		return null;
-	}
 
-	
-	
-//	/**
-//	 * Method for generating the overall structure for the different
-//	 * component classes. Will typically differ depending on the user who
-//	 * is sent as input.
-//	 * 
-//	 * @param user The user who wants to print a project group.
-//	 * @return Returns the components of the page in HTML representation.
-//	 */
-//	public synchronized String toHTML(User user) {
-//		return null;
-//		//If administrator, getProjects and getUsers should be called
-//		//and then for each on each of those objects and call toHTML()
-//		//on them. If project worker, call appropriate methods to
-//		//generate this page instead, etc.
-//		
-//		//If the administrator would like to get the view of a project
-//		//manager (which should be possible since the administrator also
-//		//has the same rights as project manager), an 'ugly' solution
-//		//is proposed here, but feel free to refine it if you find it too 
-//		//ugly.
-//		
-//		//Simply change the role for the user (who is the administrator)
-//		//to "ProjectManager" (before calling this method), 
-//		//and then check what role the user has in this method. That is,
-//		//always check the role to determine which page that should be generated
-//		
-//		//Problem if done this way is that the administrator does not have any
-//		//role defined, however, then it should be null, so if the role is null
-//		//we can be certain that the user is the administrator who wants 
-//		//the administrator page. But as stated earlier, this is kind of
-//		//ugly so there might be a better way to solve it!
-//		
+	//	/**
+	//	 * Method for generating the overall structure for the different
+	//	 * component classes. Will typically differ depending on the user who
+	//	 * is sent as input.
+	//	 * 
+	//	 * @param user The user who wants to print a project group.
+	//	 * @return Returns the components of the page in HTML representation.
+	//	 */
+	//	public synchronized String toHTML(User user) {
+	//		return null;
+	//		//If administrator, getProjects and getUsers should be called
+	//		//and then for each on each of those objects and call toHTML()
+	//		//on them. If project worker, call appropriate methods to
+	//		//generate this page instead, etc.
+	//		
+	//		//If the administrator would like to get the view of a project
+	//		//manager (which should be possible since the administrator also
+	//		//has the same rights as project manager), an 'ugly' solution
+	//		//is proposed here, but feel free to refine it if you find it too 
+	//		//ugly.
+	//		
+	//		//Simply change the role for the user (who is the administrator)
+	//		//to "ProjectManager" (before calling this method), 
+	//		//and then check what role the user has in this method. That is,
+	//		//always check the role to determine which page that should be generated
+	//		
+	//		//Problem if done this way is that the administrator does not have any
+	//		//role defined, however, then it should be null, so if the role is null
+	//		//we can be certain that the user is the administrator who wants 
+	//		//the administrator page. But as stated earlier, this is kind of
+	//		//ugly so there might be a better way to solve it!
+	//		
 	// //Moreover the setRole(ProjectManager) for the administrator object
 	// should not
-//		//have any effect on the database, thus a control needs to be done in
+	//		//have any effect on the database, thus a control needs to be done in
 	// //setRole which checks if it is the administrator who the role is set
 	// for,
-//		//if so, just set the attribute internally for the class, but do not
-//		//update the database.	
-//		
-//	}
+	//		//if so, just set the attribute internally for the class, but do not
+	//		//update the database.	
+	//		
+	//	}
 
 
 }
