@@ -210,7 +210,7 @@ public class DatabaseHandlerInstance {
 	public User getUser(long userId) {
 		try {
 			PreparedStatement ps;
-			ps = conn.prepareStatement("SELECT * from Users WHERE is = '" + userId + "'");
+			ps = conn.prepareStatement("SELECT * from Users WHERE id = " + userId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			return getUser(rs.getString("userName"));

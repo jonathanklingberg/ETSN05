@@ -264,7 +264,7 @@ public class ProjectGroup extends AbstractCointainer {
 	 * Will return the name of the project group.
 	 * @return The name of the project group.
 	 */
-	public String getProjectName(){
+	public String getName(){
 		return name;
 	}
 

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import database.ProjectGroup;
 import database.TimeReport;
 import database.User;
 import database.DatabaseHandlerInstance;
@@ -55,14 +56,16 @@ public class WorkerComponent extends ServletBase {
 			String userName = getName();
 			Long userId = (Long) session.getAttribute("userId");
 			//Prints username and project group ID
-			String projectGroupName = instance.getGroupNameOfUser(userName);
+			User user = instance.getUser(userId);
+			long groupId = user.getGroupId();
+			ProjectGroup pg = instance.getProjectGroup(groupId);
+			String projectGroupName = pg.getName();
 			out.println("<p> Signed in as: " + userName + " </p>");
 			out.println("<p> Assigned to project group: " + projectGroupName + " </p>");
 			
 			
 			//Display all project members in project group
-
-			ArrayList<User> groupMembers = instance.getUsersInGroup(instance.getGroupIdOfUser(userName));
+			ArrayList<User> groupMembers = instance.getUsersInGroup(instance.getUser(userName).getGroupId());
 			printUserTable(out, groupMembers, null);
 			
 			ArrayList<TimeReport> timeReports = instance.getUsersTimeReports(userId);

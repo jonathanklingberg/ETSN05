@@ -213,7 +213,7 @@ public class AdministrationComponent extends ServletBase {
 		 List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		 for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
-			String name = projectGroups.get(i).getProjectName();
+			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
 			String editURL = "administrationcomponent?editgroup="+id;

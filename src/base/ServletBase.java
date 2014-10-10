@@ -132,7 +132,7 @@ public abstract class ServletBase extends HttpServlet {
     		System.out.println(name);
     		String pw = userList.get(i).getPassword();
     		String role = userList.get(i).getRole();
-    		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
+    		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
     		String editURL = "administrationcomponent?edituser="+name;
     		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
     		String deleteURL = "administrationcomponent?deleteuser="+name;
