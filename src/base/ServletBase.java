@@ -143,12 +143,11 @@ public abstract class ServletBase extends HttpServlet {
 				deleteCode = "";
 			}
 			printUser(out, name, role, group, editCode, deleteCode);
-		}
-		
+		}		
 		out.println("</table>");
 	}
-	//make private!!!!
-	protected void printUser(PrintWriter out, String name, String role, String group,
+	
+	private void printUser(PrintWriter out, String name, String role, String group,
 			String editCode, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td>" + name + "</td>");
@@ -159,8 +158,8 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");
 	}
-	//make privatE !!!!
-	protected void printTableHeader(PrintWriter out) {
+
+	private void printTableHeader(PrintWriter out) {
 		out.println("<tr>");
 		out.println("<td><B>Name</B></td>");
 		out.println(isAdmin()? "<td><B>Group</B></td>" : "");
