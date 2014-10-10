@@ -6,11 +6,10 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import data.Role;
 import database.TimeReport;
 import database.User;
 import database.WorkspaceInstance;
@@ -44,28 +43,27 @@ public class WorkerComponent extends ServletBase {
 	  */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		session = request.getSession(true);
 		out.println(getPageIntro());
+		String role = getRole();
 
-		// Get session and username
-		HttpSession session = request.getSession(true);
-		String role = (String) session.getAttribute("role");
-		
 		// Check so that the current user are eather a developer, tester or a system architect. 
 		// Currently not giving the admin or PM access to WorkerComponent
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
-			out.println("<h1> Workercomponent " + "</h1>");
-			String userName = (String) session.getAttribute("name");
+			out.println("<h1> Worker page " + "</h1>");//Is not shown in mockup design!
+
+			String userName = getName();
 			Long userId = (Long) session.getAttribute("userId");
 			//Prints username and project group ID
-			long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
-			out.println("<p> Logged in as: " + userName + " </p>");
-			out.println("<p> Assigned to project group: " + projectGroup + " </p>");
+			String projectGroupName = instance.getGroupNameOfUser(userName);
+			out.println("<p> Signed in as: " + userName + " </p>");
+			out.println("<p> Assigned to project group: " + projectGroupName + " </p>");
 			
 			
 			//Display all project members in project group
 			//out.println("<div Style=\"display:inline-block\"> Group members");
-			ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
-			listUsers(out, groupMembers, null);
+			ArrayList<User> groupMembers = instance.getUsersInGroup(instance.getGroupIdOfUser(userName));
+			printUserTable(out, groupMembers, null);
 //			out.println("<div>");
 //			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
 //			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
@@ -111,6 +109,8 @@ public class WorkerComponent extends ServletBase {
 			
 			out.println("<button type=button>Add Time Report</button>");
 
+			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
+
 			
 		} else {
 			System.err.println("Illigal action performed as: " + role + "; tried to access WorkerComponent.");
@@ -129,10 +129,6 @@ public class WorkerComponent extends ServletBase {
 
 	protected String getUserTableName() {		
 		return "<p>Members in project:</p>";
-	}
-
-	protected String getUserTable() {		
-		return "<tr><td>Name</td><td>Role</td></tr>";
 	}
 
 	protected boolean isAdminOrProjectManager() {

@@ -323,6 +323,16 @@ public class TimeReport extends DatabaseInterface {
 		//Does not matter whether it's signed or not, since this method
 		//only should be called when we are certain that the object
 		//actually is to be removed.
-		return false;
+		boolean successfullyRemovedTimeReport = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE from TimeReports WHERE id=" + id + ";");
+			ps.executeUpdate();
+			successfullyRemovedTimeReport = true;
+			ps.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return successfullyRemovedTimeReport;
 	}
 }

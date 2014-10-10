@@ -35,13 +35,14 @@ import database.WorkspaceInstance;
 public abstract class ServletBase extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	// Define states
 	protected static final int LOGIN_FALSE = 0;
 	protected static final int LOGIN_TRUE = 1;	
 	
 	protected Connection conn;
 	protected WorkspaceInstance instance;
+	protected HttpSession session;
 	/**
 	 * Constructs a servlet and makes a connection to the database. 
 	 * It also writes all user names on the console for test purpose. 
@@ -121,39 +122,76 @@ public abstract class ServletBase extends HttpServlet {
     }
 
 // Print User Table according to mockup design in SRS
-	protected void listUsers(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
+	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
 		out.println(getUserTableName());
-	    out.println("<table border=" + formElement("1") + ">");
-	    out.println(getUserTable());		
-		for(int i = 0; i < userList.size(); i++) {			
-	    	String name = userList.get(i).getName();
-	    	String pw = userList.get(i).getPassword();
-	    	String role = userList.get(i).getRole();
-	    	String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
-	    	String editURL = "administrationcomponent?edituser="+name;
-	    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
-	    	String deleteURL = "administrationcomponent?deleteuser="+name;
-	    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-	    	if (name.equals("admin")){
-	    		deleteCode = "";
-	    	}
-	    	out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
-	    	out.println(isAdmin()? ("<td>" + group + "</td>") : "");
-	    	out.println("<td>" + role + "</td>");
-	    	out.println(isAdmin()? ("<td>" + pw + "</td>") : "");
-	    	out.println(isAdminOrProjectManager()? ("<td>" + editCode + "</td>") : "");
-	    	out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
-	    	out.println("</tr>");
+		out.println("<table border=" + formElement("1") + ">");	
+		if(isAdmin()){
+			out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 		}
+		printTableHeader(out);	    
+		for(int i = 0; i < userList.size(); i++) {			
+			String name = userList.get(i).getName();
+			System.out.println(name);
+			String pw = userList.get(i).getPassword();
+			String role = userList.get(i).getRole();
+			String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
+			String editURL = "administrationcomponent?edituser="+name;
+			String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
+			String deleteURL = "administrationcomponent?deleteuser="+name;
+			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+			if (name.equals("admin")){
+				deleteCode = "";
+			}
+			printUser(out, name, role, group, editCode, pw, deleteCode);
+		}
+		
 		out.println("</table>");
 		if(userActionMessage != null)
 			out.print("<p>"+ userActionMessage +"</p>");
 	}
+	//make private!!!!
+	protected void printUser(PrintWriter out, String name, String role, String group,
+			String editCode, String pw, String deleteCode) {
+		out.println("<tr>");
+		out.println("<td>" + name + "</td>");
+		out.println(isAdmin()? ("<td>" + group + "</td>") : "");
+		out.println("<td>" + role + "</td>");
+		out.println(isAdmin()? ("<td>" + pw + "</td>") : "");
+		out.println(isAdminOrProjectManager()? ("<td>" + editCode + "</td>") : "");
+		out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
+		out.println("</tr>");
+	}
+	//make privatE !!!!
+	protected void printTableHeader(PrintWriter out) {
+		out.println("<tr>");
+		out.println("<td><B>Name</B></td>");
+		out.println(isAdmin()? "<td><B>Group</B></td>" : "");
+		out.println("<td><B>Role</B></td>");
+		out.println(isAdmin()? "<td><B>Password</B></td>" : "");
+		out.println(isAdminOrProjectManager()? "<td><B>Edit</B></td>" : "");
+		out.println(isAdmin()? "<td><B>Remove</B></td></tr>" : "");
+	}
+	protected String getRole(){
+		Object roleObj = session.getAttribute("role");
+		String role = "";
+		if (roleObj != null) {
+			role = (String) roleObj; // if the name exists typecast the role
+		}
+		return role;
+	}
+	
+	protected String getName(){
+		String name = "";
+		Object nameObj = session.getAttribute("name");
+		if (nameObj != null) {
+			name = (String) nameObj; // if the name exists typecast the name
+			// to a string
+		}
+		return name;
+	}
 
 	protected abstract boolean isAdminOrProjectManager();
 	protected abstract boolean isAdmin();
-	protected abstract String getUserTable();
 	protected abstract String getUserTableName();
 
 }

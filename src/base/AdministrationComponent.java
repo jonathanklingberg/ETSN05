@@ -11,7 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
+import com.sun.xml.internal.fastinfoset.tools.PrintTable;
 
 import data.Role;
 import database.ProjectGroup;
@@ -90,17 +91,13 @@ public class AdministrationComponent extends ServletBase {
 		String userActionMessage;
 		String groupActionMessage;
 		PrintWriter out = response.getWriter();
+		session = request.getSession();
 		out.println(getPageIntro());
 
-		String role = "";
-		HttpSession session = request.getSession(true);
-		Object roleObj = session.getAttribute("role");
-		if (roleObj != null) {
-			role = (String) roleObj;
-		}
 		// check that the user is logged in as admin, otherwise redirect back to loginComponent
-		if (isLoggedIn(request) && role.equals("Admin")) {
-			out.println("<h1>Administration page " + "</h1>");
+		if (isLoggedIn(request) && getRole().equalsIgnoreCase("Admin")) {
+			
+			out.println("<h1>Administration page " + "</h1>"); //Is not shown in mockup design!
 			
 			// check if the administrator wants to add a new user in the form
 			String newName = request.getParameter("addname");
@@ -120,7 +117,7 @@ public class AdministrationComponent extends ServletBase {
 			userActionMessage = addNewUser(request, out);
 			
 			ArrayList<User> users = instance.getUsers();
-			listUsers(out, users, userActionMessage);
+			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input>");
@@ -133,7 +130,7 @@ public class AdministrationComponent extends ServletBase {
 			out.println("</body></html>");
 
 		} else {
-			System.err.println("Illigal action performed as: " + role + "; tried to access AdministrationComponent.");
+			System.err.println("Illigal action performed as: " + getRole() + "; tried to access AdministrationComponent.");
 			response.sendRedirect("logincomponent");
 		}	
 	}
@@ -237,10 +234,6 @@ public class AdministrationComponent extends ServletBase {
 
 	protected String getUserTableName() {
 		return "<p>System users: </p>";
-	}
-
-	protected String getUserTable() {			
-		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
 	}
 
 	protected boolean isAdminOrProjectManager() {
