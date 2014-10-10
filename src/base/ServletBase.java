@@ -125,9 +125,6 @@ public abstract class ServletBase extends HttpServlet {
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
 		out.println(getUserTableName());
 		out.println("<table border=" + formElement("1") + ">");	
-		if(isAdmin()){
-			out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
-		}
 		printTableHeader(out);	    
 		for(int i = 0; i < userList.size(); i++) {			
 			String name = userList.get(i).getName();
