@@ -71,7 +71,7 @@ public class LoginComponent extends ServletBase {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// Get the session
-		HttpSession session = request.getSession(true);
+		session = request.getSession(true);
 		
 		int state;
 
@@ -144,11 +144,6 @@ public class LoginComponent extends ServletBase {
 		return "";
 	}
 
-	//Never used
-	protected String getUserTable() {		
-		return "";
-	}
-	
 	//Never used
 	protected boolean isAdminOrProjectManager() {
 		return false;

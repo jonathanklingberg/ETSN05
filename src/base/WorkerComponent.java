@@ -8,9 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import data.Role;
 import database.User;
 import database.WorkspaceInstance;
 
@@ -46,14 +44,14 @@ public class WorkerComponent extends ServletBase {
 		out.println(getPageIntro());
 
 		// Get session and username
-		HttpSession session = request.getSession(true);
-		String role = (String) session.getAttribute("role");
+		session = request.getSession(true);
+		String role = getRole();
 		
 		// Check so that the current user are eather a developer, tester or a system architect. 
 		// Currently not giving the admin or PM access to WorkerComponent
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
 			out.println("<h1> Workercomponent " + "</h1>");
-			String userName = (String) session.getAttribute("name");
+			String userName = getName();
 			//Prints username and project group ID
 			long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
 			out.println("<p> Logged in as: " + userName + " </p>");
@@ -88,10 +86,6 @@ public class WorkerComponent extends ServletBase {
 
 	protected String getUserTableName() {		
 		return "<p>Members in project:</p>";
-	}
-
-	protected String getUserTable() {		
-		return "<tr><td>Name</td><td>Role</td></tr>";
 	}
 
 	protected boolean isAdminOrProjectManager() {

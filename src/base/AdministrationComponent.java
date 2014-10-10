@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import database.ProjectGroup;
 import database.User;
@@ -87,15 +86,10 @@ public class AdministrationComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
+		session = request.getSession();
 
-		String role = "";
-		HttpSession session = request.getSession(true);
-		Object roleObj = session.getAttribute("role");
-		if (roleObj != null) {
-			role = (String) roleObj;
-		}
 		// check that the user is logged in as admin, otherwise redirect back to loginComponent
-		if (isLoggedIn(request) && role.equals("Admin")) {
+		if (isLoggedIn(request) && getRole().equalsIgnoreCase("Admin")) {
 			out.println("<h1>Administration page " + "</h1>");
 			
 			// check if the administrator wants to add a new user in the form
@@ -108,13 +102,13 @@ public class AdministrationComponent extends ServletBase {
 				}	else
 					out.println("<p>Error: Suggesten name not allowed</p>");
 			}
-			
+			// check if admin wants to remove group
 			String deleteGroup = request.getParameter("deletegroup");
 			if (deleteGroup != null) {
 				long groupNumber = Long.parseLong(deleteGroup);
 				System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
 			}
-			
+			// check if admin wants to edit group
 			String editGroup = request.getParameter("editgroup");
 			if (editGroup != null) {
 				long groupNumber = Long.parseLong(editGroup);
@@ -130,6 +124,7 @@ public class AdministrationComponent extends ServletBase {
 					}
 				}
 			}
+			// check if admin wants to create a new group
 			String createNewGroup = request.getParameter("addNewGroup");
 			if(createNewGroup != null) {
 				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
@@ -141,17 +136,18 @@ public class AdministrationComponent extends ServletBase {
 					script(out, code);
 				}
 			}
+			//check if admin wants to delete a user
 			String deleteUser = request.getParameter("deleteuser");
 			if(deleteUser != null) {
 				instance.getUser(deleteUser).removeMe();
 			}			
 			ArrayList<User> users = instance.getUsers();
-			listUsers(out, users);
+			printUserList(out, users);
 			listGroups(out);
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println("</body></html>");
 		} else {
-			System.err.println("Illigal action performed as: " + role + "; tried to access AdministrationComponent.");
+			System.err.println("Illigal action performed as: " + getRole() + "; tried to access AdministrationComponent.");
 			response.sendRedirect("logincomponent");
 		}	
 	}
@@ -182,7 +178,7 @@ public class AdministrationComponent extends ServletBase {
 		 out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 	}
 
-	public void listUsers(PrintWriter out, ArrayList<User> users) {
+	public void printUserList(PrintWriter out, ArrayList<User> users) {
 		String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
 		script(out, javascriptCode);
 		out.println("<p>System users:</p>");
@@ -221,10 +217,6 @@ public class AdministrationComponent extends ServletBase {
 
 	protected String getUserTableName() {
 		return null;
-	}
-
-	protected String getUserTable() {			
-		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
 	}
 
 	protected boolean isAdminOrProjectManager() {
