@@ -61,51 +61,70 @@ public class WorkerComponent extends ServletBase {
 			
 			
 			//Display all project members in project group
-			//out.println("<div Style=\"display:inline-block\"> Group members");
+
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance.getGroupIdOfUser(userName));
 			printUserTable(out, groupMembers, null);
+			
+			ArrayList<TimeReport> timeReports = instance.getUsersTimeReports(userId);
+			printTimeReportTable(out, timeReports);
+			
+			
+			
+			
+			
+			
+			
+			
+			/* TAG DET FETASTE FRÅN KODEN NEDAN OCH LYFT UPP TILL ServletBase SÅ ATT ALLA COMPONENTS DRAR NYTTA AV DEN! */
+			
+			
+			
+			
+			
+//out.println("<div Style=\"display:inline-block\"> Group members");	
+////			out.println("<div>");
+////			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
+////			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
+////			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
+////			for(int i = 0; i < groupMembers.size(); i++){
+////				out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
+////				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
+////			}
+////			out.println("</table>");
+////			out.println("</div>");
+//			out.println("<br>");
+//			
+//			//Display all time reports belonging to the logged in user. 
+//			//out.println("<div Style=\"DISPLAY:inline-block\"> Time Reports");
 //			out.println("<div>");
-//			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
-//			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
-//			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
-//			for(int i = 0; i < groupMembers.size(); i++){
-//				out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
-//				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
+//			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%> Time Reports");
+//			out.println("<tr><td><CENTER><B>DATE</B></CENTER></td>");
+//			out.println("<td><CENTER><B>WEEK</B></CENTER></td>");
+//			out.println("<td><CENTER><B>TIME (MIN)</B></CENTER></td>");
+//			out.println("<td><CENTER><B>TYPE</B></CENTER></td>");
+//			out.println("<td><CENTER><B>STATE</B></CENTER></td>");
+//			out.println("<td><CENTER><B>EDIT</B></CENTER></td>");
+//			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
+//			
+//			ArrayList<TimeReport> timeReports = instance.getUsersTimeReports(userId);
+//			
+//			for(int i = 0; i < timeReports.size(); ++i){
+//				Long timeReportId = timeReports.get(i).getId();
+//				String editURL = "workercomponent?edittimereport="+timeReportId;
+//		    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
+//		    	String deleteURL = "workercomponent?deletetimereport="+timeReportId;
+//		    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";
+//				
+//				out.println("<tr><td><CENTER>" + timeReports.get(i).getDate() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + timeReports.get(i).getWeek() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + timeReports.get(i).getDuration() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + timeReports.get(i).getType() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + timeReports.get(i).isSigned() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + editCode +  "</CENTER></td>");
+//				out.println("<td><CENTER>" + deleteCode + "</CENTER></td></tr>");
 //			}
 //			out.println("</table>");
 //			out.println("</div>");
-			out.println("<br>");
-			
-			
-			//Display all time reports belonging to the logged in user. 
-			//out.println("<div Style=\"DISPLAY:inline-block\"> Time Reports");
-			out.println("<div>");
-			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%> Time Reports");
-			out.println("<tr><td><CENTER><B>DATE</B></CENTER></td>");
-			out.println("<td><CENTER><B>WEEK</B></CENTER></td>");
-			out.println("<td><CENTER><B>TIME (MIN)</B></CENTER></td>");
-			out.println("<td><CENTER><B>TYPE</B></CENTER></td>");
-			out.println("<td><CENTER><B>STATE</B></CENTER></td>");
-			out.println("<td><CENTER><B>EDIT</B></CENTER></td>");
-			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
-			ArrayList<TimeReport> timeReports = DatabaseHandlerInstance.getInstance(conn).getUsersTimeReports(userId);
-			for(int i = 0; i < timeReports.size(); ++i){
-				Long timeReportId = timeReports.get(i).getId();
-				String editURL = "workercomponent?edittimereport="+timeReportId;
-		    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
-		    	String deleteURL = "workercomponent?deletetimereport="+timeReportId;
-		    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";
-				
-				out.println("<tr><td><CENTER>" + timeReports.get(i).getDate() + "</CENTER></td>");
-				out.println("<td><CENTER>" + timeReports.get(i).getWeek() + "</CENTER></td>");
-				out.println("<td><CENTER>" + timeReports.get(i).getDuration() + "</CENTER></td>");
-				out.println("<td><CENTER>" + timeReports.get(i).getType() + "</CENTER></td>");
-				out.println("<td><CENTER>" + timeReports.get(i).isSigned() + "</CENTER></td>");
-				out.println("<td><CENTER>" + editCode +  "</CENTER></td>");
-				out.println("<td><CENTER>" + deleteCode + "</CENTER></td></tr>");
-			}
-			out.println("</table>");
-			out.println("</div>");
 			
 			out.println("<button type=button>Add Time Report</button>");
 
@@ -131,12 +150,16 @@ public class WorkerComponent extends ServletBase {
 		return "<p>Members in project:</p>";
 	}
 
-	protected boolean isAdminOrProjectManager() {
+	protected boolean isAdminOrProjectManagerComponent() {
 		return false;
 	}
 
-	protected boolean isAdmin() {
+	protected boolean isAdminComponent() {
 		return false;
+	}
+
+	protected String getTimeReportTableName() {
+		return "Your time reports";
 	}
 
 }

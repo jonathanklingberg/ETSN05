@@ -232,11 +232,15 @@ public class AdministrationComponent extends ServletBase {
 		return "<p>System users: </p>";
 	}
 
-	protected boolean isAdminOrProjectManager() {
+	protected boolean isAdminOrProjectManagerComponent() {
 		return true;
 	}
 
-	protected boolean isAdmin() {
+	protected boolean isAdminComponent() {
 		return true;
+	}
+
+	protected String getTimeReportTableName() {
+		return "All time reports";
 	}
 }

@@ -146,13 +146,17 @@ public class LoginComponent extends ServletBase {
 	}
 
 	//Never used
-	protected boolean isAdminOrProjectManager() {
+	protected boolean isAdminOrProjectManagerComponent() {
 		return false;
 	}
 	
 	//Never used
-	protected boolean isAdmin() {
+	protected boolean isAdminComponent() {
 		return false;
+	}
+
+	protected String getTimeReportTableName() {
+		return "";
 	}
 	
 //	protected boolean setActive(String username){

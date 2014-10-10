@@ -56,10 +56,11 @@ public class ProjectManagerComponent extends ServletBase {
 			System.out.println(groupId);
 			out.println("<p>Assigned to project: "+instance.getGroupName(groupId) +"</p>");;
 			
-			//Prints a list with users that are in the same group
+			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			printUserTable(out, usersInGroup, null);
 			
+			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsForGroup(groupId);
 			printTimeReportTable(out, timeReports);
 
@@ -108,12 +109,16 @@ public class ProjectManagerComponent extends ServletBase {
 		return 	"<p>Members in project:</p>";
 	}
 
-	protected boolean isAdminOrProjectManager() {
+	protected boolean isAdminOrProjectManagerComponent() {
 		return true;
 	}
 
-	protected boolean isAdmin() {
+	protected boolean isAdminComponent() {
 		return false;
+	}
+
+	protected String getTimeReportTableName() {
+		return "Time reports in project";
 	}
 
 }

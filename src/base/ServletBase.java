@@ -2,6 +2,7 @@ package base;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -121,53 +122,99 @@ public abstract class ServletBase extends HttpServlet {
     	return "";
     }
 
-// Print User Table according to mockup design in SRS
-	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println(getUserTableName());
-		out.println("<table border=" + formElement("1") + ">");	
-		printTableHeader(out);	    
-		for(int i = 0; i < userList.size(); i++) {			
-			String name = userList.get(i).getName();
-			System.out.println(name);
-			String pw = userList.get(i).getPassword();
-			String role = userList.get(i).getRole();
-			String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
-			String editURL = "administrationcomponent?edituser="+name;
-			String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
-			String deleteURL = "administrationcomponent?deleteuser="+name;
-			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-			if (name.equals("admin")){
-				deleteCode = "";
-			}
-			printUser(out, name, role, group, editCode, pw, deleteCode);
-		}
-		
-		out.println("</table>");
-		if(userActionMessage != null)
-			out.print("<p>"+ userActionMessage +"</p>");
+    // Print User Table according to mockup design in SRS
+    protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
+    	out.println(getUserTableName());
+    	out.println("<table border=" + formElement("1") + ">");	
+    	printUserTableHeader(out);	    
+    	for(int i = 0; i < userList.size(); ++i) {			
+    		String name = userList.get(i).getName();
+    		System.out.println(name);
+    		String pw = userList.get(i).getPassword();
+    		String role = userList.get(i).getRole();
+    		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
+    		String editURL = "administrationcomponent?edituser="+name;
+    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
+    		String deleteURL = "administrationcomponent?deleteuser="+name;
+    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+    		if (name.equals("admin")){
+    			deleteCode = "";
+    		}
+    		printUser(out, name, role, group, editCode, pw, deleteCode);
+    	}		
+    	out.println("</table>");
+    	if(userActionMessage != null)
+    		out.print("<p>"+ userActionMessage +"</p>");
+    }
+    // Print Time Report Table according to mockup design in SRS
+    protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports){
+    	out.println("<BR>");
+    	out.println(getTimeReportTableName());
+    	out.println("<table border=" + formElement("1") + ">");	
+    	printTimeReportTableHeader(out);
+
+    	for(int i = 0; i < timeReports.size(); ++i){
+    		Long timeReportId = timeReports.get(i).getId();
+    		String editURL = "workercomponent?edittimereport="+timeReportId;
+    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
+    		String deleteURL = "workercomponent?deletetimereport="+timeReportId;
+    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
+    		
+    		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
+    	}
+    	out.println("</table>");		
+    }
+
+	private void printTimeReport(PrintWriter out, String editCode,
+			String deleteCode, TimeReport tr) {
+		User user = instance.getUser(tr.getUserId());
+		out.println("<tr>");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>" + user.getName() + "</B></td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>" + user.getRole() + "</B></td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>" + tr.getWeek() + "</B></td>" : "");
+		out.println("<td>" + tr.getDate() + "</td>");
+		out.println("<td>" + tr.getDuration() + "</td>");
+		out.println("<td>" + tr.getType() + "</td>");			
+		out.println("<td>" + tr.isSigned() + "</td>");
+		out.println("<td>" + editCode +  "</td>");
+		out.println("<td>" + deleteCode + "</td></tr>");
+	}  
+
+	private void printTimeReportTableHeader(PrintWriter out) {
+		out.println("<tr>");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>Username</B></td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>Role</B></td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>Week</B></td>" : "");
+		out.println("<td><B>Date</B></td>");
+		out.println("<td><B>Time (min)</B></td>");
+		out.println("<td><B>Type</B></td>");
+		out.println("<td><B>State</B></td>");
+		out.println("<td><B>Edit</B></td>");
+		out.println("<td><B>Remove</B></td>");		
 	}
-	
+
 	private void printUser(PrintWriter out, String name, String role, String group,
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td>" + name + "</td>");
-		out.println(isAdmin()? ("<td>" + group + "</td>") : "");
+		out.println(isAdminComponent()? ("<td>" + group + "</td>") : "");
 		out.println("<td>" + role + "</td>");
-		out.println(isAdmin()? ("<td>" + pw + "</td>") : "");
-		out.println(isAdminOrProjectManager()? ("<td>" + editCode + "</td>") : "");
-		out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
+		out.println(isAdminComponent()? ("<td>" + pw + "</td>") : "");
+		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
+		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");
 	}
 
-	private void printTableHeader(PrintWriter out) {
+	private void printUserTableHeader(PrintWriter out) {
 		out.println("<tr>");
 		out.println("<td><B>Name</B></td>");
-		out.println(isAdmin()? "<td><B>Group</B></td>" : "");
+		out.println(isAdminComponent()? "<td><B>Group</B></td>" : "");
 		out.println("<td><B>Role</B></td>");
-		out.println(isAdmin()? "<td><B>Password</B></td>" : "");
-		out.println(isAdminOrProjectManager()? "<td><B>Edit</B></td>" : "");
-		out.println(isAdmin()? "<td><B>Remove</B></td></tr>" : "");
+		out.println(isAdminComponent()? "<td><B>Password</B></td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td><B>Edit</B></td>" : "");
+		out.println(isAdminComponent()? "<td><B>Remove</B></td></tr>" : "");
 	}
+	
 	protected String getRole(){
 		Object roleObj = session.getAttribute("role");
 		String role = "";
@@ -186,12 +233,10 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		return name;
 	}
-	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports){
-		
-	}
 
-	protected abstract boolean isAdminOrProjectManager();
-	protected abstract boolean isAdmin();
+	protected abstract String getTimeReportTableName();
+	protected abstract boolean isAdminOrProjectManagerComponent();
+	protected abstract boolean isAdminComponent();
 	protected abstract String getUserTableName();
 
 }

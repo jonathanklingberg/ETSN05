@@ -168,7 +168,7 @@ public class DatabaseHandlerInstance {
 			ps.close();
 		} catch (SQLException e) {
 			System.err.println(e);
-		}		
+		}	
 		return users;
 	}
 	
@@ -219,9 +219,23 @@ public class DatabaseHandlerInstance {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;	
-		
+		return null;			
 		}
+
+	public User getUser(long userId) {
+		try {
+			PreparedStatement ps;
+			ps = conn.prepareStatement("SELECT * from Users WHERE is = '" + userId + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return getUser(rs.getString("userName"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 
 	/**
 	 * Retrieves a specific project group from the database
@@ -441,7 +455,7 @@ public class DatabaseHandlerInstance {
 		return timeReport;
 		
 	}
-	
+
 	
 	
 //	/**
