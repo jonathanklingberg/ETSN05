@@ -47,7 +47,7 @@ public class ProjectManagerComponent extends ServletBase {
 		String myName = getName();
 		
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("projectmanager")) {
-			out.println("<h1>Project management page " + "</h1>");
+			out.println("<h1>Project management page " + "</h1>"); //Is not shown in mockup design!
 			long groupId = instance.getGroupIdOfUser(myName);
 			out.println("<p>Signed in as: Project Manager</p>");
 			
@@ -57,7 +57,7 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			//Prints a list with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
-			printUserList(out, usersInGroup);
+			printUserTable(out, usersInGroup);
 			
 
 

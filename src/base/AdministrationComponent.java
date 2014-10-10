@@ -89,12 +89,13 @@ public class AdministrationComponent extends ServletBase {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		out.println(getPageIntro());
 		session = request.getSession();
+		out.println(getPageIntro());
 
 		// check that the user is logged in as admin, otherwise redirect back to loginComponent
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("Admin")) {
-			out.println("<h1>Administration page " + "</h1>");
+			
+			out.println("<h1>Administration page " + "</h1>"); //Is not shown in mockup design!
 			
 			// check if the administrator wants to add a new user in the form
 			String newName = request.getParameter("addname");
@@ -117,7 +118,7 @@ public class AdministrationComponent extends ServletBase {
 			ArrayList<User> users = instance.getUsers();
 			String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
 			script(out, javascriptCode);
-			printUserList(out, users);
+			printUserTable(out, users);
 	
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");

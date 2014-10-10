@@ -251,27 +251,7 @@ public class WorkspaceInstance {
  	* @return A list of all the project members in a given group,
  	* or an empty list if there are no members in the group.
  	*/
-	
-	//Förmodligen en onödig metod, tror detta går att göra via klassen ProjectGroup. 
-	public synchronized ArrayList<User> getGroupMembers(long id){
-		ArrayList<User> membersList = new ArrayList<User>();
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
-					+ " WHERE RoleInGroup.groupId = " + id + " AND RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
-			ResultSet rs = ps.executeQuery();			
-			while(rs.next()){
-				long userId = rs.getLong("id");
-				String userName = rs.getString("userName");
-				String password = rs.getString("password");
-				String sessionId = rs.getString("sessionId");
-				String role = rs.getString("role");
-				membersList.add(new User(conn, userName, password, userId, id, role, sessionId));
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return membersList;
-	}
+		
 	
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		try{
@@ -430,6 +410,11 @@ public class WorkspaceInstance {
 		}				
 		return list;
 	}
+
+	public String getGroupNameOfUser(String userName) {
+		return getGroupName(getGroupIdOfUser(userName));
+	}
+	
 	
 	
 //	/**

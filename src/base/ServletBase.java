@@ -114,17 +114,15 @@ public abstract class ServletBase extends HttpServlet {
     						"<title> The Base Block System </title></head><body>";
     	return intro;
     }
-    
     protected String getViewLayoutStart(){
     	return "";
-    }
-    
+    }    
     protected String getViewLayoutSEnd(){
     	return "";
     }
-
+    
 // Print User Table according to mockup design in SRS
-	protected void printUserList(PrintWriter out, ArrayList<User> userList) {
+	protected void printUserTable(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableName());
 		out.println("<table border=" + formElement("1") + ">");	
 		if(isAdmin()){
