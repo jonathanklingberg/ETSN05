@@ -86,40 +86,44 @@ public abstract class ServletBase extends HttpServlet {
 		if (objectState != null) 
 			state = (Integer) objectState; 
 		return (state == LOGIN_TRUE);
+
 	}
 
-	/**
-	 * Can be used to construct form elements.
-	 * @param par Input string
-	 * @return output string = "par" 
-	 */
-	protected String formElement(String par) {
-		return '"' + par + '"';
-	}
+    
+    /**
+     * Can be used to construct form elements.
+     * @param par Input string
+     * @return output string = "par" 
+     */
+    protected String formElement(String par) {
+    	return '"' + par + '"';
+    }
+    
+    
+    /**
+     * Constructs the header of all servlets. 
+     * @return String with html code for the header. 
+     */
+    protected String getPageIntro() {
+    	//TODO include Footable js
+    	String intro = "<html><head>" + 
+    						"<script src=\"js/jquery-1.8.3.js\"></script>" +
+							"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
+							"<script src=\"js/epuss.js\"></script>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
+    						"<title> The Base Block System </title></head><body>";
+    	return intro;
+    }
+    
+    protected String getViewLayoutStart(){
+    	return "";
+    }
+    
+    protected String getViewLayoutSEnd(){
+    	return "";
+    }
 
-
-	/**
-	 * Constructs the header of all servlets. 
-	 * @return String with html code for the header. 
-	 */
-	protected String getPageIntro() {
-		//TODO include Footable js
-		String intro = "<html><head>" + 
-				"<script src=\"js/jquery-1.11.1.js\"></script>" +
-				"<script src=\"js/epuss.js\"></script>" +
-				"<title> The Base Block System </title></head><body>";
-		return intro;
-	}
-
-	protected String getViewLayoutStart(){
-		return "";
-	}
-
-	protected String getViewLayoutSEnd(){
-		return "";
-	}
-
-	// Print User Table according to mockup design in SRS
+// Print User Table according to mockup design in SRS
 	protected void printUserList(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableName());
 		out.println("<table border=" + formElement("1") + ">");		

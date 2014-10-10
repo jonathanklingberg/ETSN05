@@ -9,6 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import data.Role;
+import database.TimeReport;
+
 import database.User;
 import database.WorkspaceInstance;
 
@@ -51,24 +54,65 @@ public class WorkerComponent extends ServletBase {
 		// Currently not giving the admin or PM access to WorkerComponent
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
 			out.println("<h1> Workercomponent " + "</h1>");
+
 			String userName = getName();
+			Long userId = (Long) session.getAttribute("userId");
 			//Prints username and project group ID
 			long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
 			out.println("<p> Logged in as: " + userName + " </p>");
 			out.println("<p> Assigned to project group: " + projectGroup + " </p>");
 			
+			
 			//Display all project members in project group
-			//Anropa en metod för att hämta alla medlemmar i en viss grupp. Metoden bör skapas i WorkspaceInstance 
-			out.println("<p>Group members</p>");
-			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=60%>");
-			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
-			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
+			//out.println("<div Style=\"display:inline-block\"> Group members");
 			ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
-			for(int i = 0; i < groupMembers.size(); i++){
-				out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
-				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
+			printUserList(out, groupMembers);
+//			out.println("<div>");
+//			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
+//			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
+//			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
+//			for(int i = 0; i < groupMembers.size(); i++){
+//				out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
+//			}
+//			out.println("</table>");
+//			out.println("</div>");
+			out.println("<br>");
+			
+			
+			//Display all time reports belonging to the logged in user. 
+			//out.println("<div Style=\"DISPLAY:inline-block\"> Time Reports");
+			out.println("<div>");
+			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%> Time Reports");
+			out.println("<tr><td><CENTER><B>DATE</B></CENTER></td>");
+			out.println("<td><CENTER><B>WEEK</B></CENTER></td>");
+			out.println("<td><CENTER><B>TIME (MIN)</B></CENTER></td>");
+			out.println("<td><CENTER><B>TYPE</B></CENTER></td>");
+			out.println("<td><CENTER><B>STATE</B></CENTER></td>");
+			out.println("<td><CENTER><B>EDIT</B></CENTER></td>");
+			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
+			ArrayList<TimeReport> timeReports = WorkspaceInstance.getInstance(conn).getUsersTimeReports(userId);
+			for(int i = 0; i < timeReports.size(); ++i){
+				Long timeReportId = timeReports.get(i).getId();
+				String editURL = "workercomponent?edittimereport="+timeReportId;
+		    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
+		    	String deleteURL = "workercomponent?deletetimereport="+timeReportId;
+		    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";
+				
+				out.println("<tr><td><CENTER>" + timeReports.get(i).getDate() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).getWeek() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).getDuration() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).getType() + "</CENTER></td>");
+				out.println("<td><CENTER>" + timeReports.get(i).isSigned() + "</CENTER></td>");
+				out.println("<td><CENTER>" + editCode +  "</CENTER></td>");
+				out.println("<td><CENTER>" + deleteCode + "</CENTER></td></tr>");
 			}
 			out.println("</table>");
+			out.println("</div>");
+			
+			out.println("<button type=button>Add Time Report</button>");
+
+			
 		} else {
 			System.err.println("Illigal action performed as: " + role + "; tried to access WorkerComponent.");
 			response.sendRedirect("logincomponent");

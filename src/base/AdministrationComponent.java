@@ -2,6 +2,7 @@ package base;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -102,61 +103,82 @@ public class AdministrationComponent extends ServletBase {
 				}	else
 					out.println("<p>Error: Suggesten name not allowed</p>");
 			}
-			// check if admin wants to remove group
-			String deleteGroup = request.getParameter("deletegroup");
-			if (deleteGroup != null) {
-				long groupNumber = Long.parseLong(deleteGroup);
-				System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
-			}
-			// check if admin wants to edit group
-			String editGroup = request.getParameter("editgroup");
-			if (editGroup != null) {
-				long groupNumber = Long.parseLong(editGroup);
-				String newGroupName = request.getParameter("groupname");
-				if(newGroupName != null){
-					boolean res = instance.changeGroupName(groupNumber, newGroupName);	
-					if(!res) {
-						String code ="alert(\"Group name already taken, please try a new one\")";
-						script(out, code);
-					} else {
-						String code ="alert(\"Group name has been updated!\")";
-						script(out, code);
-					}
-				}
-			}
-			// check if admin wants to create a new group
-			String createNewGroup = request.getParameter("addNewGroup");
-			if(createNewGroup != null) {
-				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
-				if(res) {
-					String code ="alert(\"Group has been added!\")";
-					script(out, code);
-				} else {
-					String code ="alert(\"Group name already taken, please try a new one\")";
-					script(out, code);
-				}
-			}
-			//check if admin wants to delete a user
-			String deleteUser = request.getParameter("deleteuser");
-			if(deleteUser != null) {
-				instance.getUser(deleteUser).removeMe();
-			}			
+
+			
+			deleteGroup(request);
+			editGroup(request, out);
+			createNewGroup(request, out);
+			deleteUser(request);	
+			
 			ArrayList<User> users = instance.getUsers();
 			printUserList(out, users);
+			out.println("<div id=\"createUser\" title=\"Add a new user\">");
+			out.println("Username: <input type=\"text\" id=\"name\"></input>");
+			out.println("Password: <input type=\"text\" id=\"password\"></input>");
+			out.println("Group: <input type=\"text\" id=\"group\"></input>");
+			out.println("Project Manager: <input type=\"checkbox\" id=\"pm\">");
+			out.println("</div><br />");
+			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
+
 			listGroups(out);
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println("</body></html>");
+
 		} else {
 			System.err.println("Illigal action performed as: " + getRole() + "; tried to access AdministrationComponent.");
 			response.sendRedirect("logincomponent");
 		}	
 	}
+
+	private void deleteUser(HttpServletRequest request) {
+		String deleteUser = request.getParameter("deleteuser");
+		if(deleteUser != null) {
+			instance.getUser(deleteUser).removeMe();
+		}
+	}
+
+	private void deleteGroup(HttpServletRequest request) {
+		String deleteGroup = request.getParameter("deletegroup");
+		if (deleteGroup != null) {
+			long groupNumber = Long.parseLong(deleteGroup);
+			System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
+		}
+	}
+
+	private void editGroup(HttpServletRequest request, PrintWriter out) {
+		String editGroup = request.getParameter("editgroup");
+		if (editGroup != null) {
+			long groupNumber = Long.parseLong(editGroup);
+			String newGroupName = request.getParameter("groupname");
+			if(newGroupName != null){
+				boolean res = instance.changeGroupName(groupNumber, newGroupName);	
+				if(!res) {
+					String code ="alert(\"Group name already taken, please try a new one\")";
+					script(out, code);
+				} else {
+					String code ="alert(\"Group name has been updated!\")";
+					script(out, code);
+				}
+			}
+		}
+	}
+
+	private void createNewGroup(HttpServletRequest request, PrintWriter out) {
+		String createNewGroup = request.getParameter("addNewGroup");
+		if(createNewGroup != null) {
+			boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
+			if(res) {
+				String code ="alert(\"Group has been added!\")";
+				script(out, code);
+			} else {
+				String code ="alert(\"Group name already taken, please try a new one\")";
+				script(out, code);
+			}
+		}
+	}
 	
 	public void listGroups(PrintWriter out) { 
-		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
-		javascriptCode += "function createGroup(link) { var name = prompt('Please enter a name for the new group.');  if (name != null) { link.href = link.href+name; return true; } return false;}";
-		script(out, javascriptCode);
-		out.println("<p> Groups </p>");
+	 	 out.println("<p> Groups </p>");
 		 out.println("<table border=" + formElement("1") + ">");
 		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
 		 List<ProjectGroup> projectGroups = instance.getProjectGroups();		 
@@ -210,13 +232,14 @@ public class AdministrationComponent extends ServletBase {
 		out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 		out.println("</table>");
 	}
+
 	
 	private void script(PrintWriter out, String code){
 		out.print("<script>" + code + "</script>");
 	}
 
 	protected String getUserTableName() {
-		return null;
+		return "<p>System users: </p>";
 	}
 
 	protected boolean isAdminOrProjectManager() {

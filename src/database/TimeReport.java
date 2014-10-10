@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import data.Role;
@@ -76,7 +78,15 @@ public class TimeReport extends DatabaseInterface {
 	 * @param signed A boolean stating whether the time report is signed
 	 */
 	public TimeReport(long userId, long groupId, long type, 
-			long duration, long week, Date date, boolean signed) {}
+			long duration, long week, Date date, boolean signed) {
+		this.userId = userId;
+		this.groupId = groupId;
+		this.type = type;
+		this.duration = duration;
+		this.week = week;
+		this.date = date;
+		this.signed = signed;
+	}
 	
 	
 	/**
@@ -88,9 +98,10 @@ public class TimeReport extends DatabaseInterface {
 	public boolean signTimeReport() {
 		boolean wasSigned = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed=1 WHERE id=" + id +";");
-			ResultSet rs = ps.executeQuery();
-			wasSigned=true;
+			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed='1' WHERE id=" + id + ";" );
+			ps.executeUpdate();
+			wasSigned = true;
+			ps.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,7 +116,17 @@ public class TimeReport extends DatabaseInterface {
 	 * @return True if the time report was unsigned successfully, false otherwise.
 	 */
 	public boolean unsignTimeReport() {
-		return false;
+		boolean wasUnsigned = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed='0' WHERE id=" + id + ";" );
+			ps.executeUpdate();
+			wasUnsigned = true;
+			ps.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return wasUnsigned;
 	}
 	
 	/**
@@ -117,7 +138,26 @@ public class TimeReport extends DatabaseInterface {
 	 * @return True if the time report was updated successfully, false otherwise.
 	 */
 	public boolean updateTimeReport() {
-		return false;
+		boolean successfullyExecutedStatement = false;
+		try {
+			int signStatus = signed? 1: 0;
+			String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date);
+			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed=" + signStatus + 
+					", week=" + week + 
+					", type=" + type + 
+					", duration="+ duration + 
+					", date=" + dateFormat +
+					", groupId=" + groupId + 
+					", userId=" + userId + 
+					" WHERE id=" + id +";" );
+			ps.executeUpdate();
+			successfullyExecutedStatement = true;
+			ps.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return successfullyExecutedStatement;
 	}
 	
 	/**
@@ -126,7 +166,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return The id of the report.
 	 */
 	public long getId() {
-		return -1;
+		return id;
 	}
 	
 	/**
@@ -135,7 +175,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return The group id to which the report belong.
 	 */
 	public long getGroupId() {
-		return -1;
+		return groupId;
 	}
 	
 	/**
@@ -144,7 +184,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return The user id to which the report belong.
 	 */
 	public long getUserId() {
-		return -1;
+		return userId;
 	}
 	
 	/**
@@ -152,8 +192,8 @@ public class TimeReport extends DatabaseInterface {
 	 * 
 	 * @return The type of the report.
 	 */
-	public int getType() {
-		return -1;
+	public long getType() {
+		return type;
 	}
 	
 	/**
@@ -162,7 +202,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return Number of minutes reported.
 	 */
 	public long getDuration() {
-		return -1;
+		return duration;
 	}
 	
 	/**
@@ -171,7 +211,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return The date the time report was created.
 	 */
 	public Date getDate() {
-		return null;
+		return date;
 	}
 	
 	/**
@@ -180,7 +220,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return The week which the time report concerns.
 	 */
 	public long getWeek() {
-		return -1;
+		return week;
 	}
 	
 	/**
@@ -189,7 +229,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @return True if the report is signed, false otherwise.
 	 */
 	public boolean isSigned() {
-		return false;
+		return signed;
 	}
 	
 	/**
@@ -198,10 +238,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @param id The id to change to.
 	 */
 	public void setId(long id) {
-		//Note that this should just be set internally here
-		//like this.id = id, and the changes are actually pushed
-		//to the database when updateTimeReport() is called.
-		//(The SQL statement is created here)
+		this.id=id;
 	}
 	
 	/**
@@ -210,7 +247,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @param userId The userId to change to.
 	 */
 	public void setUserId(long userId) {
-		//See setId
+		this.userId=userId;
 	}
 	
 	/**
@@ -219,7 +256,7 @@ public class TimeReport extends DatabaseInterface {
 	 * @param groupId The groupId to change to.
 	 */
 	public void setGroupId(long groupId) {
-		//See setId
+		this.groupId=groupId;
 	}
 	
 	/**
@@ -227,8 +264,8 @@ public class TimeReport extends DatabaseInterface {
 	 * 
 	 * @param type The type to change to.
 	 */
-	public void setType(int type) {
-		//See setId
+	public void setType(long type) {
+		this.type = type;
 	}
 	
 	/**
@@ -237,15 +274,15 @@ public class TimeReport extends DatabaseInterface {
 	 * @param duration The duration to change to.
 	 */
 	public void setDuration(long duration) {
-		//See setId
+		this.duration=duration;
 	}
 	
 	/**
-	 * Setter for the week of this time report
+	 * Setter for the week of this time report.
 	 * 
 	 * @param week The week to change to.
 	 */
-	public void setWeek(long week) {
+	private void setWeek(long week) {
 		//See setId
 		
 		//Moreover the user will never enter an explicit value
@@ -256,11 +293,14 @@ public class TimeReport extends DatabaseInterface {
 	
 	/**
 	 * Setter for the date of this time report.
-	 * 
+	 * This will in turn call on the setWeek method automatically.
 	 * @param date The date to change to.
 	 */
 	public void setDate(Date date) {
-		//See setId
+		this.date=date;
+		java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+		calenderWeek.setTime(date);
+		setWeek(calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR));
 	}
 	
 	/**
