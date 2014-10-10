@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.xml.internal.fastinfoset.tools.PrintTable;
+
 import data.Role;
 import database.ProjectGroup;
 import database.User;
@@ -113,7 +115,10 @@ public class AdministrationComponent extends ServletBase {
 			addNewUser(request, out);
 			
 			ArrayList<User> users = instance.getUsers();
+			String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
+			script(out, javascriptCode);
 			printUserList(out, users);
+	
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input>");
@@ -226,40 +231,6 @@ public class AdministrationComponent extends ServletBase {
 		 out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 	}
 
-	public void printUserList(PrintWriter out, ArrayList<User> users) {
-		String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
-		script(out, javascriptCode);
-		out.println("<p>System users:</p>");
-	    out.println("<table border=" + formElement("1") + ">");
-	    out.println("<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>");
-		
-		for(int i = 0; i < users.size(); i++) {
-	    	String name = users.get(i).getName();
-	    	System.out.println(name);
-	    	String pw = users.get(i).getPassword();
-	    	String role = users.get(i).getRole();
-	    	String group = instance.getProjectGroup(users.get(i).getGroupId()).getProjectName();
-	    	String editURL = "administrationcomponent?edituser="+name;
-	    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
-	    	String deleteURL = "administrationcomponent?deleteuser="+name;
-	    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
-	    	if (name.equals("admin")){
-	    		deleteCode = "";
-	    	}
-	    	out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
-	    	out.println("<td>" + group + "</td>");
-	    	out.println("<td>" + role + "</td>");
-	    	out.println("<td>" + pw + "</td>");
-	    	out.println("<td>" + editCode + "</td>");
-	    	out.println("<td>" + deleteCode + "</td>");
-	    	out.println("</tr>");
-		}
-		out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
-		out.println("</table>");
-	}
-
-	
 	private void script(PrintWriter out, String code){
 		out.print("<script>" + code + "</script>");
 	}

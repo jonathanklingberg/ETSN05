@@ -126,11 +126,15 @@ public abstract class ServletBase extends HttpServlet {
 // Print User Table according to mockup design in SRS
 	protected void printUserList(PrintWriter out, ArrayList<User> userList) {
 		out.println(getUserTableName());
-		out.println("<table border=" + formElement("1") + ">");		
+		out.println("<table border=" + formElement("1") + ">");	
+		if(isAdmin()){
+			out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
+		}
 		printTableHeader(out);	    
 		for(int i = 0; i < userList.size(); i++) {			
 			String name = userList.get(i).getName();
-			String pw = "null"; // users.get(i).getPassword();
+			System.out.println(name);
+			String pw = userList.get(i).getPassword();
 			String role = userList.get(i).getRole();
 			String group = instance.getProjectGroup(userList.get(i).getGroupId()).getProjectName();
 			String editURL = "administrationcomponent?edituser="+name;
@@ -142,10 +146,11 @@ public abstract class ServletBase extends HttpServlet {
 			}
 			printUser(out, name, role, group, editCode, deleteCode);
 		}
+		
 		out.println("</table>");
 	}
-
-	private void printUser(PrintWriter out, String name, String role, String group,
+	//make private!!!!
+	protected void printUser(PrintWriter out, String name, String role, String group,
 			String editCode, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td>" + name + "</td>");
@@ -156,8 +161,8 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");
 	}
-
-	private void printTableHeader(PrintWriter out) {
+	//make privatE !!!!
+	protected void printTableHeader(PrintWriter out) {
 		out.println("<tr>");
 		out.println("<td><B>Name</B></td>");
 		out.println(isAdmin()? "<td><B>Group</B></td>" : "");
