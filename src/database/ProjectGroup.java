@@ -71,8 +71,8 @@ public class ProjectGroup extends DatabaseInterface {
 		//in this class
 		ArrayList<User> membersList = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role "
-					+ "FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id + " AND Users.isActive = 1");
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+					+ " WHERE RoleInGroup.groupId = " + id + " AND RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");

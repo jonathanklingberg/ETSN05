@@ -117,80 +117,75 @@ public class AdministrationComponent extends ServletBase {
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
 
-		String myName = "";
+		String role = "";
 		HttpSession session = request.getSession(true);
-		Object nameObj = session.getAttribute("name");
-		if (nameObj != null) {
-			myName = (String) nameObj; // if the name exists typecast the name
-										// to a string
+		Object roleObj = session.getAttribute("role");
+		if (roleObj != null) {
+			role = (String) roleObj;
 		}
-		System.out.println("MyName: " + myName);
-		// check that the user is logged in
-		if (!isLoggedIn(request))
-			response.sendRedirect("logincomponent");
-		else
-			if (myName.equals("admin")) {
-				out.println("<h1>Administration page " + "</h1>");
-				
-				// check if the administrator wants to add a new user in the form
-				String newName = request.getParameter("addname");
-				if (newName != null) {
-					if (checkNewName(newName)) {
-						boolean addPossible = addUser(newName);
-						if (!addPossible)
-							out.println("<p>Error: Suggested user name not possible to add</p>");
-					}	else
-						out.println("<p>Error: Suggesten name not allowed</p>");
-				}
-				
-				String deleteGroup = request.getParameter("deletegroup");
-				if (deleteGroup != null) {
-					long groupNumber = Long.parseLong(deleteGroup);
-					System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
-				}
-				
-				String editGroup = request.getParameter("editgroup");
-				if (editGroup != null) {
-					long groupNumber = Long.parseLong(editGroup);
-					String newGroupName = request.getParameter("groupname");
-					if(newGroupName != null){
-						boolean res = instance.changeGroupName(groupNumber, newGroupName);	
-						if(!res) {
-							String code ="alert(\"Group name already taken, please try a new one\")";
-							script(out, code);
-						} else {
-							String code ="alert(\"Group name has been updated!\")";
-							script(out, code);
-						}
-					}
-				}
-				String createNewGroup = request.getParameter("addNewGroup");
-				if(createNewGroup != null) {
-					boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
-					if(res) {
-						String code ="alert(\"Group has been added!\")";
-						script(out, code);
-					} else {
+		// check that the user is logged in as admin, otherwise redirect back to loginComponent
+		if (isLoggedIn(request) && role.equals("Admin")) {
+			out.println("<h1>Administration page " + "</h1>");
+			
+			// check if the administrator wants to add a new user in the form
+			String newName = request.getParameter("addname");
+			if (newName != null) {
+				if (checkNewName(newName)) {
+					boolean addPossible = addUser(newName);
+					if (!addPossible)
+						out.println("<p>Error: Suggested user name not possible to add</p>");
+				}	else
+					out.println("<p>Error: Suggesten name not allowed</p>");
+			}
+			
+			String deleteGroup = request.getParameter("deletegroup");
+			if (deleteGroup != null) {
+				long groupNumber = Long.parseLong(deleteGroup);
+				System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
+			}
+			
+			String editGroup = request.getParameter("editgroup");
+			if (editGroup != null) {
+				long groupNumber = Long.parseLong(editGroup);
+				String newGroupName = request.getParameter("groupname");
+				if(newGroupName != null){
+					boolean res = instance.changeGroupName(groupNumber, newGroupName);	
+					if(!res) {
 						String code ="alert(\"Group name already taken, please try a new one\")";
 						script(out, code);
+					} else {
+						String code ="alert(\"Group name has been updated!\")";
+						script(out, code);
 					}
 				}
-				String deleteUser = request.getParameter("deleteuser");
-				if(deleteUser != null) {
-					instance.getUser(deleteUser).removeMe();
+			}
+			String createNewGroup = request.getParameter("addNewGroup");
+			if(createNewGroup != null) {
+				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
+				if(res) {
+					String code ="alert(\"Group has been added!\")";
+					script(out, code);
+				} else {
+					String code ="alert(\"Group name already taken, please try a new one\")";
+					script(out, code);
 				}
-				
-				
-				ArrayList<User> users = instance.getUsers();
-				listUsers(out, users);
-				listGroups(out);
-				out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
-				out.println("</body></html>");
-				
-				
-			} else  // name not admin
-				response.sendRedirect("functionality.html");	
-		}
+			}
+			String deleteUser = request.getParameter("deleteuser");
+			if(deleteUser != null) {
+				instance.getUser(deleteUser).removeMe();
+			}
+			
+			
+			ArrayList<User> users = instance.getUsers();
+			listUsers(out, users);
+			listGroups(out);
+			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
+			out.println("</body></html>");
+		} else {
+			System.err.println("Illigal action performed as: " + role + "; tried to access AdministrationComponent.");
+			response.sendRedirect("logincomponent");
+		}	
+	}
 	
 	public void listGroups(PrintWriter out) { 
 		String javascriptCode = "function editGroup(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
@@ -255,21 +250,19 @@ public class AdministrationComponent extends ServletBase {
 		out.print("<script>" + code + "</script>");
 	}
 
-	@Override
-	protected String getUserTableHeading() {
+	protected String getUserTableName() {
 		return null;
 	}
-<<<<<<< HEAD
-=======
 
-	protected String generateUserTable() {
-		
+	protected String getUserTable() {			
 		return "<tr><td>Name</td><td>Group</td><td>Role</td><td>Password</td><td>Edit</td><td>Remove</td></tr>";
 	}
 
-	protected Role getRole() {
-		return Role.Admin;
+	protected boolean isAdminOrProjectManager() {
+		return true;
 	}
 
->>>>>>> branch 'master' of https://github.com/jonathanklingberg/ETSN05.git
+	protected boolean isAdmin() {
+		return true;
+	}
 }

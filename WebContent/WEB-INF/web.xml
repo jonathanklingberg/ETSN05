@@ -29,4 +29,24 @@
     <servlet-name>AdministrationComponent</servlet-name>
     <url-pattern>/AdministrationComponent</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>WorkerComponent</display-name>
+    <servlet-name>WorkerComponent</servlet-name>
+    <servlet-class>base.WorkerComponent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WorkerComponent</servlet-name>
+    <url-pattern>/WorkerComponent</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ProjectManagerComponent</display-name>
+    <servlet-name>ProjectManagerComponent</servlet-name>
+    <servlet-class>base.ProjectManagerComponent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProjectManagerComponent</servlet-name>
+    <url-pattern>/ProjectManagerComponent</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -62,13 +62,16 @@ public class ProjectManagerComponent extends ServletBase {
 			    out.println("<table border=" + formElement("1") + ">");
 			    out.println("<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>");
 			    
+			    //Prints a list with users that are in the same group
 			    ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
+			    listUsers(out, usersInGroup);
+			    
 			    
 			    
 			    
 				
 				/* Do alot of stuff according to the SRS:
-				 * See all members of his group
+				 * See all members of his group			X
 				 * See all groupmembers timereports
 				 * See summation of timereports. (time, role, activity etc etc) See SRS 6.7) (footable)
 				 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
@@ -101,21 +104,20 @@ public class ProjectManagerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	@Override
-	protected String getUserTableHeading() {
-		
+	protected String getUserTableName() {		
 		return 	"<p>Members in project:</p>";
 	}
 
-	@Override
-	protected String generateUserTable() {
-
+	protected String getUserTable() {
 		return "<tr><td>Name</td><td>Role</td><td>Edit (role)</td></tr>";
 	}
 
-	@Override
-	protected Role getRole() {
-		return Role.ProjectManager;
+	protected boolean isAdminOrProjectManager() {
+		return true;
+	}
+
+	protected boolean isAdmin() {
+		return false;
 	}
 
 }
