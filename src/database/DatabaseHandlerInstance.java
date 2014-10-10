@@ -29,11 +29,11 @@ import java.util.List;
  */
 
 
-public class WorkspaceInstance {
-	private static WorkspaceInstance instance = null;
+public class DatabaseHandlerInstance {
+	private static DatabaseHandlerInstance instance = null;
 	private static Connection conn;
-	protected WorkspaceInstance(Connection conn) {
-		WorkspaceInstance.conn = conn;
+	protected DatabaseHandlerInstance(Connection conn) {
+		DatabaseHandlerInstance.conn = conn;
 		//Food for thought: Will this connection live on forever,
 		//or will it be closed when the session of the user who created is
 		// is closed? If so, there might be a need for a redesign, or
@@ -49,9 +49,9 @@ public class WorkspaceInstance {
 	 * @return The WorkspaceInstance which will be the same in the entire
 	 *         system.
 	 */
-	public static WorkspaceInstance getInstance(Connection conn) {  
+	public static DatabaseHandlerInstance getInstance(Connection conn) {  
 		if(instance == null) {
-	         instance = new WorkspaceInstance(conn);
+	         instance = new DatabaseHandlerInstance(conn);
 	     }
 	      return instance;
 	}
@@ -126,16 +126,13 @@ public class WorkspaceInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
 			ps.executeUpdate();
-			ps = conn.prepareStatement("select id from Users where userName='" + user.getName() +  "'");
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			System.out.println("sd " + rs.getLong("id"));
-			User newUser = new User(conn, user.getName(), user.getPassword(), rs.getLong("id"), user.getGroupId(), user.getRole(), null);
-			wasAdded = getProjectGroup(newUser.getGroupId()).addUser(newUser);
+			ps.close();
+			wasAdded = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return wasAdded;
 	}	
 	

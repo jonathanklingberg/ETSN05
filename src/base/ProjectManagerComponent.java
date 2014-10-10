@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import data.Role;
 import database.User;
-import database.WorkspaceInstance;
+import database.DatabaseHandlerInstance;
 
 /**
  * This class will be used by project managers in order to communicate with the

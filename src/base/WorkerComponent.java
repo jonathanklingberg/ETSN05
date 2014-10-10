@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import database.TimeReport;
 import database.User;
-import database.WorkspaceInstance;
+import database.DatabaseHandlerInstance;
 
 /**
  * This class will be used by project workers in order to
@@ -88,7 +88,7 @@ public class WorkerComponent extends ServletBase {
 			out.println("<td><CENTER><B>STATE</B></CENTER></td>");
 			out.println("<td><CENTER><B>EDIT</B></CENTER></td>");
 			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
-			ArrayList<TimeReport> timeReports = WorkspaceInstance.getInstance(conn).getUsersTimeReports(userId);
+			ArrayList<TimeReport> timeReports = DatabaseHandlerInstance.getInstance(conn).getUsersTimeReports(userId);
 			for(int i = 0; i < timeReports.size(); ++i){
 				Long timeReportId = timeReports.get(i).getId();
 				String editURL = "workercomponent?edittimereport="+timeReportId;

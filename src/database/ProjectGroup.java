@@ -26,7 +26,7 @@ import data.Role;
  *  @version 0.2
  */
 
-public class ProjectGroup extends DatabaseInterface {
+public class ProjectGroup extends AbstractCointainer {
 	protected String name;
 	protected long id;
 	

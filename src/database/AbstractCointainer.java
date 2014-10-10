@@ -13,7 +13,7 @@ import data.Role;
  * @version 0.2
  *
  */
-public abstract class DatabaseInterface {
+public abstract class AbstractCointainer {
 	protected Connection conn;
 	/**
 	 * Creates an HTML representation of the object depending on
