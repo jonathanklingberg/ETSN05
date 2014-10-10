@@ -275,23 +275,24 @@ public class ProjectGroup extends DatabaseInterface {
 	 */
 	public boolean removeMe() {
 		try {
-			System.out.println(id);
 			List<User> usersTobeDeleted = getUsers();
 			List<TimeReport> timeReportsToDelete = getTimeReports();
 			PreparedStatement ps;
 			for(int i = 0; i < usersTobeDeleted.size(); i++) {
-				ps = conn.prepareStatement("DELETE FROM Users WHERE id = '" + usersTobeDeleted.get(i).getUserId() + "'");
-				ps.executeUpdate();
-				ps.close();
+				usersTobeDeleted.get(i).removeMe();
 			}
 			for(int i = 0; i < timeReportsToDelete.size(); i++) {
 				removeTimeReport(timeReportsToDelete.get(i));
 			}
+			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = '" + id + "'");
+			ps.executeUpdate();
+			ps.close();
 			ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE id = '" + id + "'");
 			ps.executeUpdate();
 			ps.close();
 			return true;
 		}catch(SQLException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
