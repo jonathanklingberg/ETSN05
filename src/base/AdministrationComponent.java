@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import data.Role;
 import database.ProjectGroup;
 import database.User;
 
@@ -108,13 +109,13 @@ public class AdministrationComponent extends ServletBase {
 			deleteGroup(request);
 			editGroup(request, out);
 			createNewGroup(request, out);
-			deleteUser(request);	
+			deleteUser(request);
+			addNewUser(request, out);
 			
 			ArrayList<User> users = instance.getUsers();
 			printUserList(out, users);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
-			out.println("Password: <input type=\"text\" id=\"password\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input>");
 			out.println("Project Manager: <input type=\"checkbox\" id=\"pm\">");
 			out.println("</div><br />");
@@ -128,6 +129,32 @@ public class AdministrationComponent extends ServletBase {
 			System.err.println("Illigal action performed as: " + getRole() + "; tried to access AdministrationComponent.");
 			response.sendRedirect("logincomponent");
 		}	
+	}
+
+	private void addNewUser(HttpServletRequest request, PrintWriter out) {
+		String failMsg = "";
+		String username = request.getParameter("addNewUser");
+		String group = request.getParameter("group");
+		String pmChecked = request.getParameter("pm");
+		if(username != null) {
+			if(checkNewName(username)) {
+				if(instance.getProjectId(group) != -1) {
+					if(pmChecked.equals("true")) {
+						instance.addUser(new User(username, createPassword(), "ProjectManager", instance.getProjectId(group)));
+	 				} else {
+						instance.addUser(new User(username, createPassword(), "Unspecified", instance.getProjectId(group)));
+	 				}
+				} else {
+					failMsg += "Group does not exist! \n";
+				}
+			} else {
+				failMsg += "Username already taken! Please try a new one";
+			}
+			if(!failMsg.isEmpty()) {
+				String code = "alert('" + failMsg + "')";
+				script(out, code);
+			}
+		}
 	}
 
 	private void deleteUser(HttpServletRequest request) {
@@ -185,7 +212,6 @@ public class AdministrationComponent extends ServletBase {
 		 for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getProjectName();
-			 
 			String deleteURL = "administrationcomponent?deletegroup="+id;
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
 			String editURL = "administrationcomponent?editgroup="+id;

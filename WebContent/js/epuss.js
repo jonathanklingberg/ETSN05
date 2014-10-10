@@ -13,11 +13,10 @@ window.onload = function(){
 	    buttons: { 
 	        Add: function() {
 	            var name = $("#name").val();
-	            var passWord = $("#passWord").val();
 	            var group = $("#group").val();
 	            var pm = $("#pm").val() == "on";
 	            $(this).dialog("close");
-	            var url = "AdministrationComponent?addNewUser="+ name + "&password=" +  passWord + "&group=" +  group + "&pm=" + pm;
+	            var url = "AdministrationComponent?addNewUser="+ name + "&group=" +  group + "&pm=" + pm;
 	            $(location).attr('href',url);
 	        },
 	        Cancel: function () {

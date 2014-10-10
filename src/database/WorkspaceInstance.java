@@ -124,7 +124,7 @@ public class WorkspaceInstance {
 		
 		boolean wasAdded = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("INSERT into Users(id, userName, password, sessionId) VALUES('', '" + user.getName() + "', '" + user.getPassword() + "', '" + user.getSessionId() + "')" );
+			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
 			ps.executeUpdate();
 			ps.close();
 			wasAdded = true;
@@ -170,6 +170,20 @@ public class WorkspaceInstance {
 			System.err.println(e);
 		}		
 		return users;
+	}
+	
+	public long getProjectId(String projectName) {
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement("select * from ProjectGroups where groupName= + '" + projectName + "'");
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				return rs.getLong("id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	/** 
