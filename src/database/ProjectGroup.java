@@ -219,7 +219,7 @@ public class ProjectGroup extends DatabaseInterface {
 		if(!user.getName().equals("admin")){
 			try {
 				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
-					"groupId = " + id +" WHERE userId = '" + user.getUserId() + "'");
+					"groupId = " + id +", isActiveInGroup = 1 WHERE userId = '" + user.getUserId() + "'");
 				if(ps.executeUpdate() == 1){
 					wasAdded = true;
 				}

@@ -52,7 +52,7 @@ public class WorkerComponent extends ServletBase {
 		// Check so that the current user are eather a developer, tester or a system architect. 
 		// Currently not giving the admin or PM access to WorkerComponent
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
-			out.println("<h1> Workercomponent " + "<h1>");
+			out.println("<h1> Workercomponent " + "</h1>");
 			String userName = (String) session.getAttribute("name");
 			//Prints username and project group ID
 			long projectGroup = WorkspaceInstance.getInstance(conn).getUser(userName).getGroupId();
@@ -62,7 +62,7 @@ public class WorkerComponent extends ServletBase {
 			//Display all project members in project group
 			//Anropa en metod för att hämta alla medlemmar i en viss grupp. Metoden bör skapas i WorkspaceInstance 
 			out.println("<p>Group members</p>");
-			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=70%>");
+			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=60%>");
 			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
 			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
 			ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
