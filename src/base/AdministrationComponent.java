@@ -84,6 +84,8 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		String userActionMessage;
+		String groupActionMessage;
 		PrintWriter out = response.getWriter();
 		session = request.getSession();
 		out.println(getPageIntro());
@@ -103,27 +105,23 @@ public class AdministrationComponent extends ServletBase {
 				}	else
 					out.println("<p>Error: Suggesten name not allowed</p>");
 			}
-
 			
-			deleteGroup(request);
-			editGroup(request, out);
-			createNewGroup(request, out);
-			deleteUser(request);
-			addNewUser(request, out);
+			groupActionMessage = deleteGroup(request);
+			groupActionMessage = editGroup(request, out);
+			groupActionMessage = createNewGroup(request, out);
+			userActionMessage = deleteUser(request);
+			userActionMessage = addNewUser(request, out);
 			
 			ArrayList<User> users = instance.getUsers();
-			String javascriptCode = "function createUser(link){ var name = prompt('Please enter a new name for the group.'); if (name != null) { link.href= link.href+\"&groupname=\"+name; return true; } return false;}";
-			script(out, javascriptCode);
-			printUserTable(out, users);
-	
+			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input>");
 			out.println("Project Manager: <input type=\"checkbox\" id=\"pm\">");
 			out.println("</div><br />");
 			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
-
-			listGroups(out);
+			listGroups(out, groupActionMessage);
+			out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println("</body></html>");
 
@@ -133,48 +131,51 @@ public class AdministrationComponent extends ServletBase {
 		}	
 	}
 
-	private void addNewUser(HttpServletRequest request, PrintWriter out) {
-		String failMsg = "";
+	private String addNewUser(HttpServletRequest request, PrintWriter out) {
+		String failMsg = null;
 		String username = request.getParameter("addNewUser");
 		String group = request.getParameter("group");
-		String pmChecked = request.getParameter("pm");
+		boolean pmChecked = Boolean.parseBoolean(request.getParameter("pm"));
+		System.out.println(pmChecked);
 		if(username != null) {
 			if(checkNewName(username)) {
 				if(instance.getProjectId(group) != -1) {
-					if(pmChecked.equals("true")) {
-						instance.addUser(new User(username, createPassword(), "ProjectManager", instance.getProjectId(group)));
+					boolean res;
+					if(pmChecked) {
+						res = instance.addUser(new User(username, createPassword(), "ProjectManager", instance.getProjectId(group)));
 	 				} else {
-						instance.addUser(new User(username, createPassword(), "Unspecified", instance.getProjectId(group)));
+						res = instance.addUser(new User(username, createPassword(), "Unspecified", instance.getProjectId(group)));
 	 				}
+					if(!res)
+						failMsg = "User already exists!";
 				} else {
-					failMsg += "Group does not exist! \n";
+					failMsg = "Group does not exist!";
 				}
 			} else {
-				failMsg += "Username already taken! Please try a new one";
-			}
-			if(!failMsg.isEmpty()) {
-				String code = "alert('" + failMsg + "')";
-				script(out, code);
+				failMsg = "Incorrect username format!";
 			}
 		}
+		return failMsg;
 	}
 
-	private void deleteUser(HttpServletRequest request) {
+	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
-			instance.getUser(deleteUser).removeMe();
+			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not remove user.";
 		}
+		return null;
 	}
 
-	private void deleteGroup(HttpServletRequest request) {
+	private String deleteGroup(HttpServletRequest request) {
 		String deleteGroup = request.getParameter("deletegroup");
 		if (deleteGroup != null) {
 			long groupNumber = Long.parseLong(deleteGroup);
-			System.out.println(instance.getProjectGroup(groupNumber).removeMe() ? "success" : "fail");
+			return instance.getProjectGroup(groupNumber).removeMe() ? "Group deleted successfully." : "Failed to delete group.";
 		}
+		return null;
 	}
 
-	private void editGroup(HttpServletRequest request, PrintWriter out) {
+	private String editGroup(HttpServletRequest request, PrintWriter out) {
 		String editGroup = request.getParameter("editgroup");
 		if (editGroup != null) {
 			long groupNumber = Long.parseLong(editGroup);
@@ -182,31 +183,29 @@ public class AdministrationComponent extends ServletBase {
 			if(newGroupName != null){
 				boolean res = instance.changeGroupName(groupNumber, newGroupName);	
 				if(!res) {
-					String code ="alert(\"Group name already taken, please try a new one\")";
-					script(out, code);
+					return "Group name already taken, please try a new one.";
 				} else {
-					String code ="alert(\"Group name has been updated!\")";
-					script(out, code);
+					return "Group name has been updated.";
 				}
 			}
 		}
+		return null;
 	}
 
-	private void createNewGroup(HttpServletRequest request, PrintWriter out) {
+	private String createNewGroup(HttpServletRequest request, PrintWriter out) {
 		String createNewGroup = request.getParameter("addNewGroup");
 		if(createNewGroup != null) {
 			boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
 			if(res) {
-				String code ="alert(\"Group has been added!\")";
-				script(out, code);
+				return "Group has been added.";
 			} else {
-				String code ="alert(\"Group name already taken, please try a new one\")";
-				script(out, code);
+				return "Group name already taken, please try a new one";
 			}
 		}
+		return null;
 	}
 	
-	public void listGroups(PrintWriter out) { 
+	public void listGroups(PrintWriter out, String groupActionMessage) { 
 	 	 out.println("<p> Groups </p>");
 		 out.println("<table border=" + formElement("1") + ">");
 		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
@@ -225,11 +224,8 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("</tr>");
 		 }
 		 out.println("</table>");
-		 out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
-	}
-
-	private void script(PrintWriter out, String code){
-		out.print("<script>" + code + "</script>");
+		 if(groupActionMessage != null)
+			 out.print("<p>"+ groupActionMessage +"</p>");
 	}
 
 	protected String getUserTableName() {

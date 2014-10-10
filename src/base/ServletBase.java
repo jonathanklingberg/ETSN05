@@ -7,13 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import data.Role;
 import database.TimeReport;
 import database.User;
 import database.DatabaseHandlerInstance;
@@ -40,7 +38,7 @@ public abstract class ServletBase extends HttpServlet {
 	// Define states
 	protected static final int LOGIN_FALSE = 0;
 	protected static final int LOGIN_TRUE = 1;	
-
+	
 	protected Connection conn;
 	protected DatabaseHandlerInstance instance;
 	protected HttpSession session;
@@ -48,21 +46,21 @@ public abstract class ServletBase extends HttpServlet {
 	 * Constructs a servlet and makes a connection to the database. 
 	 * It also writes all user names on the console for test purpose. 
 	 */
-	public ServletBase() {
-		try{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+    public ServletBase() {
+    	try{
+    		Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
-					"user=puss1403&password=9dpa2oan");
+			           "user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
 			Statement stmt = conn.createStatement();		    
-			ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
-			System.out.println("Successfully connected to database!"); // Success message in console
-			stmt.close();
-
+		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
+		    System.out.println("Successfully connected to database!"); // Success message in console
+		    stmt.close();
+			
 		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,21 +71,22 @@ public abstract class ServletBase extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Checks if a user is logged in or not.
-	 * @param request The HTTP Servlet request (so that the session can be found)
-	 * @return true if the user is logged in, otherwise false.
-	 */
-	protected boolean isLoggedIn(HttpServletRequest request) {
-		HttpSession session = request.getSession(true);
-		Object objectState = session.getAttribute("state");
-		int state = LOGIN_FALSE;
+    }
+    
+    /**
+     * Checks if a user is logged in or not.
+     * @param request The HTTP Servlet request (so that the session can be found)
+     * @return true if the user is logged in, otherwise false.
+     */
+    protected boolean isLoggedIn(HttpServletRequest request) {
+    	HttpSession session = request.getSession(true);
+    	Object objectState = session.getAttribute("state");
+    	int state = LOGIN_FALSE;
 		if (objectState != null) 
 			state = (Integer) objectState; 
 		return (state == LOGIN_TRUE);
 	}
+
     
     /**
      * Can be used to construct form elements.
@@ -113,20 +112,19 @@ public abstract class ServletBase extends HttpServlet {
     						"<title> The Base Block System </title></head><body>";
     	return intro;
     }
+    
     protected String getViewLayoutStart(){
-    	return "";
-    }    
-    protected String getViewLayoutSEnd(){
     	return "";
     }
     
+    protected String getViewLayoutSEnd(){
+    	return "";
+    }
+
 // Print User Table according to mockup design in SRS
-	protected void printUserTable(PrintWriter out, ArrayList<User> userList) {
+	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
 		out.println(getUserTableName());
 		out.println("<table border=" + formElement("1") + ">");	
-		if(isAdmin()){
-			out.println("<br/><a href=\"administrationcomponent?addNewUser=\" onclick="+ formElement("return createUser(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
-		}
 		printTableHeader(out);	    
 		for(int i = 0; i < userList.size(); i++) {			
 			String name = userList.get(i).getName();
@@ -141,18 +139,21 @@ public abstract class ServletBase extends HttpServlet {
 			if (name.equals("admin")){
 				deleteCode = "";
 			}
-			printUser(out, name, role, group, editCode, deleteCode);
-		}		
+			printUser(out, name, role, group, editCode, pw, deleteCode);
+		}
+		
 		out.println("</table>");
+		if(userActionMessage != null)
+			out.print("<p>"+ userActionMessage +"</p>");
 	}
 	
 	private void printUser(PrintWriter out, String name, String role, String group,
-			String editCode, String deleteCode) {
+		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td>" + name + "</td>");
 		out.println(isAdmin()? ("<td>" + group + "</td>") : "");
 		out.println("<td>" + role + "</td>");
-		out.println(isAdmin()? ("<td>" + group + "</td>") : "");
+		out.println(isAdmin()? ("<td>" + pw + "</td>") : "");
 		out.println(isAdminOrProjectManager()? ("<td>" + editCode + "</td>") : "");
 		out.println(isAdmin()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");

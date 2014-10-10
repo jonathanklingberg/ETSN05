@@ -6,12 +6,11 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import data.Role;
 import database.TimeReport;
-
 import database.User;
 import database.DatabaseHandlerInstance;
 
@@ -47,7 +46,7 @@ public class WorkerComponent extends ServletBase {
 		session = request.getSession(true);
 		out.println(getPageIntro());
 		String role = getRole();
-		
+
 		// Check so that the current user are eather a developer, tester or a system architect. 
 		// Currently not giving the admin or PM access to WorkerComponent
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
@@ -64,7 +63,7 @@ public class WorkerComponent extends ServletBase {
 			//Display all project members in project group
 			//out.println("<div Style=\"display:inline-block\"> Group members");
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance.getGroupIdOfUser(userName));
-			printUserTable(out, groupMembers);
+			printUserTable(out, groupMembers, null);
 //			out.println("<div>");
 //			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
 //			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
@@ -109,7 +108,7 @@ public class WorkerComponent extends ServletBase {
 			out.println("</div>");
 			
 			out.println("<button type=button>Add Time Report</button>");
-			
+
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 
 			

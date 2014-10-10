@@ -14,7 +14,7 @@ window.onload = function(){
 	        Add: function() {
 	            var name = $("#name").val();
 	            var group = $("#group").val();
-	            var pm = $("#pm").val() == "on";
+	            var pm = $("#pm").is(":checked");
 	            $(this).dialog("close");
 	            var url = "AdministrationComponent?addNewUser="+ name + "&group=" +  group + "&pm=" + pm;
 	            $(location).attr('href',url);

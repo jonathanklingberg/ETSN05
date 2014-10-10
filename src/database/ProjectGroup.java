@@ -218,9 +218,12 @@ public class ProjectGroup extends AbstractCointainer {
 		boolean wasAdded = false;
 		if(!user.getName().equals("admin")){
 			try {
-				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
-					"groupId = " + id +", isActiveInGroup = 1 WHERE userId = '" + user.getUserId() + "'");
-				if(ps.executeUpdate() == 1){
+				PreparedStatement ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role) values("+ user.getUserId() +", " +
+					user.getGroupId() +", '" + user.getRole() + "');");
+				System.out.println("role: " + user.getRole());
+				System.out.println("groupid " + user.getGroupId());
+				System.out.println("id : " + user.getUserId());
+				if(ps.executeUpdate() != 0){
 					wasAdded = true;
 				}
 				ps.close();
