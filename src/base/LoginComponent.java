@@ -98,6 +98,7 @@ public class LoginComponent extends ServletBase {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
        			session.setAttribute("name", name);  // save the name in the session
+       			session.setAttribute("userId", currUser.getUserId());  // save the userId in the session
        			session.setAttribute("sessionid", session.getId());
        			session.setAttribute("role", currUser.getRole());
        			switch (currUser.getRole()) {
