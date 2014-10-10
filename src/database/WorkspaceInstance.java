@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -406,6 +407,38 @@ public class WorkspaceInstance {
 		return usersInGroup;
 	}
 
+	
+	/**
+ 	* Retrieves all time reports belonging to a specified user
+ 	* 
+ 	*  @param userId The id of the user
+ 	* @return A list of all the time reports belonging to a specified user,
+ 	* or an empty list if there are no time reports.
+ 	*/
+	public ArrayList<TimeReport> getUsersTimeReports(long userId){
+		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){	
+				long id = rs.getLong("id");
+				long groupId = rs.getLong("groupId"); 
+				Date date = rs.getDate("date");
+				long duration = rs.getLong("duration");
+				long type = rs.getLong("type");
+				long week = rs.getLong("week");
+				boolean signed = rs.getBoolean("signed");
+				list.add(new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed));
+			}			
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}				
+		return list;
+	}
+	
+	
 //	/**
 //	 * Method for generating the overall structure for the different
 //	 * component classes. Will typically differ depending on the user who
