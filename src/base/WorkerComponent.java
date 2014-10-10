@@ -68,7 +68,7 @@ public class WorkerComponent extends ServletBase {
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance.getUser(userName).getGroupId());
 			printUserTable(out, groupMembers, null);
 			
-			ArrayList<TimeReport> timeReports = instance.getUsersTimeReports(userId);
+			ArrayList<TimeReport> timeReports = instance.getUsersTimeReportsOfUser(userId);
 			printTimeReportTable(out, timeReports);
 			
 			

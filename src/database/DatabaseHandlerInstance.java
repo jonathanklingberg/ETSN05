@@ -334,42 +334,6 @@ public class DatabaseHandlerInstance {
 		return resultOk;
 	}
 
-	public long getGroupIdOfUser(String name) {
-		long groupId = 0;
-		try {
-			PreparedStatement ps = conn.prepareStatement("select * from Users where userName='"
-					+ name + "'");
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			long id = rs.getLong("id");
-			rs = ps.executeQuery("select * from RoleInGroup where userId='"
-					+ id + "'");
-			rs.next();
-			groupId = rs.getLong("groupId");
-			rs.close();
-			ps.close();
-		} catch (SQLException e) {			
-			e.printStackTrace();
-		}		
-		return groupId;
-	}
-
-	public String getGroupName(long groupId) {
-		String groupName = "";
-		try {
-			PreparedStatement ps = conn.prepareStatement("select * from ProjectGroups where id="
-					+ groupId);
-			ResultSet rs = ps.executeQuery();
-			rs.next();	
-			groupName = rs.getString("groupName");
-			rs.close();
-			ps.close();
-		} catch (SQLException e) {			
-			e.printStackTrace();
-		}				
-		return groupName;
-	}
-
 	public ArrayList<User> getUsersInGroup(long groupId) {
 		ArrayList<User> usersInGroup = new ArrayList<User>();
 		for(User u : getAllUsers()) {
@@ -389,7 +353,7 @@ public class DatabaseHandlerInstance {
 	 * @return A list of all the time reports belonging to a specified user,
 	 * or an empty list if there are no time reports.
 	 */
-	public ArrayList<TimeReport> getUsersTimeReports(long userId){
+	public ArrayList<TimeReport> getUsersTimeReportsOfUser(long userId){
 		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
@@ -405,11 +369,7 @@ public class DatabaseHandlerInstance {
 		return list;
 	}
 
-	public String getGroupNameOfUser(String userName) {
-		return getGroupName(getGroupIdOfUser(userName));
-	}
-
-	public ArrayList<TimeReport> getTimeReportsForGroup(long groupId) {
+	public ArrayList<TimeReport> getTimeReportsOfGroup(long groupId) {
 		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE groupId = " + groupId);
@@ -440,7 +400,6 @@ public class DatabaseHandlerInstance {
 			System.err.println(e);
 		}
 		return timeReport;
-
 	}
 
 

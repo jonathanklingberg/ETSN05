@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.Role;
+import database.ProjectGroup;
 import database.TimeReport;
 import database.User;
 import database.DatabaseHandlerInstance;
@@ -54,14 +55,15 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			System.out.println("groupId = ");
 			System.out.println(groupId);
-			out.println("<p>Assigned to project: "+instance.getGroupName(groupId) +"</p>");;
+			ProjectGroup pg = instance.getProjectGroup(groupId);
+			out.println("<p>Assigned to project: "+ pg.getName() +"</p>");;
 			
 			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			printUserTable(out, usersInGroup, null);
 			
 			// Prints a table with time reports from users of the same group
-			ArrayList<TimeReport> timeReports = instance.getTimeReportsForGroup(groupId);
+			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			printTimeReportTable(out, timeReports);
 
 

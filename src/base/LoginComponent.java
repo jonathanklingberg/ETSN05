@@ -69,7 +69,7 @@ public class LoginComponent extends ServletBase {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+			
 		// Get the session
 		session = request.getSession(true);
 		
