@@ -62,22 +62,23 @@ public class WorkerComponent extends ServletBase {
 			out.println("<p> Assigned to project group: " + projectGroup + " </p>");
 			
 			
-			 
-			
 			//Display all project members in project group
 			//out.println("<div Style=\"display:inline-block\"> Group members");
-			out.println("<div>");
-			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
-			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
-			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
 			ArrayList<User> groupMembers = WorkspaceInstance.getInstance(conn).getGroupMembers(projectGroup);
-			for(int i = 0; i < groupMembers.size(); i++){
-				out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
-				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
-			}
-			out.println("</table>");
-			out.println("</div>");
+			listUsers(out, groupMembers);
+//			out.println("<div>");
+//			out.println("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=35%> Group Members");
+//			out.println("<tr><td><CENTER><B>NAME</B></CENTER></td>");
+//			out.println("<td><CENTER><B>ROLE</B></CENTER></td></tr>");
+//			for(int i = 0; i < groupMembers.size(); i++){
+//				out.println("<tr><td><CENTER>" + groupMembers.get(i).getName() + "</CENTER></td>");
+//				out.println("<td><CENTER>" + groupMembers.get(i).getRole() + "</CENTER></td></tr>");
+//			}
+//			out.println("</table>");
+//			out.println("</div>");
 			out.println("<br>");
+			
+			
 			//Display all time reports belonging to the logged in user. 
 			//out.println("<div Style=\"DISPLAY:inline-block\"> Time Reports");
 			out.println("<div>");
@@ -91,13 +92,19 @@ public class WorkerComponent extends ServletBase {
 			out.println("<td><CENTER><B>REMOVE</B></CENTER></td></tr>");
 			ArrayList<TimeReport> timeReports = WorkspaceInstance.getInstance(conn).getUsersTimeReports(userId);
 			for(int i = 0; i < timeReports.size(); ++i){
+				Long timeReportId = timeReports.get(i).getId();
+				String editURL = "workercomponent?edittimereport="+timeReportId;
+		    	String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
+		    	String deleteURL = "workercomponent?deletetimereport="+timeReportId;
+		    	String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";
+				
 				out.println("<tr><td><CENTER>" + timeReports.get(i).getDate() + "</CENTER></td>");
 				out.println("<td><CENTER>" + timeReports.get(i).getWeek() + "</CENTER></td>");
 				out.println("<td><CENTER>" + timeReports.get(i).getDuration() + "</CENTER></td>");
 				out.println("<td><CENTER>" + timeReports.get(i).getType() + "</CENTER></td>");
 				out.println("<td><CENTER>" + timeReports.get(i).isSigned() + "</CENTER></td>");
-				out.println("<td><CENTER> EDIT BUTTON </CENTER></td>");
-				out.println("<td><CENTER> REMOVE BUTTON </CENTER></td></tr>");
+				out.println("<td><CENTER>" + editCode +  "</CENTER></td>");
+				out.println("<td><CENTER>" + deleteCode + "</CENTER></td></tr>");
 			}
 			out.println("</table>");
 			out.println("</div>");
