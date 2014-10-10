@@ -27,7 +27,7 @@ import data.Role;
  * @author SG
  * @version 0.2
  */
-public class TimeReport extends DatabaseInterface {
+public class TimeReport extends AbstractCointainer {
 	private long id;
 	private long groupId;
 	private long userId;

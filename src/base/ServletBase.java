@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import data.Role;
 import database.User;
-import database.WorkspaceInstance;
+import database.DatabaseHandlerInstance;
 
 /**
  *  This class is the superclass for all servlets in the application. 
@@ -41,7 +41,7 @@ public abstract class ServletBase extends HttpServlet {
 	protected static final int LOGIN_TRUE = 1;	
 
 	protected Connection conn;
-	protected WorkspaceInstance instance;
+	protected DatabaseHandlerInstance instance;
 	protected HttpSession session;
 	/**
 	 * Constructs a servlet and makes a connection to the database. 
@@ -52,7 +52,7 @@ public abstract class ServletBase extends HttpServlet {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 					"user=puss1403&password=9dpa2oan");
-			instance = WorkspaceInstance.getInstance(conn);
+			instance = DatabaseHandlerInstance.getInstance(conn);
 			Statement stmt = conn.createStatement();		    
 			ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
 			System.out.println("Successfully connected to database!"); // Success message in console

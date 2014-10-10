@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
  * @version 0.2
  * 
  */
-public class User extends DatabaseInterface {
+public class User extends AbstractCointainer {
 	private String name;
 	private String password;
 	private long groupID;
