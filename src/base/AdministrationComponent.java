@@ -139,22 +139,24 @@ public class AdministrationComponent extends ServletBase {
 		System.out.println(pmChecked);
 		if(username != null) {
 			if(checkNewName(username)) {
-				long groupId = instance.getProjectGroup(groupName).getId();
-				if(groupId != -1) {
+				ProjectGroup p = instance.getProjectGroup(groupName);
+				if(p != null) {
+				long groupId = p.getId();
 					boolean res;
 					if(pmChecked) {
 						res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
 	 				} else {
 						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
 	 				}
-					if(!res)
+					if(!res){	
 						failMsg = "User already exists!";
+					}
 				} else {
 					failMsg = "Group does not exist!";
 				}
 			} else {
 				failMsg = "Incorrect username format!";
-			}
+			}	
 		}
 		return failMsg;
 	}
@@ -215,9 +217,9 @@ public class AdministrationComponent extends ServletBase {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
-		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + ">Delete</a>";
 			String editURL = "administrationcomponent?editgroup="+id;
-		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
+		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
 			out.println("<tr>");
 	    	out.println("<td>" + name + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
