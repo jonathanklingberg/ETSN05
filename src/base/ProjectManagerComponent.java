@@ -32,7 +32,12 @@ import database.DatabaseHandlerInstance;
  */
 @WebServlet("/projectmanagercomponent")
 public class ProjectManagerComponent extends ServletBase {
-
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Handles input from the project manager and displays information.
 	 * 
@@ -45,7 +50,7 @@ public class ProjectManagerComponent extends ServletBase {
 		session = request.getSession(true);
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
-
+		
 		String myName = getName();
 		
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("projectmanager")) {
@@ -91,7 +96,8 @@ public class ProjectManagerComponent extends ServletBase {
 
 
 		} else { // user is not admin or project manager
-			response.sendRedirect("functionality.html");
+//			response.sendRedirect("functionality.html");
+			// TODO FIX
 		}
 	}
 
@@ -105,6 +111,17 @@ public class ProjectManagerComponent extends ServletBase {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		// Update db signed.....
+		String checkbox = request.getParameter("signed");
+		String reportid = request.getParameter("reportid");
+		System.out.println("Signed: " + checkbox);
+		System.out.println("reportid: " + reportid);
+		PrintWriter out = response.getWriter();
+//		if("OK_from_db" == true){
+//			out.print("Everything OK / 1");
+//		}else{
+//			out.print("Something went wrong! / 0");
+//		}
 	}
 
 	protected String getUserTableName() {		

@@ -33,7 +33,7 @@ CREATE TABLE RoleInGroup(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
 userId INT UNSIGNED,
 groupId INT UNSIGNED NOT NULL,
-role VARCHAR(20) NOT NULL,
+role VARCHAR(20) NOT NULL DEFAULT 1,
 isActiveInGroup TINYINT(1),
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
@@ -78,16 +78,18 @@ INSERT INTO ProjectGroups (groupName) VALUES ('Group2');
 INSERT INTO ProjectGroups (groupName) VALUES ('Group3');
 INSERT INTO ProjectGroups (groupName) VALUES ('Group4');
 -- Add admin to RoleInGroup
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (1, 1, 'Admin');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (2, 2, 'Tester');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (3, 2, 'Developer');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (4, 2, 'ProjectManager');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (5, 3, 'Tester');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (6, 3, 'Developer');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (7, 3, 'ProjectManager');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (8, 4, 'Tester');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (9, 4, 'Developer');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (10, 4, 'ProjectManager');
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (1, 1, 'Admin', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (2, 2, 'Tester', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (3, 2, 'Developer', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (4, 2, 'ProjectManager', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (5, 3, 'Tester', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (6, 3, 'Developer', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (7, 3, 'ProjectManager', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (8, 4, 'Tester', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, 'Developer', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
+-- Create a timereport for testing
+INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES( 2, 2, '2010-02-01', 2, 21, 2, 0);
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);

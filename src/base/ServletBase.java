@@ -108,15 +108,18 @@ public abstract class ServletBase extends HttpServlet {
     						"<script src=\"js/jquery-1.8.3.js\"></script>" +
 							"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
 							"<script src=\"js/epuss.js\"></script>" +
+							"<script src=\"js/footable.js\"></script>" +
 							"<script src=\"js/footable.bookmarkable.js\"></script>" +
 							"<script src=\"js/footable.filter.js\"></script>" +
 							"<script src=\"js/footable.grid.js\"></script>" +
-							"<script src=\"js/footable.js\"></script>" +
 							"<script src=\"js/footable.memory.js\"></script>" +
 							"<script src=\"js/footable.paginate.js\"></script>" +
-							"<script src=\"js/footable.plugin.templat.js\"></script>" +
+							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
+//							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.standalone.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
     						"<title> The Base Block System </title></head><body>";
     	return intro;
@@ -141,29 +144,16 @@ public abstract class ServletBase extends HttpServlet {
     		String pw = userList.get(i).getPassword();
     		String role = userList.get(i).getRole();
     		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
-    		String editCode = "";
-    		if(isAdminComponent()) {
-    			editCode = "<a href=\"#\" class=\"editUserButton\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
-    		} else {
-    			String editURL = "administrationcomponent?edituser="+name;
-    			editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
-    		}
+    		String editURL = "administrationcomponent?edituser="+name;
+    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
     		String deleteURL = "administrationcomponent?deleteuser="+name;
-    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + ">Delete</a>";
+    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
     		if (name.equals("admin")){
-    			editCode = "";
     			deleteCode = "";
     		}
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
-    	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
-	    "<input type=\"text\" id=\"oldUserName\" />Password: " +
-	        "<input type=\"text\" id=\"oldPassWord\" />Group: " + 
-	        "<input type=\"text\" id=\"oldGroupName\" />Project Manager: " + 
-	        "<input type=\"checkbox\" id=\"oldPM\" />" + 
-	    "</div>";
     	out.println("</table>");
-    	out.println(editForm);
     	if(userActionMessage != null)
     		out.print("<p>"+ userActionMessage +"</p>");
     }
@@ -177,13 +167,13 @@ public abstract class ServletBase extends HttpServlet {
     	for(int i = 0; i < timeReports.size(); ++i){
     		Long timeReportId = timeReports.get(i).getId();
     		String editURL = "workercomponent?edittimereport="+timeReportId;
-    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + ">Edit</a>";
+    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
     		String deleteURL = "workercomponent?deletetimereport="+timeReportId;
-    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + ">Delete</a>";	
-    		
+    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
     		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
     	}
-    	out.println("</table>");		
+    	out.println("</table>");	
+    	out.println("<div id=\"testcont\">testcont</div>");
     }
 
 	private void printTimeReport(PrintWriter out, String editCode,
@@ -196,7 +186,13 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td>" + tr.getDate() + "</td>");
 		out.println("<td>" + tr.getDuration() + "</td>");
 		out.println("<td>" + tr.getType() + "</td>");			
-		out.println("<td>" + tr.isSigned() + "</td>");
+		//out.println("<td>" + tr.isSigned() + "</td>");
+		if(session.getAttribute("role").equals("ProjectManager") || session.getAttribute("role").equals("Admin")){
+			String isSigned = tr.isSigned() ? "checked" : "";		
+//			out.println("<td><form action=\"projectmanagercomponent\" method=\"POST\"><input type=\"hidden\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\"  checked =" +isSigned +"></input><input type=\"submit\" value=\"Submit\" /></form></td>");
+			out.println("<td><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" checked=" +isSigned +"></input></td>");
+		}
+		
 		out.println("<td>" + editCode +  "</td>");
 		out.println("<td>" + deleteCode + "</td></tr>");
 	}  
@@ -209,9 +205,10 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td><B>Date</B></td>");
 		out.println("<td><B>Time (min)</B></td>");
 		out.println("<td><B>Type</B></td>");
-		out.println("<td><B>State</B></td>");
+		out.println("<td><B>Signed</B></td>");
 		out.println("<td><B>Edit</B></td>");
-		out.println("<td><B>Remove</B></td>");		
+		out.println("<td><B>Remove</B></td>");	
+		out.println("</tr>");
 	}
 
 	private void printUser(PrintWriter out, String name, String role, String group,

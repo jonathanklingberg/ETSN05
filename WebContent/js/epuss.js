@@ -13,8 +13,54 @@ $(document).ready(
 		$('#logincredentials').html(  "admin - passwd <br>" +
 				"testuser -  passwd <br>" +
 				"devuser -  passwd <br>" +
-				"pmuser -  passwd <br>");
-	});
+				"pmuser -  passwd <br>"
+		);
+		$('.signedCheckbox').on('click', function(e){
+			e.preventDefault();
+			var success = false;
+			var checked;
+			if($(this).prop('checked')){
+				checked = true;
+			}else{
+				checked = false;
+			}
+			var reportId = $(this).siblings('.timereportid').val();
+			var data = {
+					checked : checked,
+					reportId : reportId
+				};
+			console.log("Checked: " + checked);
+			console.log("reportId: " + reportId);
+			$.ajax({
+				  type: "POST",
+				  url:  "projectmanagercomponent",
+				  data: data,
+				  dataType: "html"
+				}).done(function(response) {
+					if(response != null && response == 1){ // Success!						
+						console.log("response" + response);
+						$('#testcont').html(response);
+						alert( "success" );
+					}else{ // Something went wrong!
+						alert( "error" );
+					}
+				  })
+				  .fail(function( jqXHR, textStatus ) {
+				    alert( "error"  + textStatus);
+				    //TODO Uncheck the checkbox if not allowed to check && checked == true
+				  })
+				  .always(function() {
+				    alert( "complete" );
+				  });
+			});
+		if(success){
+			if(checked == true){				
+				$(this).prop("cecked", "checked");
+			}
+		}else{
+			
+		}
+		});
 
 window.onload = function(){
 	$("#createUser").dialog({
