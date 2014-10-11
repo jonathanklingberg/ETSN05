@@ -325,7 +325,7 @@ public class TimeReport extends AbstractCointainer {
 		//actually is to be removed.
 		boolean successfullyRemovedTimeReport = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE from TimeReports WHERE id=" + id + ";");
+			PreparedStatement ps = conn.prepareStatement("DELETE from TimeReports WHERE id= " + id);
 			ps.executeUpdate();
 			successfullyRemovedTimeReport = true;
 			ps.close();
