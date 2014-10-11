@@ -108,15 +108,19 @@ public abstract class ServletBase extends HttpServlet {
     						"<script src=\"js/jquery-1.8.3.js\"></script>" +
 							"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
 							"<script src=\"js/epuss.js\"></script>" +
+							"<script src=\"js/footable.js\"></script>" +
 							"<script src=\"js/footable.bookmarkable.js\"></script>" +
 							"<script src=\"js/footable.filter.js\"></script>" +
 							"<script src=\"js/footable.grid.js\"></script>" +
-							"<script src=\"js/footable.js\"></script>" +
 							"<script src=\"js/footable.memory.js\"></script>" +
 							"<script src=\"js/footable.paginate.js\"></script>" +
-							"<script src=\"js/footable.plugin.templat.js\"></script>" +
+							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
+//							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/old_theme_css.css\"/>" +
+							
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.standalone.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
     						"<title> The Base Block System </title></head><body>";
     	return intro;

@@ -9,12 +9,19 @@ $(document).ready(
 		$("body").on("submit", function(){
 			$("body").fadeOut(1000);
 		});
+//		$('#grouplist').footable();
 		
 		$('#logincredentials').html(  "admin - passwd <br>" +
 				"testuser -  passwd <br>" +
 				"devuser -  passwd <br>" +
 				"pmuser -  passwd <br>");
 	});
+
+$(function () {
+
+    $('.footable').footable();
+
+});
 
 window.onload = function(){
 	$("#createUser").dialog({

@@ -231,8 +231,9 @@ public class AdministrationComponent extends ServletBase {
 	
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
 	 	 out.println("<p> Groups </p>");
-		 out.println("<table border=" + formElement("1") + ">");
-		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
+	 	out.println("Filter: <input id=\"filter\" type=\"text\"></input>");
+		 out.println("<table data-filter=\"#filter\" id=\"grouplist\"  class=\"footable\" border=" + formElement("1") + ">");
+		 out.println("<tr><th data-sort-initial=\"true\">Group</th><th>Edit</th><th>Remove</th></tr>");
 		 List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		 for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
@@ -242,7 +243,7 @@ public class AdministrationComponent extends ServletBase {
 			String editURL = "administrationcomponent?editgroup="+id;
 		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
 			out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
+	    	out.println("<td data-value='" + name + "'>" + name + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
