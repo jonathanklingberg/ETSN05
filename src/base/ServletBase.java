@@ -113,7 +113,7 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.filter.js\"></script>" +
 							"<script src=\"js/footable.grid.js\"></script>" +
 							"<script src=\"js/footable.memory.js\"></script>" +
-							"<script src=\"js/footable.paginate.js\"></script>" +
+//							"<script src=\"js/footable.paginate.js\"></script>" +
 							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
