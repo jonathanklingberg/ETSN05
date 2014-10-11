@@ -19,7 +19,13 @@ $(document).ready(
 
 $(function () {
 
-    $('.footable').footable();
+    $('.footable').footable({    	
+			filter: {
+				minimum: 1,
+				
+			}
+    }
+    );
 
 });
 
