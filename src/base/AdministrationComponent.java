@@ -84,8 +84,8 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String userActionMessage;
-		String groupActionMessage;
+		String userActionMessage = null;
+		String groupActionMessage = null;
 		PrintWriter out = response.getWriter();
 		session = request.getSession();
 		out.println(getPageIntro());
@@ -106,12 +106,18 @@ public class AdministrationComponent extends ServletBase {
 					out.println("<p>Error: Suggesten name not allowed</p>");
 			}
 			
-			groupActionMessage = deleteGroup(request);
-			groupActionMessage = editGroup(request, out);
-			groupActionMessage = createNewGroup(request, out);
-			userActionMessage = deleteUser(request);
-			userActionMessage = addNewUser(request, out);
-			userActionMessage = editExistingUser(request, out);
+			if(groupActionMessage == null)
+				groupActionMessage = deleteGroup(request);
+			if(groupActionMessage == null)
+				groupActionMessage = editGroup(request, out);
+			if(groupActionMessage == null)
+				groupActionMessage = createNewGroup(request, out);
+			if(userActionMessage == null)
+				userActionMessage = deleteUser(request);
+			if(userActionMessage == null)
+				userActionMessage = addNewUser(request, out);
+			if(userActionMessage == null)
+				userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
 			printUserTable(out, users, userActionMessage);
@@ -149,15 +155,19 @@ public class AdministrationComponent extends ServletBase {
 			if(newPassword.length() == 6) {
 				if(checkNewName(newUserName)) {
 					if(groupExists) {
-						boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
-						if(res) {
-							return "User edited succesfully.";
+						int amountOfPMs = instance.getProjectGroup(newGroupName).getNumberOfPMs();
+						if(amountOfPMs < 5 || !pmChoice) {
+							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
+							if(res) {
+								return "User edited succesfully.";
+							} else {
+								return "User not edited.";
+							}
 						} else {
-							
-							return "User not edited.";
+							return "Amount of project managers exceeded.";
 						}
 					} else {
-						return "The given groupname does not exist.";
+					return "The given groupname does not exist.";
 					}
 				} else {
 					return "Incorrect format of username.";
@@ -180,9 +190,14 @@ public class AdministrationComponent extends ServletBase {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
 				long groupId = p.getId();
-					boolean res;
+					boolean res = false;
 					if(pmChecked) {
-						res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
+						int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
+						if(amountOfPMs < 5){
+							res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
+						}else{
+							return "Amount of project managers exceeded.";
+						}
 	 				} else {
 						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
 	 				}

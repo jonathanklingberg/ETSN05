@@ -89,6 +89,19 @@ public class ProjectGroup extends AbstractCointainer {
 		}
 		return membersList;
 	}
+
+	
+	public int getNumberOfPMs() {
+		int amountOfPMs = 0;
+		ArrayList<User> users = (ArrayList<User>) getUsers();
+		for(int i = 0; i < users.size(); i++) {
+			System.out.println("Role:    " + users.get(i).getRole());
+			if(users.get(i).getRole().equals("ProjectManager")) {
+				amountOfPMs++;
+			}
+		}
+		return amountOfPMs;
+	}
 	
 	
 	/**
@@ -218,11 +231,8 @@ public class ProjectGroup extends AbstractCointainer {
 		boolean wasAdded = false;
 		if(!user.getName().equals("admin")){
 			try {
-				PreparedStatement ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role) values("+ user.getUserId() +", " +
-					user.getGroupId() +", '" + user.getRole() + "');");
-				System.out.println("role: " + user.getRole());
-				System.out.println("groupid " + user.getGroupId());
-				System.out.println("id : " + user.getUserId());
+				PreparedStatement ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role, isActiveInGroup) values("+ user.getUserId() +", " +
+					user.getGroupId() +", '" + user.getRole() + "', 1);");
 				if(ps.executeUpdate() != 0){
 					wasAdded = true;
 				}
