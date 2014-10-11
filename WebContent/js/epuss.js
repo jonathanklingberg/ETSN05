@@ -5,6 +5,11 @@ $(document).ready(
 		$("body").on("submit", function(){
 			$("body").fadeOut(1000);
 		});
+		
+		$('#logincredentials').html(  "admin - adminpw <br>" +
+				"testuser -  passwd <br>" +
+				"devuser -  passwd <br>" +
+				"pmuser -  passwd <br>");
 	});
 
 window.onload = function(){

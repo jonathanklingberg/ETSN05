@@ -54,6 +54,7 @@ public class LoginComponent extends ServletBase {
      */
     protected String loginRequestForm() {
     	String html = "<p>Please enter your name and password in order to log in:</p>";
+    	html += "<div id=\"logincredentials\"></div>";
     	html += "<p> <form name=" + formElement("input");
     	html += " method=" + formElement("post");
     	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("userName") + '>'; 
@@ -90,7 +91,7 @@ public class LoginComponent extends ServletBase {
 		name = request.getParameter("userName"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
         
-        if (name != null && password != null) {
+        if (name != null && name.length() > 5 && password != null && password.length() == 6) {
         	System.out.println("User:" + name);
         	System.out.println("password:" + password);
         	User currUser = instance.getUser(name);

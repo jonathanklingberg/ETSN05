@@ -56,15 +56,15 @@ FOREIGN KEY (type) REFERENCES Types(type)
 
 -- Create default users
 INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'adminpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('test', 'testpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('dev', 'devpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pm', 'pmpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('test2', 'testpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('dev2', 'devpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pm2', 'pmpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('test3', 'testpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('dev3', 'devpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pm3', 'pmpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser2', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser2', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser2', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser3', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser3', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser3', 'password', NULL, 1);
 -- Create default Roles
 INSERT INTO Roles VALUES('ProjectManager');
 INSERT INTO Roles VALUES('Developer');
