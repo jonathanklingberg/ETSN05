@@ -150,8 +150,6 @@ public class AdministrationComponent extends ServletBase {
 		return null;
 	}
 
-
-
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");

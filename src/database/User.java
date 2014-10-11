@@ -291,9 +291,9 @@ public class User extends AbstractCointainer {
 		//when removing the user
 		boolean successfullyRemoved = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM Users WHERE id = '" + userID + "'");
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM Users WHERE id = " + userID);
 			ps.executeUpdate();
-			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = '" + userID + "'");
+			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = " + userID);
 			ps.executeUpdate();
 			sessionID = null;
 			successfullyRemoved = true;
