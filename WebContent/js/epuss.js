@@ -6,7 +6,7 @@ $(document).ready(
 			$("body").fadeOut(1000);
 		});
 		
-		$('#logincredentials').html(  "admin - adminpw <br>" +
+		$('#logincredentials').html(  "admin - passwd <br>" +
 				"testuser -  passwd <br>" +
 				"devuser -  passwd <br>" +
 				"pmuser -  passwd <br>");
