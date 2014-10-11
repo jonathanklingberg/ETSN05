@@ -250,7 +250,7 @@ public class AdministrationComponent extends ServletBase {
 	 	 out.println("<p> Groups </p>");
 	 	out.println("Filter: <input id=\"filter\" type=\"text\"></input>");
 		 out.println("<table data-filter=\"#filter\" id=\"grouplist\"  class=\"footable\" border=" + formElement("1") + ">");
-		 out.println("<tr><th data-sort-initial=\"true\">Group</th><th>Edit</th><th>Remove</th></tr>");
+		 out.println("<thead><tr><th data-sort-initial=\"true\">Group</th><th>Edit</th><th>Remove</th></tr></thead>");
 		 List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		 for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
