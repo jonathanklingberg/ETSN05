@@ -37,7 +37,27 @@ window.onload = function(){
 	$("#createUserButton").click(function () {
 	    $("#createUser").dialog("open");
 	});
-
+	
+	$("#createTimeReport").dialog({
+	    autoOpen: false,
+	    buttons: { 
+	        Submit: function() {
+	            var date = $("#date").val();
+	            var duration = $("#duration").val();
+	            var type = $("#type").val();
+	            $(this).dialog("close");
+	            var url = "workercomponent?addNewTimeReport="+ date + "&duration=" + duration + "&type=" + type;
+	            $(location).attr('href',url);
+	        },
+	        Cancel: function () {
+	            $(this).dialog("close");
+	        }
+	    }
+	});
+	
+	$("#createTimeReportButton").click(function () {
+	    $("#createTimeReport").dialog("open");
+	});
 
 $("#editUser").dialog({
     autoOpen: false,
@@ -68,9 +88,8 @@ $("#editUser").dialog({
 
 //$(".editUserButton").click(function () {
 //});
-
-
 };
+
 
 function editUser(name, password, group){
 	oldUserName = name;
