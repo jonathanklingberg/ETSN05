@@ -442,7 +442,7 @@ public class DatabaseHandlerInstance {
 	}
 
 	public boolean editUser(String oldUserName, String newUserName,
-			String newPassword, String newGroupName, boolean pmChoice) {
+			String newPassword, String newGroupName, String role) {
 		try{
 			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
 			ps.executeUpdate();
@@ -451,13 +451,6 @@ public class DatabaseHandlerInstance {
 			rs.next();
 			long userId = rs.getLong("id");
 			long groupId = instance.getProjectGroup(newGroupName).getId();
-			ps = conn.prepareStatement("select role from RoleInGroup where userId = "  + userId);
-			rs = ps.executeQuery();
-			rs.next();
-			String role = rs.getString("role");
-			if(pmChoice) {
-				role = "ProjectManager";
-			}
 			ps = conn.prepareStatement("update RoleInGroup set groupId = " + groupId + ", role = '" + role + "' where userId = " + userId);
 			ps.executeUpdate();
 			ps.close();
