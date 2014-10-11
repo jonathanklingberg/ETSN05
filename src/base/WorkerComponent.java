@@ -78,6 +78,7 @@ public class WorkerComponent extends ServletBase {
 			
 			
 			
+			
 			/* TAG DET FETASTE FRÅN KODEN NEDAN OCH LYFT UPP TILL ServletBase SÅ ATT ALLA COMPONENTS DRAR NYTTA AV DEN! */
 			
 			
@@ -128,8 +129,12 @@ public class WorkerComponent extends ServletBase {
 //			}
 //			out.println("</table>");
 //			out.println("</div>");
-			
-			out.println("<button type=button>Add Time Report</button>");
+			out.println("<div id=\"createTimeReport\" title=\"Add a new time report\">");
+			out.println("Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input>");
+			out.println("Duration(min): <input type=\"text\" id=\"duration\"></input>");
+			out.println("Type: <input type=\"text\" id=\"type\">");
+			out.println("</div><br />");
+			out.println("<input type=\"button\" id=\"createTimeReportButton\" value=\"Add new\" />");
 
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 
