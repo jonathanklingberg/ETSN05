@@ -54,6 +54,7 @@ public class LoginComponent extends ServletBase {
      */
     protected String loginRequestForm() {
     	String html = "<p>Please enter your name and password in order to log in:</p>";
+    	html += "<div id=\"logincredentials\"></div>";
     	html += "<p> <form name=" + formElement("input");
     	html += " method=" + formElement("post");
     	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("userName") + '>'; 
@@ -73,7 +74,7 @@ public class LoginComponent extends ServletBase {
 		// Get the session
 		session = request.getSession(true);
 		
-		int state;
+		int state = LOGIN_FALSE;
 
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
@@ -91,43 +92,47 @@ public class LoginComponent extends ServletBase {
         password = request.getParameter("password"); // get the entered password
         
         if (name != null && password != null) {
-        	System.out.println("User:" + name);
-        	System.out.println("password:" + password);
-        	User currUser = instance.getUser(name);
-        	if(currUser.comparePassword(password)){
-        		state = LOGIN_TRUE;
-       			session.setAttribute("state", state);  // save the state in the session
-       			session.setAttribute("name", name);  // save the name in the session
-       			session.setAttribute("userId", currUser.getUserId());  // save the userId in the session
-       			session.setAttribute("sessionid", session.getId());
-       			session.setAttribute("role", currUser.getRole());
-       			switch (currUser.getRole()) {
-       			case "Admin":
-       				System.out.println("***REDIRECT TO ADMIN-PAGE***");
-       				response.sendRedirect("administrationcomponent");
-       				break;
-       			case "ProjectManager":
-       				System.out.println("***REDIRECT TO PM-PAGE***");
-       				response.sendRedirect("projectmanagercomponent");
-       				break;
-       			case "SystemArchitect": case "Developer": case "Tester": case "Unspecified":
-       				System.out.println("***REDIRECT TO WORKER-PAGE***");
-       				response.sendRedirect("workercomponent");
-       				break;
-       			default:
-       				System.out.println("***REDIRECT TO FUNCTIONALITY-PAGE***");
-       				response.sendRedirect("functionality.html");
-       				break;
-       			}
-       		} else {
-       			out.println("<p>That was not a valid user name / password. </p>");
-       			out.println(loginRequestForm());
-       		}
-       	}else{ // name was null, probably because no form has been filled out yet. Display form.
-       		out.println(loginRequestForm());
-       		//TODO "wrong" username text goes here!
+        	if(name.length() > 0 && password.length() > 0){
+	        	System.out.println("User: " + name);
+	        	System.out.println("Password: " + password);
+	        	User currUser = instance.getUser(name);
+	        	if(currUser != null && currUser.comparePassword(password)){
+	        		System.out.println("Login success!");
+	        		state = LOGIN_TRUE;
+	       			session.setAttribute("state", state);  // save the state in the session
+	       			session.setAttribute("name", name);  // save the name in the session
+	       			session.setAttribute("userId", currUser.getUserId());  // save the userId in the session
+	       			session.setAttribute("sessionid", session.getId());
+	       			session.setAttribute("role", currUser.getRole());
+	       			switch (currUser.getRole()) {
+	       			case "Admin":
+	       				System.out.println("***REDIRECT TO ADMIN-PAGE***");
+	       				response.sendRedirect("administrationcomponent");
+	       				break;
+	       			case "ProjectManager":
+	       				System.out.println("***REDIRECT TO PM-PAGE***");
+	       				response.sendRedirect("projectmanagercomponent");
+	       				break;
+	       			case "SystemArchitect": case "Developer": case "Tester": case "Unspecified":
+	       				System.out.println("***REDIRECT TO WORKER-PAGE***");
+	       				response.sendRedirect("workercomponent");
+	       				break;
+	       			default:
+	       				System.out.println("***REDIRECT TO FUNCTIONALITY-PAGE***");
+	       				response.sendRedirect("functionality.html");
+	       				break;
+	       			}
+	       		} else{       			
+	       			out.println("<p style=\"color:red;\">That was not a valid username / password. </p>");
+	        	}
+        	}else{
+        	out.println("<p style=\"color:red;\">That was not a valid username / password. </p>");
+        		System.out.println("Wrong password!");	
+        	}
        	}
-        
+        if(state == LOGIN_FALSE){
+        	out.println(loginRequestForm());
+        }
 		out.println("</body></html>");
 	}
 

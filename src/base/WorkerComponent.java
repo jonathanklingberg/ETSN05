@@ -48,7 +48,7 @@ public class WorkerComponent extends ServletBase {
 		out.println(getPageIntro());
 		String role = getRole();
 
-		// Check so that the current user are eather a developer, tester or a system architect. 
+		// Check so that the current user are either a developer, tester or a system architect. 
 		// Currently not giving the admin or PM access to WorkerComponent
 		if (isLoggedIn(request) && (role.equals("Developer") || role.equals("SystemArchitect") || role.equals("Tester"))) {
 			out.println("<h1> Worker page " + "</h1>");//Is not shown in mockup design!
