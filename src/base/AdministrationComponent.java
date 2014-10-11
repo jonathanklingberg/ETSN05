@@ -141,24 +141,23 @@ public class AdministrationComponent extends ServletBase {
 			if(checkNewName(username)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
-					long groupId = p.getId();
-
-				if(groupId != -1) {
+				long groupId = p.getId();
 					boolean res;
 					if(pmChecked) {
 						res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
 	 				} else {
 						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
 	 				}
-					if(!res)
+					if(!res){	
 						failMsg = "User already exists!";
+					}
 				} else {
 					failMsg = "Group does not exist!";
 				}
 			} else {
 				failMsg = "Incorrect username format!";
-			}
-		}				}
+			}	
+		}
 		return failMsg;
 	}
 

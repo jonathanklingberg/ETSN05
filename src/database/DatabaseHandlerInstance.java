@@ -1,11 +1,10 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +124,14 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
 			ps.executeUpdate();
+			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long userid = Integer.parseInt(rs.getString("id"));
 			ps.close();
 			wasAdded = true;
+			User usr = new User(conn, user.getName(), user.getPassword(), userid, user.getGroupId(), user.getRole(), null);
+			instance.getProjectGroup(user.getGroupId()).addUser(usr);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -191,7 +196,7 @@ public class DatabaseHandlerInstance {
 			//			HttpSession session = request.getSession(true);
 			//			String sessionId = session.getId();
 
-			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
+			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id);
 			System.out.println("id: " + id);
 			rs = ps.executeQuery();
 			rs.next();
@@ -251,6 +256,7 @@ public class DatabaseHandlerInstance {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
+			System.out.println("Groupid: " + id);
 			rs.close();
 			ps.close();
 			return new ProjectGroup(conn, id, groupName);
