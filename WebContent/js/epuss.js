@@ -22,10 +22,8 @@ $(function () {
     $('.footable').footable({    	
 			filter: {
 				minimum: 1,
-				
 			}
-    }
-    );
+    });
 
 });
 

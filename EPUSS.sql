@@ -55,7 +55,7 @@ FOREIGN KEY (type) REFERENCES Types(type)
 );
 
 -- Create default users
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'adminpw', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'passwd', NULL, 1);
 INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'passwd', NULL, 1);
 INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'passwd', NULL, 1);
 INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'passwd', NULL, 1);
