@@ -138,13 +138,32 @@ public class AdministrationComponent extends ServletBase {
 		String newPassword = request.getParameter("password");
 		String newGroupName = request.getParameter("group");
 		boolean pmChoice = Boolean.parseBoolean(request.getParameter("pm"));
+		ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
+		boolean groupExists = false;
+		for(int i = 0; i < groups.size(); i++) {
+			if(groups.get(i).getName().equals(newGroupName)) {
+				groupExists = true;
+			}
+		}
 		if(oldUserName != null) {
-			boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
-			if(res) {
-				return "User edited succesfully.";
+			if(newPassword.length() == 6) {
+				if(checkNewName(newUserName)) {
+					if(groupExists) {
+						boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
+						if(res) {
+							return "User edited succesfully.";
+						} else {
+							
+							return "User not edited.";
+						}
+					} else {
+						return "The given groupname does not exist.";
+					}
+				} else {
+					return "Incorrect format of username.";
+				}
 			} else {
-				
-				return "User not edited.";
+				return "Password must consist of 6 characters.";
 			}
 		}
 		return null;

@@ -443,7 +443,6 @@ public class DatabaseHandlerInstance {
 
 	public boolean editUser(String oldUserName, String newUserName,
 			String newPassword, String newGroupName, boolean pmChoice) {
-		
 		try{
 			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
 			ps.executeUpdate();
