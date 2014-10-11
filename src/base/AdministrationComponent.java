@@ -142,12 +142,13 @@ public class AdministrationComponent extends ServletBase {
 			boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
 			if(res) {
 				return "User edited succesfully.";
+			} else {
+				
+				return "User not edited.";
 			}
 		}
-		return "User not edited.";
+		return null;
 	}
-
-
 
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
