@@ -1,11 +1,10 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +124,14 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
 			ps.executeUpdate();
+			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long userid = Integer.parseInt(rs.getString("id"));
 			ps.close();
 			wasAdded = true;
+			User usr = new User(conn, user.getName(), user.getPassword(), userid, user.getGroupId(), user.getRole(), null);
+			instance.getProjectGroup(user.getGroupId()).addUser(usr);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -191,7 +196,7 @@ public class DatabaseHandlerInstance {
 			//			HttpSession session = request.getSession(true);
 			//			String sessionId = session.getId();
 
-			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = '" + id + "'");
+			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id);
 			System.out.println("id: " + id);
 			rs = ps.executeQuery();
 			rs.next();
@@ -247,10 +252,11 @@ public class DatabaseHandlerInstance {
 
 	public ProjectGroup getProjectGroup(String groupName) {
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName =" + groupName + ";");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName ='" + groupName + "';");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
+			System.out.println("Groupid: " + id);
 			rs.close();
 			ps.close();
 			return new ProjectGroup(conn, id, groupName);
@@ -292,7 +298,7 @@ public class DatabaseHandlerInstance {
 	public boolean addUser(String name, String password) {
 		boolean resultOK = false;	
 		try{
-			PreparedStatement ps = conn.prepareStatement("insert into users (name, password) values('"
+			PreparedStatement ps = conn.prepareStatement("insert into Users (name, password) values('"
 					+ name + "', '" + password + "')");
 			ps.executeUpdate();
 			ps.close();
@@ -308,7 +314,7 @@ public class DatabaseHandlerInstance {
 
 	public void deleteUser(String name) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("delete from users where name='" + name + "'");
+			PreparedStatement ps = conn.prepareStatement("delete from Users where name='" + name + "'");
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {
@@ -321,7 +327,7 @@ public class DatabaseHandlerInstance {
 	public boolean inactivateUser(String name) {
 		boolean resultOk = true;
 		try{
-			PreparedStatement ps = conn.prepareStatement("update users set is_active = 0 where name = '"
+			PreparedStatement ps = conn.prepareStatement("update Users set is_active = 0 where name = '"
 					+ name + "'");
 			ps.executeUpdate();
 			ps.close();
@@ -345,6 +351,39 @@ public class DatabaseHandlerInstance {
 		return usersInGroup;
 	}
 
+	
+	/** 
+	 * Retrieves a specific time report from the database
+	 * 
+	 * @param userName
+	 *            The id of the time report that should be fetched from the
+	 *            database
+	 * @return The time report if it is found in the database, otherwise null
+	 */
+	public TimeReport getTimeReport(long id){
+		TimeReport timeReport = null;
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from TimeReports WHERE id = " + id);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+
+			long userId = rs.getLong("userId"); 
+			long groupId = rs.getLong("groupId");
+			Date date = rs.getDate("date");
+			long duration = rs.getLong("duration");
+			long type = rs.getLong("type");
+			long week = rs.getLong("week");
+			boolean signed = rs.getBoolean("signed");
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			rs.close();
+			ps.close();
+		}catch (SQLException e) {
+			System.out.println("FAIL I getTimeReport");
+			System.err.println(e);
+	
+		}
+		return timeReport;
+	}
 
 	/**
 	 * Retrieves all time reports belonging to a specified user
@@ -400,6 +439,34 @@ public class DatabaseHandlerInstance {
 			System.err.println(e);
 		}
 		return timeReport;
+	}
+
+	public boolean editUser(String oldUserName, String newUserName,
+			String newPassword, String newGroupName, boolean pmChoice) {
+		
+		try{
+			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
+			ps.executeUpdate();
+			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long userId = rs.getLong("id");
+			long groupId = instance.getProjectGroup(newGroupName).getId();
+			ps = conn.prepareStatement("select role from RoleInGroup where userId = "  + userId);
+			rs = ps.executeQuery();
+			rs.next();
+			String role = rs.getString("role");
+			if(pmChoice) {
+				role = "ProjectManager";
+			}
+			ps = conn.prepareStatement("update RoleInGroup set groupId = " + groupId + ", role = '" + role + "' where userId = " + userId);
+			ps.executeUpdate();
+			ps.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 

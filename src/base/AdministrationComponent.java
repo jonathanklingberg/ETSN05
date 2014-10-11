@@ -111,6 +111,7 @@ public class AdministrationComponent extends ServletBase {
 			groupActionMessage = createNewGroup(request, out);
 			userActionMessage = deleteUser(request);
 			userActionMessage = addNewUser(request, out);
+			userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
 			printUserTable(out, users, userActionMessage);
@@ -131,6 +132,23 @@ public class AdministrationComponent extends ServletBase {
 		}	
 	}
 
+	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
+		String oldUserName = request.getParameter("oldUserName");
+		String newUserName = request.getParameter("editUser");
+		String newPassword = request.getParameter("password");
+		String newGroupName = request.getParameter("group");
+		boolean pmChoice = Boolean.parseBoolean(request.getParameter("pm"));
+		if(oldUserName != null) {
+			boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
+			if(res) {
+				return "User edited succesfully.";
+			}
+		}
+		return "User not edited.";
+	}
+
+
+
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");
@@ -139,22 +157,24 @@ public class AdministrationComponent extends ServletBase {
 		System.out.println(pmChecked);
 		if(username != null) {
 			if(checkNewName(username)) {
-				long groupId = instance.getProjectGroup(groupName).getId();
-				if(groupId != -1) {
+				ProjectGroup p = instance.getProjectGroup(groupName);
+				if(p != null) {
+				long groupId = p.getId();
 					boolean res;
 					if(pmChecked) {
 						res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
 	 				} else {
 						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
 	 				}
-					if(!res)
+					if(!res){	
 						failMsg = "User already exists!";
+					}
 				} else {
 					failMsg = "Group does not exist!";
 				}
 			} else {
 				failMsg = "Incorrect username format!";
-			}
+			}	
 		}
 		return failMsg;
 	}
@@ -216,9 +236,9 @@ public class AdministrationComponent extends ServletBase {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
-		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + ">Delete</a>";
 			String editURL = "administrationcomponent?editgroup="+id;
-		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + "> edit </a>";
+		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
 			out.println("<tr>");
 	    	out.println("<td data-value='" + name + "'>" + name + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
