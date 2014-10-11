@@ -345,6 +345,39 @@ public class DatabaseHandlerInstance {
 		return usersInGroup;
 	}
 
+	
+	/** 
+	 * Retrieves a specific time report from the database
+	 * 
+	 * @param userName
+	 *            The id of the time report that should be fetched from the
+	 *            database
+	 * @return The time report if it is found in the database, otherwise null
+	 */
+	public TimeReport getTimeReport(long id){
+		TimeReport timeReport = null;
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from TimeReports WHERE id = " + id);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+
+			long userId = rs.getLong("userId"); 
+			long groupId = rs.getLong("groupId");
+			Date date = rs.getDate("date");
+			long duration = rs.getLong("duration");
+			long type = rs.getLong("type");
+			long week = rs.getLong("week");
+			boolean signed = rs.getBoolean("signed");
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			rs.close();
+			ps.close();
+		}catch (SQLException e) {
+			System.out.println("FAIL I getTimeReport");
+			System.err.println(e);
+	
+		}
+		return timeReport;
+	}
 
 	/**
 	 * Retrieves all time reports belonging to a specified user
