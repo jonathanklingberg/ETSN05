@@ -141,16 +141,29 @@ public abstract class ServletBase extends HttpServlet {
     		String pw = userList.get(i).getPassword();
     		String role = userList.get(i).getRole();
     		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
-    		String editURL = "administrationcomponent?edituser="+name;
-    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
+    		String editCode = "";
+    		if(isAdminComponent()) {
+    			editCode = "<a href=\"#\" class=\"editUserButton\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
+    		} else {
+    			String editURL = "administrationcomponent?edituser="+name;
+    			editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
+    		}
     		String deleteURL = "administrationcomponent?deleteuser="+name;
-    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
+    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + ">Delete</a>";
     		if (name.equals("admin")){
+    			editCode = "";
     			deleteCode = "";
     		}
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
+    	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
+	    "<input type=\"text\" id=\"oldUserName\" />Password: " +
+	        "<input type=\"text\" id=\"oldPassWord\" />Group: " + 
+	        "<input type=\"text\" id=\"oldGroupName\" />Project Manager: " + 
+	        "<input type=\"checkbox\" id=\"oldPM\" />" + 
+	    "</div>";
     	out.println("</table>");
+    	out.println(editForm);
     	if(userActionMessage != null)
     		out.print("<p>"+ userActionMessage +"</p>");
     }
@@ -164,9 +177,9 @@ public abstract class ServletBase extends HttpServlet {
     	for(int i = 0; i < timeReports.size(); ++i){
     		Long timeReportId = timeReports.get(i).getId();
     		String editURL = "workercomponent?edittimereport="+timeReportId;
-    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
+    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + ">Edit</a>";
     		String deleteURL = "workercomponent?deletetimereport="+timeReportId;
-    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
+    		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + ">Delete</a>";	
     		
     		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
     	}

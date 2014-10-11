@@ -1,3 +1,7 @@
+var oldUserName = "";
+var oldPassword = "";
+var oldGroup = "";
+
 $(document).ready(
 	function(){
 		$("body").hide();
@@ -54,7 +58,45 @@ window.onload = function(){
 	$("#createTimeReportButton").click(function () {
 	    $("#createTimeReport").dialog("open");
 	});
+
+$("#editUser").dialog({
+    autoOpen: false,
+    maxWidth: 309,
+    maxHeight: 310,
+    minWidth: 309,
+    minHeight: 310,
+    open: function () {
+        $("#oldUserName").val(oldUserName);
+        $("#oldPassWord").val(oldPassword);
+        $("#oldGroupName").val(oldGroup);
+    },            
+    buttons: {
+        Edit: function () {
+            var name = $("#oldUserName").val();
+            var password = $("#oldPassWord").val();
+            var group = $("#oldGroupName").val();
+            var pm = $("#oldPM").is(":checked");
+            $(this).dialog("close");
+            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&editUser=" + name +"&password=" + password + "&group=" + group + "&pm=" + pm;
+            $(location).attr('href', url);
+        },
+        Cancel: function () {
+            $(this).dialog("close");
+        }
+    }
+});
+
+//$(".editUserButton").click(function () {
+//});
 };
+
+
+function editUser(name, password, group){
+	oldUserName = name;
+	oldPassword = password;
+	oldGroup = group;
+    $("#editUser").dialog("open");
+}
 
 function editGroup(link) { 
 	var name = prompt('Please enter a new name for the group.'); 
