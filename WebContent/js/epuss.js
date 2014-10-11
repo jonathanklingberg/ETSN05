@@ -19,6 +19,10 @@ $(document).ready(
 window.onload = function(){
 	$("#createUser").dialog({
 	    autoOpen: false,
+	    maxWidth: 309,
+	    maxHeight: 310,
+	    minWidth: 309,
+	    minHeight: 310,
 	    buttons: { 
 	        Add: function() {
 	            var name = $("#name").val();
