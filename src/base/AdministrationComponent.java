@@ -124,7 +124,14 @@ public class AdministrationComponent extends ServletBase {
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input>");
-			out.println("Project Manager: <input type=\"checkbox\" id=\"pm\">");
+			String t = "<br/><select id=\"myselect\"> " + 
+	    	           " <option value=\"Developer\">Developer</option> " +
+	    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
+	    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+	    	            "<option value=\"Tester\">Tester</option> "+
+	    	           " <option value=\"Unspecified\">Unspecified</option> "+
+	    	        "</select>";
+			out.println(t);
 			out.println("</div><br />");
 			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
 			listGroups(out, groupActionMessage);
@@ -143,7 +150,7 @@ public class AdministrationComponent extends ServletBase {
 		String newUserName = request.getParameter("editUser");
 		String newPassword = request.getParameter("password");
 		String newGroupName = request.getParameter("group");
-		boolean pmChoice = Boolean.parseBoolean(request.getParameter("pm"));
+		String role = request.getParameter("role");
 		ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
 		boolean groupExists = false;
 		for(int i = 0; i < groups.size(); i++) {
@@ -156,8 +163,8 @@ public class AdministrationComponent extends ServletBase {
 				if(checkNewName(newUserName)) {
 					if(groupExists) {
 						int amountOfPMs = instance.getProjectGroup(newGroupName).getNumberOfPMs();
-						if(amountOfPMs < 5 || !pmChoice) {
-							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
+						if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
+							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
 							if(res) {
 								return "User edited succesfully.";
 							} else {
@@ -183,24 +190,19 @@ public class AdministrationComponent extends ServletBase {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");
 		String groupName = request.getParameter("group");
-		boolean pmChecked = Boolean.parseBoolean(request.getParameter("pm"));
-		System.out.println(pmChecked);
+		String role = request.getParameter("role");
 		if(username != null) {
 			if(checkNewName(username)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
 				long groupId = p.getId();
 					boolean res = false;
-					if(pmChecked) {
-						int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
-						if(amountOfPMs < 5){
-							res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
-						}else{
-							return "Amount of project managers exceeded.";
-						}
-	 				} else {
-						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
-	 				}
+					int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
+					if(!role.equals("ProjectManager") || amountOfPMs < 5) {
+							res = instance.addUser(new User(username, createPassword(), role, groupId));
+					}else{
+						return "Amount of project managers exceeded.";
+					}
 					if(!res){	
 						failMsg = "User already exists!";
 					}

@@ -146,7 +146,7 @@ public abstract class ServletBase extends HttpServlet {
     		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
     		String editCode = "";
     		if(isAdminComponent()) {
-    			editCode = "<a href=\"#\" class=\"editUserButton\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
+    			editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
     		} else {
     			String editURL = "administrationcomponent?edituser="+name;
     			editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
@@ -160,11 +160,17 @@ public abstract class ServletBase extends HttpServlet {
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
     	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
-	    "<input type=\"text\" id=\"oldUserName\" />Password: " +
-	        "<input type=\"text\" id=\"oldPassWord\" />Group: " + 
-	        "<input type=\"text\" id=\"oldGroupName\" />Project Manager: " + 
-	        "<input type=\"checkbox\" id=\"oldPM\" />" + 
-	    "</div>";
+    	    "<input type=\"text\" id=\"oldUserName\" />Password:" +
+    	       " <input type=\"text\" id=\"oldPassWord\"/>Group: " +
+    	       " <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
+    	        "<select id=\"myselect2\"> " + 
+    	           " <option value=\"Developer\">Developer</option> " +
+    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
+    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+    	            "<option value=\"Tester\">Tester</option> "+
+    	           " <option value=\"Unspecified\">Unspecified</option> "+
+    	        "</select>"+
+    	   " </div>";
     	out.println("</table>");
     	out.println(editForm);
     	if(userActionMessage != null)
