@@ -247,7 +247,7 @@ public class DatabaseHandlerInstance {
 
 	public ProjectGroup getProjectGroup(String groupName) {
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName =" + groupName + ";");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName ='" + groupName + "';");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long id = rs.getLong("id");
