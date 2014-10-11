@@ -111,6 +111,7 @@ public class AdministrationComponent extends ServletBase {
 			groupActionMessage = createNewGroup(request, out);
 			userActionMessage = deleteUser(request);
 			userActionMessage = addNewUser(request, out);
+			userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
 			printUserTable(out, users, userActionMessage);
@@ -130,6 +131,23 @@ public class AdministrationComponent extends ServletBase {
 			response.sendRedirect("logincomponent");
 		}	
 	}
+
+	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
+		String oldUserName = request.getParameter("oldUserName");
+		String newUserName = request.getParameter("editUser");
+		String newPassword = request.getParameter("password");
+		String newGroupName = request.getParameter("group");
+		boolean pmChoice = Boolean.parseBoolean(request.getParameter("pm"));
+		if(oldUserName != null) {
+			boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, pmChoice);
+			if(res) {
+				return "User edited succesfully.";
+			}
+		}
+		return "User not edited.";
+	}
+
+
 
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;

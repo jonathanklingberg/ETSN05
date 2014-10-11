@@ -298,7 +298,7 @@ public class DatabaseHandlerInstance {
 	public boolean addUser(String name, String password) {
 		boolean resultOK = false;	
 		try{
-			PreparedStatement ps = conn.prepareStatement("insert into users (name, password) values('"
+			PreparedStatement ps = conn.prepareStatement("insert into Users (name, password) values('"
 					+ name + "', '" + password + "')");
 			ps.executeUpdate();
 			ps.close();
@@ -314,7 +314,7 @@ public class DatabaseHandlerInstance {
 
 	public void deleteUser(String name) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("delete from users where name='" + name + "'");
+			PreparedStatement ps = conn.prepareStatement("delete from Users where name='" + name + "'");
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {
@@ -327,7 +327,7 @@ public class DatabaseHandlerInstance {
 	public boolean inactivateUser(String name) {
 		boolean resultOk = true;
 		try{
-			PreparedStatement ps = conn.prepareStatement("update users set is_active = 0 where name = '"
+			PreparedStatement ps = conn.prepareStatement("update Users set is_active = 0 where name = '"
 					+ name + "'");
 			ps.executeUpdate();
 			ps.close();
@@ -406,6 +406,34 @@ public class DatabaseHandlerInstance {
 			System.err.println(e);
 		}
 		return timeReport;
+	}
+
+	public boolean editUser(String oldUserName, String newUserName,
+			String newPassword, String newGroupName, boolean pmChoice) {
+		
+		try{
+			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
+			ps.executeUpdate();
+			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long userId = rs.getLong("id");
+			long groupId = instance.getProjectGroup(newGroupName).getId();
+			ps = conn.prepareStatement("select role from RoleInGroup where userId = "  + userId);
+			rs = ps.executeQuery();
+			rs.next();
+			String role = rs.getString("role");
+			if(pmChoice) {
+				role = "ProjectManager";
+			}
+			ps = conn.prepareStatement("update RoleInGroup set groupId = " + groupId + ", role = '" + role + "' where userId = " + userId);
+			ps.executeUpdate();
+			ps.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 
