@@ -84,8 +84,8 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String userActionMessage;
-		String groupActionMessage;
+		String userActionMessage = null;
+		String groupActionMessage = null;
 		PrintWriter out = response.getWriter();
 		session = request.getSession();
 		out.println(getPageIntro());
@@ -106,18 +106,32 @@ public class AdministrationComponent extends ServletBase {
 					out.println("<p>Error: Suggesten name not allowed</p>");
 			}
 			
-			groupActionMessage = deleteGroup(request);
-			groupActionMessage = editGroup(request, out);
-			groupActionMessage = createNewGroup(request, out);
-			userActionMessage = deleteUser(request);
-			userActionMessage = addNewUser(request, out);
+			if(groupActionMessage == null)
+				groupActionMessage = deleteGroup(request);
+			if(groupActionMessage == null)
+				groupActionMessage = editGroup(request, out);
+			if(groupActionMessage == null)
+				groupActionMessage = createNewGroup(request, out);
+			if(userActionMessage == null)
+				userActionMessage = deleteUser(request);
+			if(userActionMessage == null)
+				userActionMessage = addNewUser(request, out);
+			if(userActionMessage == null)
+				userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
 			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input>");
-			out.println("Project Manager: <input type=\"checkbox\" id=\"pm\">");
+			String t = "<br/><select id=\"myselect\"> " + 
+	    	           " <option value=\"Developer\">Developer</option> " +
+	    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
+	    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+	    	            "<option value=\"Tester\">Tester</option> "+
+	    	           " <option value=\"Unspecified\">Unspecified</option> "+
+	    	        "</select>";
+			out.println(t);
 			out.println("</div><br />");
 			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
 			listGroups(out, groupActionMessage);
@@ -131,23 +145,64 @@ public class AdministrationComponent extends ServletBase {
 		}	
 	}
 
+	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
+		String oldUserName = request.getParameter("oldUserName");
+		String newUserName = request.getParameter("editUser");
+		String newPassword = request.getParameter("password");
+		String newGroupName = request.getParameter("group");
+		String role = request.getParameter("role");
+		ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
+		boolean groupExists = false;
+		for(int i = 0; i < groups.size(); i++) {
+			if(groups.get(i).getName().equals(newGroupName)) {
+				groupExists = true;
+			}
+		}
+		if(oldUserName != null) {
+			if(newPassword.length() == 6) {
+				if(checkNewName(newUserName)) {
+					if(groupExists) {
+						int amountOfPMs = instance.getProjectGroup(newGroupName).getNumberOfPMs();
+						if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
+							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
+							if(res) {
+								return "User edited succesfully.";
+							} else {
+								return "User not edited.";
+							}
+						} else {
+							return "Amount of project managers exceeded.";
+						}
+					} else {
+					return "The given groupname does not exist.";
+					}
+				} else {
+					return "Incorrect format of username.";
+				}
+			} else {
+				return "Password must consist of 6 characters.";
+			}
+		}
+		return null;
+	}
+
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");
 		String groupName = request.getParameter("group");
-		boolean pmChecked = Boolean.parseBoolean(request.getParameter("pm"));
-		System.out.println(pmChecked);
+		String role = request.getParameter("role");
 		if(username != null) {
 			if(checkNewName(username)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
 				long groupId = p.getId();
-					boolean res;
-					if(pmChecked) {
-						res = instance.addUser(new User(username, createPassword(), "ProjectManager", groupId));
-	 				} else {
-						res = instance.addUser(new User(username, createPassword(), "Unspecified", groupId));
-	 				}
+					boolean res = false;
+					int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
+					if(!role.equals("ProjectManager") || amountOfPMs < 5) {
+							res = instance.addUser(new User(username, createPassword(), role, groupId));
+					}else{
+						return "Amount of project managers exceeded.";
+					}
 					if(!res){	
 						failMsg = "User already exists!";
 					}
@@ -210,8 +265,9 @@ public class AdministrationComponent extends ServletBase {
 	
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
 	 	 out.println("<p> Groups </p>");
-		 out.println("<table border=" + formElement("1") + ">");
-		 out.println("<tr><td>Group</td><td>Edit</td><td>Remove</td></tr>");
+	 	out.println("Filter: <input id=\"groupfilter\" type=\"text\"></input>");
+		 out.println("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
+		 out.println("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
 		 List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		 for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
@@ -221,7 +277,7 @@ public class AdministrationComponent extends ServletBase {
 			String editURL = "administrationcomponent?editgroup="+id;
 		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
 			out.println("<tr>");
-	    	out.println("<td>" + name + "</td>");
+	    	out.println("<td data-value='" + name + "'>" + name + "</td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");

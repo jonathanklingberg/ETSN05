@@ -55,16 +55,16 @@ FOREIGN KEY (type) REFERENCES Types(type)
 );
 
 -- Create default users
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'adminpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser2', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser2', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser2', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser3', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser3', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser3', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser2', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser2', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser2', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser3', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser3', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser3', 'passwd', NULL, 1);
 -- Create default Roles
 INSERT INTO Roles VALUES('ProjectManager');
 INSERT INTO Roles VALUES('Developer');
@@ -88,8 +88,11 @@ INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (7, 3, '
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (8, 4, 'Tester', 1);
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, 'Developer', 1);
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
+<<<<<<< HEAD
 -- Create a timereport for testing
 INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES( 2, 2, '2010-02-01', 2, 21, 2, 0);
+=======
+>>>>>>> 0ad58244f0c8140ccd73d5846ecb51991a8d802a
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);

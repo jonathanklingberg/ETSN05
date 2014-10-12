@@ -113,7 +113,9 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.filter.js\"></script>" +
 							"<script src=\"js/footable.grid.js\"></script>" +
 							"<script src=\"js/footable.memory.js\"></script>" +
-							"<script src=\"js/footable.paginate.js\"></script>" +
+
+//							"<script src=\"js/footable.paginate.js\"></script>" +
+
 							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
@@ -136,16 +138,24 @@ public abstract class ServletBase extends HttpServlet {
     // Print User Table according to mockup design in SRS
     protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
     	out.println(getUserTableName());
-    	out.println("<table border=" + formElement("1") + ">");	
-    	printUserTableHeader(out);	    
+	 	out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
+    	out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
+    	printUserTableHeader(out);
     	for(int i = 0; i < userList.size(); ++i) {			
     		String name = userList.get(i).getName();
     		System.out.println(name);
     		String pw = userList.get(i).getPassword();
     		String role = userList.get(i).getRole();
     		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
-    		String editURL = "administrationcomponent?edituser="+name;
-    		String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + "> edit </a>";
+
+    		String editCode = "";
+    		if(isAdminComponent()) {
+    			editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
+    		} else {
+    			String editURL = "administrationcomponent?edituser="+name;
+    			editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
+    		}
+
     		String deleteURL = "administrationcomponent?deleteuser="+name;
     		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
     		if (name.equals("admin")){
@@ -153,6 +163,20 @@ public abstract class ServletBase extends HttpServlet {
     		}
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
+
+    	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
+    	    "<input type=\"text\" id=\"oldUserName\" />Password:" +
+    	       " <input type=\"text\" id=\"oldPassWord\"/>Group: " +
+    	       " <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
+    	        "<select id=\"myselect2\"> " + 
+    	           " <option value=\"Developer\">Developer</option> " +
+    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
+    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+    	            "<option value=\"Tester\">Tester</option> "+
+    	           " <option value=\"Unspecified\">Unspecified</option> "+
+    	        "</select>"+
+    	   " </div>";
+
     	out.println("</table>");
     	if(userActionMessage != null)
     		out.print("<p>"+ userActionMessage +"</p>");
@@ -161,7 +185,7 @@ public abstract class ServletBase extends HttpServlet {
     protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports){
     	out.println("<BR>");
     	out.println(getTimeReportTableName());
-    	out.println("<table border=" + formElement("1") + ">");	
+    	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
     	printTimeReportTableHeader(out);
 
     	for(int i = 0; i < timeReports.size(); ++i){
@@ -214,23 +238,24 @@ public abstract class ServletBase extends HttpServlet {
 	private void printUser(PrintWriter out, String name, String role, String group,
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
-		out.println("<td>" + name + "</td>");
-		out.println(isAdminComponent()? ("<td>" + group + "</td>") : "");
-		out.println("<td>" + role + "</td>");
-		out.println(isAdminComponent()? ("<td>" + pw + "</td>") : "");
+		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
+		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "");
+		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
+		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "");
 		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
 		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");
 	}
 
 	private void printUserTableHeader(PrintWriter out) {
-		out.println("<tr>");
-		out.println("<td><B>Name</B></td>");
-		out.println(isAdminComponent()? "<td><B>Group</B></td>" : "");
-		out.println("<td><B>Role</B></td>");
-		out.println(isAdminComponent()? "<td><B>Password</B></td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>Edit</B></td>" : "");
-		out.println(isAdminComponent()? "<td><B>Remove</B></td></tr>" : "");
+		out.println("<thead><tr>");
+		out.println("<th data-sort-initial=\"true\">Name</th>");
+		out.println(isAdminComponent()? "<th>Group</th>" : "");
+		out.println("<th>Role</th>");
+		out.println(isAdminComponent()? "<th>Password</th>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<th data-sort-ignore=\"true\">Edit</th>" : "");
+		out.println(isAdminComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");
+		out.println("</tr></thead>");
 	}
 	
 	protected String getRole(){
