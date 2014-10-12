@@ -40,6 +40,7 @@ $(document).ready(
 					if(response != null && response == 1){ // Success!						
 						console.log("response" + response);
 						$('#testcont').html(response);
+						success = true;
 						alert( "success" );
 					}else{ // Something went wrong!
 						alert( "error" );
@@ -47,19 +48,18 @@ $(document).ready(
 				  })
 				  .fail(function( jqXHR, textStatus ) {
 				    alert( "error"  + textStatus);
-				    //TODO Uncheck the checkbox if not allowed to check && checked == true
 				  })
 				  .always(function() {
 				    alert( "complete" );
 				  });
-			});
-		if(success){
-			if(checked == true){				
-				$(this).prop("cecked", "checked");
+			if(success){
+				if(checked == true){				
+					$(this).prop("checked", "checked");
+				}
+			}else{
+				
 			}
-		}else{
-			
-		}
+			});
 		});
 
 window.onload = function(){

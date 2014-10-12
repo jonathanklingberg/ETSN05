@@ -118,7 +118,7 @@ public class ProjectManagerComponent extends ServletBase {
 		System.out.println("reportid: " + reportid);
 		PrintWriter out = response.getWriter();
 //		if("OK_from_db" == true){
-//			out.print("Everything OK / 1");
+			out.print("1"); // Everything OK / 
 //		}else{
 //			out.print("Something went wrong! / 0");
 //		}
