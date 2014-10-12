@@ -18,8 +18,14 @@ PRIMARY KEY (role)
 );
 
 CREATE TABLE Types(
-type INT UNSIGNED NOT NULL,
+type VARCHAR(1) NOT NULL,
 PRIMARY KEY (type)
+);
+
+
+CREATE TABLE Numbers(
+number INT UNSIGNED NOT NULL,
+PRIMARY KEY (number)
 );
 
 CREATE TABLE ProjectGroups(
@@ -46,12 +52,14 @@ userId INT UNSIGNED NOT NULL,
 groupId INT UNSIGNED NOT NULL,
 date DATE NOT NULL,
 duration INT UNSIGNED NOT NULL,
-type INT UNSIGNED NOT NULL,
+type VARCHAR(1) NOT NULL,
+number INT UNSIGNED NOT NULL,
 week INT UNSIGNED NOT NULL,
 signed TINYINT(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
-FOREIGN KEY (type) REFERENCES Types(type)
+FOREIGN KEY (type) REFERENCES Types(type),
+FOREIGN KEY (number) REFERENCES Numbers(number)
 );
 
 -- Create default users
