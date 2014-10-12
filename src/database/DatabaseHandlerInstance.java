@@ -148,30 +148,23 @@ public class DatabaseHandlerInstance {
 	public synchronized ArrayList<User> getAllUsers() {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup");
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role, RoleInGroup.groupId FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+					+ " WHERE RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
 			ResultSet rs = ps.executeQuery();
-			ArrayList<Long> idList = new ArrayList<Long>();
-			ArrayList<String> roleList = new ArrayList<String>();
-			ArrayList<Long> groupIdList = new ArrayList<Long>();
-			while (rs.next()) {
-				idList.add(rs.getLong("userId"));
-				roleList.add(rs.getString("role"));
-				groupIdList.add(rs.getLong("groupId"));
-			}
-			for (int i = 0; i < idList.size(); i++) {
-				rs = ps.executeQuery("select * from Users where id='" + idList.get(i) + "' order by userName asc");
-				rs.next();
-				String name = rs.getString("userName");
+			while(rs.next()){
+				long userId = rs.getLong("id");
+				String username = rs.getString("userName");
 				String password = rs.getString("password");
-				String role = roleList.get(i);
-				long groupId = groupIdList.get(i);
-				users.add(new User(name, password, role, groupId));				
+				String sessionId = rs.getString("sessionId");
+				long groupId = rs.getLong("groupID");
+				String role = rs.getString("role");
+				users.add(new User(conn, username, password, userId, groupId, role, sessionId));
 			}
-			rs.close();
 			ps.close();
-		} catch (SQLException e) {
-			System.err.println(e);
-		}	
+			rs.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return users;
 	}
 

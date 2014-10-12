@@ -53,10 +53,10 @@ public abstract class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
-			Statement stmt = conn.createStatement();		    
-		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
+//			Statement stmt = conn.createStatement();		    
+//		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
 		    System.out.println("Successfully connected to database!"); // Success message in console
-		    stmt.close();
+//		    stmt.close();
 			
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
@@ -139,6 +139,8 @@ public abstract class ServletBase extends HttpServlet {
 	 	out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
     	out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
     	printUserTableHeader(out);
+    	System.out.println("uselist-size: " + userList.size());
+//    	int index = 0;
     	for(int i = 0; i < userList.size(); ++i) {			
     		String name = userList.get(i).getName();
     		System.out.println(name);
@@ -158,6 +160,8 @@ public abstract class ServletBase extends HttpServlet {
     			editCode = "";
     			deleteCode = "";
     		}
+//    		System.out.println("index: " + index);
+//    		index++;
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
     	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
