@@ -477,6 +477,30 @@ public class DatabaseHandlerInstance {
 	}
 
 	/**
+	 * Add a time report tr to the system
+	 * @param tr The time report to be added
+	 */
+	public void addTimeReport(TimeReport tr) {
+		try{
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, week, signed) values("
+					+ tr.getUserId() + ", " 
+					+ tr.getGroupId() + ", '"
+					+ tr.getDate().toString() + "', "
+					+ tr.getDuration() + ", " 
+					+ tr.getType() + ", " 
+					+ tr.getWeek() + ", 0);");
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
+	}
+
+
+
+	/**
 	 * Edit a user in the system
 	 * 
 	 * @param oldUserName Current user name
