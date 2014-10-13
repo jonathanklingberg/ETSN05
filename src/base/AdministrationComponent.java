@@ -34,16 +34,14 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	public AdministrationComponent() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-
-
-
-	// /**
-	// * Checks if a username corresponds to the requirements for user names.
-	// * @param name The investigated username
-	// * @return True if the username corresponds to the requirements
-	// */
+	
+	//TODO Please describe the requirements or refer to specified item in SRS.
+	 /**
+	 * Checks if a username corresponds to the requirements for user names.
+	 * @param name The investigated username
+	 * @return True if the username corresponds to the requirements
+	 */
 	private boolean checkNewName(String name) {
 		int length = name.length();
 		boolean ok = (length >= 5 && length <= 10);
@@ -60,10 +58,10 @@ public class AdministrationComponent extends ServletBase {
 		return ok;
 	}
 
-	// /**
-	// * Creates a random password.
-	// * @return a randomly chosen password
-	// */
+	 /**
+	 * Creates a random password.
+	 * @return a randomly chosen password
+	 */
 	private String createPassword() {
 		String result = "";
 		Random r = new Random();
@@ -71,10 +69,15 @@ public class AdministrationComponent extends ServletBase {
 			result += (char) (r.nextInt(26) + 97); // 122-97+1=26
 		return result;
 	}
-
+	
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private boolean addUser(String name) {
-		return instance.addUser(name,
-				createPassword());
+		return instance.addUser(name, createPassword());
 	}
 
 	/**
@@ -93,7 +96,8 @@ public class AdministrationComponent extends ServletBase {
 		// check that the user is logged in as admin, otherwise redirect back to loginComponent
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("Admin")) {
 			
-			out.println("<h1>Administration page " + "</h1>"); //Is not shown in mockup design!
+			//TODO This is not shown in mockup design?
+			out.println("<h1>Administration page</h1>"); 
 			
 			// check if the administrator wants to add a new user in the form
 			String newName = request.getParameter("addname");
@@ -101,11 +105,12 @@ public class AdministrationComponent extends ServletBase {
 				if (checkNewName(newName)) {
 					boolean addPossible = addUser(newName);
 					if (!addPossible)
-						out.println("<p>Error: Suggested user name not possible to add</p>");
+						out.println("<p>Error: Suggested user name not possible to add</p>"); // style red please
 				}	else
-					out.println("<p>Error: Suggesten name not allowed</p>");
+					out.println("<p>Error: Suggesten name not allowed</p>"); // style red please
 			}
 			
+			//TODO re-factor please! very hard to read and understand?
 			if(groupActionMessage == null)
 				groupActionMessage = deleteGroup(request);
 			if(groupActionMessage == null)
@@ -120,31 +125,39 @@ public class AdministrationComponent extends ServletBase {
 				userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
+			out.println("<p>System users: </p>");
 			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
-			out.println("Group: <input type=\"text\" id=\"group\"></input>");
-			String t = "<br/><select id=\"myselect\"> " + 
-	    	           " <option value=\"Developer\">Developer</option> " +
-	    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
-	    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
-	    	            "<option value=\"Tester\">Tester</option> "+
-	    	           " <option value=\"Unspecified\">Unspecified</option> "+
-	    	        "</select>";
+			out.println("Group: <input type=\"text\" id=\"group\"></input><br/>");
+			String t = "<select id=\"myselect\"> " + 
+		    	           " <option value=\"Developer\">Developer</option> " +
+		    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
+		    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+		    	            "<option value=\"Tester\">Tester</option> "+
+		    	           " <option value=\"Unspecified\">Unspecified</option> "+
+		    	        "</select>";
 			out.println(t);
-			out.println("</div><br />");
+			out.println("</div><br>");
 			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
 			listGroups(out, groupActionMessage);
-			out.println("<br/><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
+			// It's recommended to gather all js in a separate .js-file, that includes onclick-events just as a reminder =)
+			out.println("<br><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println("</body></html>");
 
 		} else {
-			System.err.println("Illigal action performed as: " + getRole() + "; tried to access AdministrationComponent.");
+			System.err.println("Illigal action performed as: " + getRole() + "; Tried to access AdministrationComponent.");
 			response.sendRedirect("logincomponent");
-		}	
+		}
 	}
-
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param request
+	 * @param out
+	 * @return
+	 */
 	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
 		String oldUserName = request.getParameter("oldUserName");
 		String newUserName = request.getParameter("editUser");
@@ -185,7 +198,13 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return null;
 	}
-
+	//TODO Javaoc
+	/**
+	 * 
+	 * @param request
+	 * @param out
+	 * @return
+	 */
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");
@@ -215,7 +234,12 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return failMsg;
 	}
-
+	//TODO Javaoc
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
@@ -224,6 +248,12 @@ public class AdministrationComponent extends ServletBase {
 		return null;
 	}
 
+	//TODO Javaoc
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private String deleteGroup(HttpServletRequest request) {
 		String deleteGroup = request.getParameter("deletegroup");
 		if (deleteGroup != null) {
@@ -232,7 +262,14 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return null;
 	}
-
+	
+	//TODO Javaoc
+	/**
+	 * 
+	 * @param request
+	 * @param out
+	 * @return
+	 */
 	private String editGroup(HttpServletRequest request, PrintWriter out) {
 		String editGroup = request.getParameter("editgroup");
 		if (editGroup != null) {
@@ -249,7 +286,14 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return null;
 	}
-
+	
+	//TODO Javaoc
+	/**
+	 * 
+	 * @param request
+	 * @param out
+	 * @return
+	 */
 	private String createNewGroup(HttpServletRequest request, PrintWriter out) {
 		String createNewGroup = request.getParameter("addNewGroup");
 		if(createNewGroup != null) {
@@ -289,23 +333,18 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("</tr>");
 		 }
 		 out.println("</table>");
-		 if(groupActionMessage != null)
-			 out.print("<p>"+ groupActionMessage +"</p>");
-	}
-
-	/**
-	 * 
-	 */
-	protected String getUserTableName() {
-		return "<p>System users: </p>";
+		 if(groupActionMessage != null){
+			 //TODO Add red style to all of your error-messages if possible please =)
+			 out.print("<p style=\"color:red\">"+ groupActionMessage +"</p>");			 
+		 }
 	}
 
 	/**
 	 * Determines whether this is an admin or 
 	 * project manager component.
 	 * 
-	 * @return true if it is an admin- or project manager 
-	 * component false otherwise
+	 * @return 	true if it is an admin- or project manager component 
+	 * 			false otherwise
 	 */
 	protected boolean isAdminOrProjectManagerComponent() {
 		return true;
@@ -314,17 +353,10 @@ public class AdministrationComponent extends ServletBase {
 	/**
 	 * Determines whether this is an admin component
 	 * 
-	 * @return true if it is an admin component, false 
-	 * otherwise
+	 * @return 	true if it is an admin component, 
+	 * 			false otherwise
 	 */
 	protected boolean isAdminComponent() {
 		return true;
-	}
-	
-	/**
-	 * 
-	 */
-	protected String getTimeReportTableName() {
-		return "All time reports";
 	}
 }
