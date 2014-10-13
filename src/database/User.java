@@ -17,12 +17,12 @@ import javax.servlet.http.HttpSession;
  *  is done by making queries to the MySQL database via the connection
  *  attribute.
  *  
- *  The class also implements the DatabaseInterface which will provide
+ *  The class also extends the AbstractCointainer which will provide
  *  methods for generating the project to HTML, as well as removing the
  *  project from the database
  *  
  * @author SG
- * @version 0.2
+ * @version 0.3
  * 
  */
 public class User extends AbstractCointainer {

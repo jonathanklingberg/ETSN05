@@ -27,7 +27,7 @@ import database.DatabaseHandlerInstance;
  * taken care of here.
  * 
  * @author SG
- * @version 0.2
+ * @version 0.3
  * 
  */
 @WebServlet("/projectmanagercomponent")

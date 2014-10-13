@@ -17,13 +17,8 @@ import java.util.List;
  *  operations can be further carried out on them instead. The class
  *  communicates with a MySQL database via the 'Connection' attribute.
  *  
- *  The class also implements the DatabaseInterface which will provide
- *  methods for generating the project to HTML, as well as removing the
- *  project from the database. However, the remove method will not be
- *  implemented by this class.
- *  
  * @author SG
- * @version 0.2
+ * @version 0.3
  * 
  */
 
