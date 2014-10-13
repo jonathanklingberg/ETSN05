@@ -64,7 +64,7 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
-			printTimeReportTable(out, timeReports);
+			printTimeReportTable(out, timeReports, null);
 
 
 

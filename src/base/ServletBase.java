@@ -168,7 +168,7 @@ public abstract class ServletBase extends HttpServlet {
     		out.print("<p>"+ userActionMessage +"</p>");
     }
     // Print Time Report Table according to mockup design in SRS
-    protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports){
+    protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
     	out.println("<BR>");
     	out.println(getTimeReportTableName());
     	out.println("<table border=" + formElement("1") + ">");	
@@ -183,7 +183,10 @@ public abstract class ServletBase extends HttpServlet {
     		
     		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
     	}
-    	out.println("</table>");		
+    	out.println("</table>");
+
+    	if(userActionMessage != null)
+    		out.print("<p>"+ userActionMessage +"</p>");
     }
 
 	private void printTimeReport(PrintWriter out, String editCode,

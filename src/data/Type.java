@@ -16,6 +16,14 @@ public enum Type {
     	this.value = value;
     }
     
+    public static boolean isType(int number){
+    	boolean isType = false;
+    	for (Type t : Type.values()){
+    		isType = t.value == number;
+    	}
+    	return isType;
+    }
+    
     public int getValue() {
     	return this.value;
     }

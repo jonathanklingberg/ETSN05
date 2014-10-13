@@ -441,6 +441,24 @@ public class DatabaseHandlerInstance {
 		return timeReport;
 	}
 
+	public void addTimeReport(TimeReport tr) {
+		try{
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, week, signed) values("
+					+ tr.getUserId() + ", " 
+					+ tr.getGroupId() + ", '"
+					+ tr.getDate().toString() + "', "
+					+ tr.getDuration() + ", " 
+					+ tr.getType() + ", " 
+					+ tr.getWeek() + ", 0);");
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
+	}
+
 
 	//	/**
 	//	 * Method for generating the overall structure for the different
