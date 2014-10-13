@@ -148,30 +148,23 @@ public class DatabaseHandlerInstance {
 	public synchronized ArrayList<User> getAllUsers() {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("select * from RoleInGroup");
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role, RoleInGroup.groupId FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+					+ " WHERE RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
 			ResultSet rs = ps.executeQuery();
-			ArrayList<Long> idList = new ArrayList<Long>();
-			ArrayList<String> roleList = new ArrayList<String>();
-			ArrayList<Long> groupIdList = new ArrayList<Long>();
-			while (rs.next()) {
-				idList.add(rs.getLong("userId"));
-				roleList.add(rs.getString("role"));
-				groupIdList.add(rs.getLong("groupId"));
-			}
-			for (int i = 0; i < idList.size(); i++) {
-				rs = ps.executeQuery("select * from Users where id='" + idList.get(i) + "' order by userName asc");
-				rs.next();
-				String name = rs.getString("userName");
+			while(rs.next()){
+				long userId = rs.getLong("id");
+				String username = rs.getString("userName");
 				String password = rs.getString("password");
-				String role = roleList.get(i);
-				long groupId = groupIdList.get(i);
-				users.add(new User(name, password, role, groupId));				
+				String sessionId = rs.getString("sessionId");
+				long groupId = rs.getLong("groupID");
+				String role = rs.getString("role");
+				users.add(new User(conn, username, password, userId, groupId, role, sessionId));
 			}
-			rs.close();
 			ps.close();
-		} catch (SQLException e) {
-			System.err.println(e);
-		}	
+			rs.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return users;
 	}
 
@@ -298,7 +291,7 @@ public class DatabaseHandlerInstance {
 	public boolean addUser(String name, String password) {
 		boolean resultOK = false;	
 		try{
-			PreparedStatement ps = conn.prepareStatement("insert into users (name, password) values('"
+			PreparedStatement ps = conn.prepareStatement("insert into Users (name, password) values('"
 					+ name + "', '" + password + "')");
 			ps.executeUpdate();
 			ps.close();
@@ -314,7 +307,7 @@ public class DatabaseHandlerInstance {
 
 	public void deleteUser(String name) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("delete from users where name='" + name + "'");
+			PreparedStatement ps = conn.prepareStatement("delete from Users where name='" + name + "'");
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {
@@ -327,7 +320,7 @@ public class DatabaseHandlerInstance {
 	public boolean inactivateUser(String name) {
 		boolean resultOk = true;
 		try{
-			PreparedStatement ps = conn.prepareStatement("update users set is_active = 0 where name = '"
+			PreparedStatement ps = conn.prepareStatement("update Users set is_active = 0 where name = '"
 					+ name + "'");
 			ps.executeUpdate();
 			ps.close();
@@ -457,6 +450,28 @@ public class DatabaseHandlerInstance {
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("VendorError: " + ex.getErrorCode());
 		}
+	}
+
+
+
+	public boolean editUser(String oldUserName, String newUserName,
+			String newPassword, String newGroupName, String role) {
+		try{
+			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
+			ps.executeUpdate();
+			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			long userId = rs.getLong("id");
+			long groupId = instance.getProjectGroup(newGroupName).getId();
+			ps = conn.prepareStatement("update RoleInGroup set groupId = " + groupId + ", role = '" + role + "' where userId = " + userId);
+			ps.executeUpdate();
+			ps.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 

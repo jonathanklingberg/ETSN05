@@ -18,8 +18,14 @@ PRIMARY KEY (role)
 );
 
 CREATE TABLE Types(
-type INT UNSIGNED NOT NULL,
+type VARCHAR(1) NOT NULL,
 PRIMARY KEY (type)
+);
+
+
+CREATE TABLE Numbers(
+number INT UNSIGNED NOT NULL,
+PRIMARY KEY (number)
 );
 
 CREATE TABLE ProjectGroups(
@@ -33,7 +39,7 @@ CREATE TABLE RoleInGroup(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
 userId INT UNSIGNED,
 groupId INT UNSIGNED NOT NULL,
-role VARCHAR(20) NOT NULL,
+role VARCHAR(20) NOT NULL DEFAULT 1,
 isActiveInGroup TINYINT(1),
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
@@ -46,25 +52,27 @@ userId INT UNSIGNED NOT NULL,
 groupId INT UNSIGNED NOT NULL,
 date DATE NOT NULL,
 duration INT UNSIGNED NOT NULL,
-type INT UNSIGNED NOT NULL,
+type VARCHAR(1) NOT NULL,
+number INT UNSIGNED NOT NULL,
 week INT UNSIGNED NOT NULL,
 signed TINYINT(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
-FOREIGN KEY (type) REFERENCES Types(type)
+FOREIGN KEY (type) REFERENCES Types(type),
+FOREIGN KEY (number) REFERENCES Numbers(number)
 );
 
 -- Create default users
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'adminpw', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser2', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser2', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser2', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser3', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser3', 'password', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser3', 'password', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser2', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser2', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser2', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser3', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser3', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser3', 'passwd', NULL, 1);
 -- Create default Roles
 INSERT INTO Roles VALUES('ProjectManager');
 INSERT INTO Roles VALUES('Developer');
@@ -78,16 +86,20 @@ INSERT INTO ProjectGroups (groupName) VALUES ('Group2');
 INSERT INTO ProjectGroups (groupName) VALUES ('Group3');
 INSERT INTO ProjectGroups (groupName) VALUES ('Group4');
 -- Add admin to RoleInGroup
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (1, 1, 'Admin');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (2, 2, 'Tester');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (3, 2, 'Developer');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (4, 2, 'ProjectManager');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (5, 3, 'Tester');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (6, 3, 'Developer');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (7, 3, 'ProjectManager');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (8, 4, 'Tester');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (9, 4, 'Developer');
-INSERT INTO RoleInGroup (userId, groupId, role) VALUES (10, 4, 'ProjectManager');
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (1, 1, 'Admin', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (2, 2, 'Tester', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (3, 2, 'Developer', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (4, 2, 'ProjectManager', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (5, 3, 'Tester', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (6, 3, 'Developer', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (7, 3, 'ProjectManager', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (8, 4, 'Tester', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, 'Developer', 1);
+INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
+--Create timereport
+INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES(2, 2, 20141012, 60, 11, 1, 1);
+INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES(24, 3, 20141012, 60, 11, 1, 1);
+
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);

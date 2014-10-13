@@ -53,10 +53,10 @@ public abstract class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
-			Statement stmt = conn.createStatement();		    
-		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
+//			Statement stmt = conn.createStatement();		    
+//		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
 		    System.out.println("Successfully connected to database!"); // Success message in console
-		    stmt.close();
+//		    stmt.close();
 			
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
@@ -108,15 +108,18 @@ public abstract class ServletBase extends HttpServlet {
     						"<script src=\"js/jquery-1.8.3.js\"></script>" +
 							"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
 							"<script src=\"js/epuss.js\"></script>" +
+							"<script src=\"js/footable.js\"></script>" +
 							"<script src=\"js/footable.bookmarkable.js\"></script>" +
 							"<script src=\"js/footable.filter.js\"></script>" +
 							"<script src=\"js/footable.grid.js\"></script>" +
-							"<script src=\"js/footable.js\"></script>" +
 							"<script src=\"js/footable.memory.js\"></script>" +
-							"<script src=\"js/footable.paginate.js\"></script>" +
-							"<script src=\"js/footable.plugin.templat.js\"></script>" +
+//							"<script src=\"js/footable.paginate.js\"></script>" +
+							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
+//							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.standalone.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
     						"<title> The Base Block System </title></head><body>";
     	return intro;
@@ -133,8 +136,11 @@ public abstract class ServletBase extends HttpServlet {
     // Print User Table according to mockup design in SRS
     protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
     	out.println(getUserTableName());
-    	out.println("<table border=" + formElement("1") + ">");	
-    	printUserTableHeader(out);	    
+	 	out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
+    	out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
+    	printUserTableHeader(out);
+    	System.out.println("uselist-size: " + userList.size());
+//    	int index = 0;
     	for(int i = 0; i < userList.size(); ++i) {			
     		String name = userList.get(i).getName();
     		System.out.println(name);
@@ -143,7 +149,7 @@ public abstract class ServletBase extends HttpServlet {
     		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
     		String editCode = "";
     		if(isAdminComponent()) {
-    			editCode = "<a href=\"#\" class=\"editUserButton\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
+    			editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
     		} else {
     			String editURL = "administrationcomponent?edituser="+name;
     			editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
@@ -154,14 +160,22 @@ public abstract class ServletBase extends HttpServlet {
     			editCode = "";
     			deleteCode = "";
     		}
+//    		System.out.println("index: " + index);
+//    		index++;
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
     	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
-	    "<input type=\"text\" id=\"oldUserName\" />Password: " +
-	        "<input type=\"text\" id=\"oldPassWord\" />Group: " + 
-	        "<input type=\"text\" id=\"oldGroupName\" />Project Manager: " + 
-	        "<input type=\"checkbox\" id=\"oldPM\" />" + 
-	    "</div>";
+    	    "<input type=\"text\" id=\"oldUserName\" />Password:" +
+    	       " <input type=\"text\" id=\"oldPassWord\"/>Group: " +
+    	       " <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
+    	        "<select id=\"myselect2\"> " + 
+    	           " <option value=\"Developer\">Developer</option> " +
+    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
+    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+    	            "<option value=\"Tester\">Tester</option> "+
+    	           " <option value=\"Unspecified\">Unspecified</option> "+
+    	        "</select>"+
+    	   " </div>";
     	out.println("</table>");
     	out.println(editForm);
     	if(userActionMessage != null)
@@ -171,7 +185,7 @@ public abstract class ServletBase extends HttpServlet {
     protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
     	out.println("<BR>");
     	out.println(getTimeReportTableName());
-    	out.println("<table border=" + formElement("1") + ">");	
+    	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
     	printTimeReportTableHeader(out);
 
     	for(int i = 0; i < timeReports.size(); ++i){
@@ -220,23 +234,24 @@ public abstract class ServletBase extends HttpServlet {
 	private void printUser(PrintWriter out, String name, String role, String group,
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
-		out.println("<td>" + name + "</td>");
-		out.println(isAdminComponent()? ("<td>" + group + "</td>") : "");
-		out.println("<td>" + role + "</td>");
-		out.println(isAdminComponent()? ("<td>" + pw + "</td>") : "");
-		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
-		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
+		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
+		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "<td></td>");
+		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
+		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "<td></td>");
+		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "<td></td>");
+		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "<td></td>");
 		out.println("</tr>");
 	}
 
 	private void printUserTableHeader(PrintWriter out) {
-		out.println("<tr>");
-		out.println("<td><B>Name</B></td>");
-		out.println(isAdminComponent()? "<td><B>Group</B></td>" : "");
-		out.println("<td><B>Role</B></td>");
-		out.println(isAdminComponent()? "<td><B>Password</B></td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>Edit</B></td>" : "");
-		out.println(isAdminComponent()? "<td><B>Remove</B></td></tr>" : "");
+		out.println("<thead><tr>");
+		out.println("<th data-sort-initial=\"true\">Name</th>");
+		out.println(isAdminComponent()? "<th>Group</th>" : "");
+		out.println("<th>Role</th>");
+		out.println(isAdminComponent()? "<th>Password</th>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<th data-sort-ignore=\"true\">Edit</th>" : "");
+		out.println(isAdminComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");
+		out.println("</tr></thead>");
 	}
 	
 	protected String getRole(){
