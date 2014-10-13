@@ -168,7 +168,7 @@ public class DatabaseHandlerInstance {
 	 * Retrieves a specific user from the database
 	 * 
 	 * @param userName
-	 *            The username of the user that should be fetched from the
+	 *            The user name of the user that should be fetched from the
 	 *            database
 	 * @return The user if it is found in the database, otherwise null
 	 */
@@ -200,6 +200,14 @@ public class DatabaseHandlerInstance {
 		return null;			
 	}
 
+	/** 
+	 * Retrieves a specific user from the database
+	 * 
+	 * @param userId
+	 *            The userId of the user that should be fetched from the
+	 *            database
+	 * @return The user if it is found in the database, otherwise null
+	 */
 	public User getUser(long userId) {
 		try {
 			PreparedStatement ps;
@@ -237,7 +245,14 @@ public class DatabaseHandlerInstance {
 		}
 		return null;
 	}	
-
+	/**
+	 * Retrieves a specific project group from the database
+	 * 
+	 * @param groupName
+	 *            The groupName of the project group to retrieve
+	 * @return The project group that maps to groupName in the database, or null if no
+	 *         such project group is found
+	 */
 	public ProjectGroup getProjectGroup(String groupName) {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName ='" + groupName + "';");
@@ -256,14 +271,12 @@ public class DatabaseHandlerInstance {
 
 
 	/**
-	 * Retrieves all users from a specified project group
+	 * Change the name of a project group
 	 * 
-	 *  @param id The id of the project group
-	 * @return A list of all the project members in a given group,
-	 * or an empty list if there are no members in the group.
+	 * @param groupNumber The groupId
+	 * @param newGroupName The new group name
+	 * @return True if successful, otherwise false.
 	 */
-
-
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		try{
 			System.out.println(newGroupName);
@@ -283,6 +296,13 @@ public class DatabaseHandlerInstance {
 		return false;
 	}
 
+	/**
+	 * Add a new user to the system
+	 * 
+	 * @param name The name of the new user
+	 * @param password The new user's password
+	 * @return True if successful, otherwise false
+	 */
 	public boolean addUser(String name, String password) {
 		boolean resultOK = false;	
 		try{
@@ -300,6 +320,10 @@ public class DatabaseHandlerInstance {
 		return resultOK;
 	}
 
+	/**
+	 * Delete a user from the system
+	 * @param name The user name of the user that should be deleted
+	 */
 	public void deleteUser(String name) {
 		try{
 			PreparedStatement ps = conn.prepareStatement("delete from Users where name='" + name + "'");
@@ -312,6 +336,12 @@ public class DatabaseHandlerInstance {
 		}
 	}
 
+	/**
+	 * Set users status to inactive
+	 * 
+	 * @param name The user name of the user to inactivate
+	 * @return True if successful, otherwise false
+	 */
 	public boolean inactivateUser(String name) {
 		boolean resultOk = true;
 		try{
@@ -328,6 +358,12 @@ public class DatabaseHandlerInstance {
 		return resultOk;
 	}
 
+	/**
+	 * Get users in a project group
+	 * 
+	 * @param groupId The groupId of the project group that the users are in 
+	 * @return an ArrayList of Users
+	 */
 	public ArrayList<User> getUsersInGroup(long groupId) {
 		ArrayList<User> usersInGroup = new ArrayList<User>();
 		for(User u : getAllUsers()) {
@@ -396,6 +432,12 @@ public class DatabaseHandlerInstance {
 		return list;
 	}
 
+	/**
+	 * Retrieve a project groups time reports
+	 * 
+	 * @param groupId The project group id from where the time reports should be retrieved
+	 * @return An ArrayList of time reports
+	 */
 	public ArrayList<TimeReport> getTimeReportsOfGroup(long groupId) {
 		ArrayList<TimeReport> list = new ArrayList<TimeReport>();
 		try {
@@ -429,6 +471,40 @@ public class DatabaseHandlerInstance {
 		return timeReport;
 	}
 
+	/**
+	 * Add a time report tr to the system
+	 * @param tr The time report to be added
+	 */
+	public void addTimeReport(TimeReport tr) {
+		try{
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, week, signed) values("
+					+ tr.getUserId() + ", " 
+					+ tr.getGroupId() + ", '"
+					+ tr.getDate().toString() + "', "
+					+ tr.getDuration() + ", " 
+					+ tr.getType() + ", " 
+					+ tr.getWeek() + ", 0);");
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
+	}
+
+
+
+	/**
+	 * Edit a user in the system
+	 * 
+	 * @param oldUserName Current user name
+	 * @param newUserName New user name
+	 * @param newPassword New password
+	 * @param newGroupName new project group name
+	 * @param role new role
+	 * @return True if update is successful, false otherwise
+	 */
 	public boolean editUser(String oldUserName, String newUserName,
 			String newPassword, String newGroupName, String role) {
 		try{

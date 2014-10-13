@@ -283,6 +283,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param week The week to change to.
 	 */
 	private void setWeek(long week) {
+		this.week=week;
 		//See setId
 		
 		//Moreover the user will never enter an explicit value
