@@ -63,6 +63,19 @@ public class ProjectManagerComponent extends ServletBase {
 			ProjectGroup pg = instance.getProjectGroup(groupId);
 			out.println("<p>Assigned to project: "+ pg.getName() +"</p>");;
 			
+			
+			
+		
+			
+			String timereportId = request.getParameter("signtimereport");
+			
+			if(timereportId != null && timereportId.length() > 0){
+				System.out.println("TimeReportId: " + timereportId);
+				instance.changeSignatureOfTimeReport(timereportId);
+			}else{
+				System.out.println("TimeReportId not existing!");
+			}
+			
 			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			printUserTable(out, usersInGroup, null);
@@ -70,10 +83,10 @@ public class ProjectManagerComponent extends ServletBase {
 			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			printTimeReportTable(out, timeReports);
-
-
-
-
+			
+			
+			
+			
 			/* Do alot of stuff according to the SRS:
 			 * See all members of his group			X
 			 * See all groupmembers timereports
@@ -112,13 +125,16 @@ public class ProjectManagerComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// Update db signed.....
-		String checkbox = request.getParameter("signed");
-		String reportid = request.getParameter("reportid");
-		System.out.println("Signed: " + checkbox);
-		System.out.println("reportid: " + reportid);
-		PrintWriter out = response.getWriter();
+//		String checkbox = request.getParameter("signed");
+//		String reportid = request.getParameter("reportid");
+//		System.out.println("Signed: " + checkbox);
+//		System.out.println("reportid: " + reportid);
+//		PrintWriter out = response.getWriter();
+		
+//		boolean signOK = instance.changeTimeReportSignature(reportid);
+		
 //		if("OK_from_db" == true){
-			out.print("1"); // Everything OK / 
+//			out.print("1"); // Everything OK / 
 //		}else{
 //			out.print("Something went wrong! / 0");
 //		}

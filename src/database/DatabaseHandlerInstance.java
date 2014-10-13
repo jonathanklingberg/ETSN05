@@ -186,10 +186,11 @@ public class DatabaseHandlerInstance {
 	 */
 	public synchronized User getUser(String userName) {
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName = '" + userName + "'");
+			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName= '" + userName + "'");
 			//			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users LEFT JOIN RoleInGroup ON RoleInGroup.groupId =" + id);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
+			System.out.println("Found a user in getUser(String) with name " + rs.getString("userName"));
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
 			String sessionId = rs.getString("sessionId");
@@ -215,9 +216,10 @@ public class DatabaseHandlerInstance {
 	public User getUser(long userId) {
 		try {
 			PreparedStatement ps;
-			ps = conn.prepareStatement("SELECT * from Users WHERE id = " + userId);
+			ps = conn.prepareStatement("SELECT * from Users WHERE id =" + userId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
+			System.out.println("Found a user with the name " + rs.getString("userName"));
 			return getUser(rs.getString("userName"));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -366,7 +368,6 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("SELECT * from TimeReports WHERE id = " + id);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-
 			long userId = rs.getLong("userId"); 
 			long groupId = rs.getLong("groupId");
 			Date date = rs.getDate("date");
@@ -379,8 +380,7 @@ public class DatabaseHandlerInstance {
 			ps.close();
 		}catch (SQLException e) {
 			System.out.println("FAIL I getTimeReport");
-			System.err.println(e);
-	
+			System.err.println(e);	
 		}
 		return timeReport;
 	}
@@ -459,6 +459,16 @@ public class DatabaseHandlerInstance {
 			return false;
 		}
 		return true;
+	}
+
+	public void changeSignatureOfTimeReport(String timereportId) {
+		TimeReport tr = instance.getTimeReport(Long.parseLong(timereportId));
+		boolean isSigned = tr.isSigned();		
+		if(isSigned){
+			tr.unsignTimeReport();
+		}else{
+			tr.signTimeReport();
+		}
 	}
 
 

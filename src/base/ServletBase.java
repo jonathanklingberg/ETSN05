@@ -187,7 +187,6 @@ public abstract class ServletBase extends HttpServlet {
     	out.println(getTimeReportTableName());
     	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
     	printTimeReportTableHeader(out);
-
     	for(int i = 0; i < timeReports.size(); ++i){
     		Long timeReportId = timeReports.get(i).getId();
     		String editURL = "workercomponent?edittimereport="+timeReportId;
@@ -197,26 +196,27 @@ public abstract class ServletBase extends HttpServlet {
     		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
     	}
     	out.println("</table>");	
-    	out.println("<div id=\"testcont\">testcont</div>");
+    	//out.println("<div id=\"testcont\">testcont</div>");
     }
 
 	private void printTimeReport(PrintWriter out, String editCode,
 			String deleteCode, TimeReport tr) {
+		System.out.println("Trying to find user with id " + tr.getUserId());
 		User user = instance.getUser(tr.getUserId());
+		System.out.println("Found " + user.getName());
 		out.println("<tr>");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>" + user.getName() + "</B></td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>" + user.getRole() + "</B></td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>" + tr.getWeek() + "</B></td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getName() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getRole() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td>" + tr.getWeek() + "</td>" : "");
 		out.println("<td>" + tr.getDate() + "</td>");
 		out.println("<td>" + tr.getDuration() + "</td>");
-		out.println("<td>" + tr.getType() + "</td>");			
+		out.println("<td>" + tr.getType() + "</td>");
 		//out.println("<td>" + tr.isSigned() + "</td>");
 		if(session.getAttribute("role").equals("ProjectManager") || session.getAttribute("role").equals("Admin")){
-			String isSigned = tr.isSigned() ? "checked" : "";		
+			String checkedAttribute = tr.isSigned() ? "checked" : "";
 //			out.println("<td><form action=\"projectmanagercomponent\" method=\"POST\"><input type=\"hidden\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\"  checked =" +isSigned +"></input><input type=\"submit\" value=\"Submit\" /></form></td>");
-			out.println("<td><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" checked=" +isSigned +"></input></td>");
-		}
-		
+			out.println("<td><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
+		}		
 		out.println("<td>" + editCode +  "</td>");
 		out.println("<td>" + deleteCode + "</td></tr>");
 	}  

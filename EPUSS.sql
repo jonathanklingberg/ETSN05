@@ -88,11 +88,10 @@ INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (7, 3, '
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (8, 4, 'Tester', 1);
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, 'Developer', 1);
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
-<<<<<<< HEAD
+
 -- Create a timereport for testing
 INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES( 2, 2, '2010-02-01', 2, 21, 2, 0);
-=======
->>>>>>> 0ad58244f0c8140ccd73d5846ecb51991a8d802a
+
 -- Create default types
 INSERT INTO Types VALUES(11);
 INSERT INTO Types VALUES(12);
