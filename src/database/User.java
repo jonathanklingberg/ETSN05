@@ -212,8 +212,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET role = '" + role + "' WHERE userId = '" + this.userID + "'");
 				ps.executeUpdate();
 				roleChanged = true;
-				ps = conn.prepareStatement("UPDATE Users SET sessionId = NULL WHERE userId = '" + this.userID + "'");
-				this.sessionID = null;
+				//TODO Kick user!
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
