@@ -44,7 +44,7 @@ public class User extends AbstractCointainer {
 	 * @param userID The user's ID.
 	 * @param groupID The user's group ID.
 	 * @param role The user's role.
-	 * @param isOnline Cookie-identifier.
+	 * @param sessionID Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
 			long userID, long groupID, String role, String sessionID) {
@@ -268,7 +268,7 @@ public class User extends AbstractCointainer {
 	 * Will produce an HTML representation of the user depending on the
 	 * user asking for it
 	 * 
-	 * @param user A user in the system who wants to display this user.
+	 * @param requestingUserRole The role of the user in the system who wants to display this user.
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(Role requestingUserRole) {

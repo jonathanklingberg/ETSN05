@@ -379,8 +379,7 @@ public class DatabaseHandlerInstance {
 	/** 
 	 * Retrieves a specific time report from the database
 	 * 
-	 * @param userName
-	 *            The id of the time report that should be fetched from the
+	 * @param id  The id of the time report that should be fetched from the
 	 *            database
 	 * @return The time report if it is found in the database, otherwise null
 	 */

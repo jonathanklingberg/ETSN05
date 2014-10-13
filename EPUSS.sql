@@ -7,7 +7,7 @@ id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 userName VARCHAR(10) NOT NULL,
 password VARCHAR(10) NOT NULL,
 sessionId VARCHAR(255) ,
-isActive tinyint(1) ,
+isActive tinyint(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 UNIQUE KEY (userName)
 );
