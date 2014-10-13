@@ -1,23 +1,14 @@
 package base;
 
 import java.io.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import data.Role;
 import database.User;
-import database.DatabaseHandlerInstance;
 
 /**
  * Servlet implementation class LoginComponent
@@ -70,11 +61,11 @@ public class LoginComponent extends ServletBase {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-		// Get the session
+
 		session = request.getSession(true);
 		
 		int state = LOGIN_FALSE;
+		boolean loginAttempt = false;
 
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
@@ -83,28 +74,29 @@ public class LoginComponent extends ServletBase {
 		
 		if (isLoggedIn(request)) {
 			session.setAttribute("state", LOGIN_FALSE);
-			session.invalidate(); // "session.destroy()"
-			System.out.println("Session.destroy()");
-			out.println("<p>You are now logged out</p>");
+			session.invalidate();
+			out.println("<p>You are now logged out</p>"); //TODO Style to match mockup
 		}
 		
 		name = request.getParameter("userName"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
         
         if (name != null && password != null) {
-        	if(name.length() > 0 && password.length() > 0){
-	        	System.out.println("User: " + name);
-	        	System.out.println("Password: " + password);
+        	loginAttempt = true;
+        	// Request to login to web-site since not null means such GET-parameters currently exists in URL.
+        	if(name.length() > 0 && password.length() > 0){ // Check if fields where empty at submit
 	        	User currUser = instance.getUser(name);
 	        	if(currUser != null && currUser.comparePassword(password)){
 	        		System.out.println("Login success!");
+	        		session.setAttribute("user", currUser); // Used to store logged in users into hashMap (usersSessions)
+	        		currUser.printActiveSessions(); // Used for testing to see which users are currently online..
 	        		state = LOGIN_TRUE;
 	       			session.setAttribute("state", state);  // save the state in the session
 	       			session.setAttribute("name", name);  // save the name in the session
 	       			session.setAttribute("userId", currUser.getUserId());  // save the userId in the session
 	       			session.setAttribute("sessionid", session.getId());
 	       			session.setAttribute("role", currUser.getRole());
-	       			switch (currUser.getRole()) {
+	       			switch (currUser.getRole()) { // Redirect user to matching page
 	       			case "Admin":
 	       				System.out.println("***REDIRECT TO ADMIN-PAGE***");
 	       				response.sendRedirect("administrationcomponent");
@@ -117,20 +109,14 @@ public class LoginComponent extends ServletBase {
 	       				System.out.println("***REDIRECT TO WORKER-PAGE***");
 	       				response.sendRedirect("workercomponent");
 	       				break;
-	       			default:
-	       				System.out.println("***REDIRECT TO FUNCTIONALITY-PAGE***");
-	       				response.sendRedirect("functionality.html");
-	       				break;
 	       			}
-	       		} else{       			
-	       			out.println("<p style=\"color:red;\">That was not a valid username / password. </p>");
-	        	}
-        	}else{
-        	out.println("<p style=\"color:red;\">That was not a valid username / password. </p>");
-        		System.out.println("Wrong password!");	
+	       		}
         	}
        	}
         if(state == LOGIN_FALSE){
+        	if(loginAttempt){
+        		out.println("<p style=\"color:red;\">That was not a valid username / password. </p>");        		
+        	}
         	out.println(loginRequestForm());
         }
 		out.println("</body></html>");
@@ -144,41 +130,14 @@ public class LoginComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
-	// Never actually lists users, thus does not need a heading for such a table
-	protected String getUserTableName() {
-		return "";
-	}
-
-	//Never used
+	
+	@Override
 	protected boolean isAdminOrProjectManagerComponent() {
 		return false;
 	}
-	
-	//Never used
+
+	@Override
 	protected boolean isAdminComponent() {
 		return false;
 	}
-
-	protected String getTimeReportTableName() {
-		return "";
-	}
-	
-//	protected boolean setActive(String username){
-//    	boolean resultOk = true;
-//    	try{
-//			Statement stmt = conn.createStatement();
-//			String statement = "update users set is_active = 1 where name = '" + username + "'";
-//			System.out.println(statement);
-//		    stmt.executeUpdate(statement); 
-//		    stmt.close();
-//			
-//		} catch (SQLException ex) {
-//		    resultOk = false;
-//		    // System.out.println("SQLException: " + ex.getMessage());
-//		    System.out.println("SQLState: " + ex.getSQLState());
-//		    System.out.println("VendorError: " + ex.getErrorCode());
-//		}
-//    	return resultOk;
-//	}
 }

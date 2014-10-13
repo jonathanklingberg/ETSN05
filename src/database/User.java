@@ -6,9 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import data.Role;
+
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 /**
  *	This class represents a User in the system, and thus
@@ -25,13 +30,12 @@ import javax.servlet.http.HttpSession;
  * @version 0.3
  * 
  */
-public class User extends AbstractCointainer {
+public class User extends AbstractCointainer implements HttpSessionBindingListener{
 	private String name;
 	private String password;
 	private long groupID;
 	private long userID;
 	private String role;
-	private String sessionID;
 	
 	/**
 	 * Constructor which should be used when the user
@@ -44,17 +48,15 @@ public class User extends AbstractCointainer {
 	 * @param userID The user's ID.
 	 * @param groupID The user's group ID.
 	 * @param role The user's role.
-	 * @param sessionID Cookie-identifier.
 	 */
 	public User(Connection conn, String name, String password, 
-			long userID, long groupID, String role, String sessionID) {
+			long userID, long groupID, String role) {
 		this.conn = conn;
 		this.name = name;
 		this.password = password;
 		this.userID = userID;
 		this.groupID = groupID;
 		this.role = role;
-		this.sessionID = sessionID;
 	}
 
 	/**
@@ -122,15 +124,6 @@ public class User extends AbstractCointainer {
 	 */
 	public long getGroupId() {
 		return groupID;
-	}
-	
-	/**
-	 * Getter for session ID
-	 * 
-	 * @return The session ID if it exists, otherwise null
-	 */
-	public String getSessionId() {
-		return sessionID;
 	}
 	
 	/**
@@ -253,8 +246,7 @@ public class User extends AbstractCointainer {
 			PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
 				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
 			ps.executeUpdate();
-			// TODO update sessionID to null in db /Jonathan
-			sessionID = null;
+			// TODO kick logged in user!
 			successfullyMoved = true;
 		} catch (SQLException e) {
 			successfullyMoved = false;
@@ -287,7 +279,7 @@ public class User extends AbstractCointainer {
 	 * @return True if the object manages to remove itself, otherwise false
 	 */
 	public boolean removeMe() {
-		//Don't forget to set 'activeInGroup' to false
+		//TODO Don't forget to set 'activeInGroup' to false
 		//when removing the user
 		boolean successfullyRemoved = false;
 		try {
@@ -295,13 +287,66 @@ public class User extends AbstractCointainer {
 			ps.executeUpdate();
 			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = " + userID);
 			ps.executeUpdate();
-			sessionID = null;
+			//TODO kick logged in user!
+			killSession();
 			successfullyRemoved = true;
 		} catch (SQLException e) {
 			successfullyRemoved = false;
 			e.printStackTrace();
 		}
 		return successfullyRemoved;
+	}
 	
+	/**
+	 * Triggered as a user-object-instance is added as session-attribute.
+	 * Kick currently logged in user and replace with new user-object into map.
+	 */
+	@Override
+	public void valueBound(HttpSessionBindingEvent event) {
+		if(usersSessions.containsKey(this.name)){
+			usersSessions.get(this.name).invalidate(); // kick currently logged in user.
+		}
+		System.out.println("*********"+this.name+" WENT ONLINE***********");
+		usersSessions.put(this.name, event.getSession()); // replace/add the new user to map.
+	}
+
+	/**
+	 * Triggered as a user-object-instance is removed as session-attribute 
+	 * and when current session is killed.
+	 * Remove currently logged in user from sessions-map.
+	 */
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		System.out.println("*********"+this.name+" WENT OFFLINE***********");
+		usersSessions.remove(this);
+	}
+	
+	/**
+	 * Kills the session that belongs to this.username.
+	 * We assume that a userName can only be used at one place at a time.
+	 */
+	public void killSession(){
+		if(usersSessions.containsKey(this.name)){
+			System.out.println("*********"+this.name+" WENT OFFLINE***********");
+			usersSessions.get(this.name).invalidate();			
+		}
+	}
+	
+	/**
+	 * Prints username and sessionID of all currently logged in users.
+	 * Used for testing purposes
+	 */
+	public void printActiveSessions(){
+		Map<String, HttpSession> map = usersSessions;
+		System.out.println("Total number of online users: " + map.size());
+		for (Map.Entry<String, HttpSession> entry : map.entrySet()) { 
+			System.out.println("Name = " + entry.getKey() + ", Session = " + entry.getValue().getId()); 
+		}
+		// Alternative method in case a user can be logged in at multiple machines simultaneously
+//		Map<User, HttpSession> map = usersSessions;
+//		System.out.println("Number of logged in users: " + map.size());
+//		for (Map.Entry<User, HttpSession> entry : map.entrySet()) { 
+//			System.out.println("Name = " + entry.getKey().getName() + ", Session = " + entry.getValue().getId()); 
+//		}
 	}
 }

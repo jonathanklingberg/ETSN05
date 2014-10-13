@@ -71,16 +71,15 @@ public class ProjectGroup extends AbstractCointainer {
 		//in this class
 		ArrayList<User> membersList = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
 					+ " WHERE RoleInGroup.groupId = " + id + " AND RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
 				String username = rs.getString("userName");
 				String password = rs.getString("password");
-				String sessionId = rs.getString("sessionId");
 				String role = rs.getString("role");
-				membersList.add(new User(conn, username, password, userId, id, role, sessionId));
+				membersList.add(new User(conn, username, password, userId, id, role));
 			}
 			ps.close();
 			rs.close();
@@ -224,9 +223,7 @@ public class ProjectGroup extends AbstractCointainer {
 		//Don't forget to check that the user is not
 		//the administrator, since he isn't allowed to
 		//be a part of a group. 
-		
-		//Does the users' sessionId
-		//need to be set to NULL? 
+
 		//Do we need to set isActive to 1? 
 		boolean wasAdded = false;
 		if(!user.getName().equals("admin")){

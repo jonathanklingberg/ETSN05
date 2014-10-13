@@ -1,6 +1,10 @@
 package database;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import data.Role;
 
@@ -14,6 +18,7 @@ import data.Role;
  */
 public abstract class AbstractCointainer {
 	protected Connection conn;
+	protected static Map<String, HttpSession> usersSessions = new HashMap<String, HttpSession>();
 	
 	/**
 	 * Creates an HTML representation of the object depending on

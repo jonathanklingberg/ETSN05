@@ -28,11 +28,6 @@ public class DatabaseHandlerInstance {
 	private static Connection conn;
 	protected DatabaseHandlerInstance(Connection conn) {
 		DatabaseHandlerInstance.conn = conn;
-		//Food for thought: Will this connection live on forever,
-		//or will it be closed when the session of the user who created is
-		// is closed? If so, there might be a need for a redesign, or
-		// setConnection
-		//method
 	}
 
 	/**
@@ -125,7 +120,7 @@ public class DatabaseHandlerInstance {
 			long userid = Integer.parseInt(rs.getString("id"));
 			ps.close();
 			wasAdded = true;
-			User usr = new User(conn, user.getName(), user.getPassword(), userid, user.getGroupId(), user.getRole(), null);
+			User usr = new User(conn, user.getName(), user.getPassword(), userid, user.getGroupId(), user.getRole());
 			instance.getProjectGroup(user.getGroupId()).addUser(usr);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -143,17 +138,16 @@ public class DatabaseHandlerInstance {
 	public synchronized ArrayList<User> getAllUsers() {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, Users.sessionId, RoleInGroup.role, RoleInGroup.groupId FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, RoleInGroup.role, RoleInGroup.groupId FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
 					+ " WHERE RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
 				String username = rs.getString("userName");
 				String password = rs.getString("password");
-				String sessionId = rs.getString("sessionId");
 				long groupId = rs.getLong("groupID");
 				String role = rs.getString("role");
-				users.add(new User(conn, username, password, userId, groupId, role, sessionId));
+				users.add(new User(conn, username, password, userId, groupId, role));
 			}
 			ps.close();
 			rs.close();
@@ -179,14 +173,13 @@ public class DatabaseHandlerInstance {
 			rs.next();
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
-			String sessionId = rs.getString("sessionId");
 			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id);
 			rs = ps.executeQuery();
 			rs.next();
 			long groupId = rs.getLong("groupId");
 			String role = rs.getString("role");
 			ps.close();
-			return new User(conn, userName, password, id, groupId, role, sessionId);
+			return new User(conn, userName, password, id, groupId, role);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}

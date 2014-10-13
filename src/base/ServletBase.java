@@ -2,11 +2,8 @@ package base;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
@@ -45,7 +42,6 @@ public abstract class ServletBase extends HttpServlet {
 	protected HttpSession session;
 	/**
 	 * Constructs a servlet and makes a connection to the database. 
-	 * It also writes all user names on the console for test purpose. 
 	 */
     public ServletBase() {
     	try{
