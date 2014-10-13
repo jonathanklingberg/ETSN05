@@ -30,6 +30,9 @@ import javax.servlet.http.HttpSessionBindingListener;
  * @version 0.3
  * 
  */
+
+//TODO Don't forget to close both preparedstatements and resultsets!
+//TODO Please redirect errors to handleSqlErrors(error) as error handler /J
 public class User extends AbstractCointainer implements HttpSessionBindingListener{
 	private String name;
 	private String password;
@@ -68,8 +71,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 * @param role The user's role.
 	 * @param groupID The user's  group ID.
 	 */
-	public User(String name, String password, 
-			String role, long groupID) {
+	public User(String name, String password, String role, long groupID) {
 		this.name = name;
 		this.password = password;
 		this.role = role;
@@ -167,7 +169,6 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 			if(ok){
 				this.password = password;
 			}
-		
 		}
 		return ok;
 	}
@@ -212,7 +213,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET role = '" + role + "' WHERE userId = '" + this.userID + "'");
 				ps.executeUpdate();
 				roleChanged = true;
-				//TODO Kick user!
+				//TODO Kick user! /J
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -245,7 +246,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 			PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
 				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
 			ps.executeUpdate();
-			// TODO kick logged in user!
+			// TODO kick logged in user! /J
 			successfullyMoved = true;
 		} catch (SQLException e) {
 			successfullyMoved = false;
@@ -263,7 +264,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 * @return Returns the user in HTML representation.
 	 */
 	public String toHTML(Role requestingUserRole) {
-		
+		//TODO Implement this to be used instead of ServletBase->PrintUser() /J
 		//If the administrator asks password and everything 
 		//should be displayed and if a project worker asks
 		//not that much should be displayed etc..
@@ -303,10 +304,10 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	@Override
 	public void valueBound(HttpSessionBindingEvent event) {
 		if(usersSessions.containsKey(this.name)){
-			usersSessions.get(this.name).invalidate(); // kick currently logged in user.
+			usersSessions.get(this.name).invalidate(); // kick currently logged in user. /J
 		}
 		System.out.println("*********"+this.name+" WENT ONLINE***********");
-		usersSessions.put(this.name, event.getSession()); // replace/add the new user to map.
+		usersSessions.put(this.name, event.getSession()); // replace/add the new user to map. /J
 	}
 
 	/**
@@ -341,7 +342,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 		for (Map.Entry<String, HttpSession> entry : map.entrySet()) { 
 			System.out.println("Name = " + entry.getKey() + ", Session = " + entry.getValue().getId()); 
 		}
-		// Alternative method in case a user can be logged in at multiple machines simultaneously
+		// Alternative method in case a user can be logged in at multiple machines simultaneously /J
 //		Map<User, HttpSession> map = usersSessions;
 //		System.out.println("Number of logged in users: " + map.size());
 //		for (Map.Entry<User, HttpSession> entry : map.entrySet()) { 

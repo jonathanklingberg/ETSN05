@@ -33,7 +33,6 @@ public abstract class ServletBase extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	// Define states
 	protected static final int LOGIN_FALSE = 0;
 	protected static final int LOGIN_TRUE = 1;	
 	
@@ -49,7 +48,7 @@ public abstract class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
-			//TODO see description below:
+			//TODO see description below: /J
 			/**
 			 *  We're very dependent of this connection and some sort of 
 			 *  re-connection functionality in case the connection closes is 
@@ -58,7 +57,7 @@ public abstract class ServletBase extends HttpServlet {
 			 *  multiple times but I can't see why that would be needed?
 			 */
 		    System.out.println("Successfully connected to database!");
-	    //TODO BETTER ERROR HANDLING!
+	    //TODO BETTER ERROR HANDLING! /J
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
@@ -114,7 +113,7 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.memory.js\"></script>" +
 
 //							Not needed for our project but some other footable plugins might need this so leave it commented
-//							"<script src=\"js/footable.paginate.js\"></script>" + 
+//							"<script src=\"js/footable.paginate.js\"></script>" + /J
 
 							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
@@ -181,7 +180,7 @@ public abstract class ServletBase extends HttpServlet {
     	           " <option value=\"Unspecified\">Unspecified</option> "+
     	        "</select>"+
     	   " </div>";
-    	//TODO something with editForm!
+    	//TODO something with editForm! /J
     	out.println("</table>");
     	if(userActionMessage != null){
     		out.print("<p>"+ userActionMessage +"</p>");
@@ -196,7 +195,6 @@ public abstract class ServletBase extends HttpServlet {
      * @param userActionMessage
      */
     protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
-    	out.println("</br>");
     	out.println("<p>Your timereports:</p>");
     	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
     	printTimeReportTableHeader(out);
@@ -210,7 +208,7 @@ public abstract class ServletBase extends HttpServlet {
     	}
     	out.println("</table>");
     	if(userActionMessage != null){
-    		out.print("<p>"+ userActionMessage +"</p>");    		
+    		out.print("<p>"+ userActionMessage +"</p>"); // style text red please! /J
     	}
     }
 
@@ -243,10 +241,6 @@ public abstract class ServletBase extends HttpServlet {
 	}
 
 	//TODO JavaDoc
-	/**
-	 * 
-	 * @param out
-	 */
 	private void printTimeReportTableHeader(PrintWriter out) {
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td><B>Username</B></td>" : "");
@@ -261,17 +255,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</tr>");
 	}
 	
-	//TODO JavaDoc
-	/**
-	 * 
-	 * @param out
-	 * @param name
-	 * @param role
-	 * @param group
-	 * @param editCode
-	 * @param pw
-	 * @param deleteCode
-	 */
+	//TODO Try to move this to USER.toHTML() /J
 	private void printUser(PrintWriter out, String name, String role, String group,
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
@@ -284,11 +268,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</tr>");
 	}
 	
-	//TODO JavaDoc
-	/**
-	 * 
-	 * @param out
-	 */
+	//TODO JavaDocs
 	private void printUserTableHeader(PrintWriter out) {
 		out.println("<thead><tr>");
 		out.println("<th data-sort-initial=\"true\">Name</th>");
@@ -300,11 +280,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</tr></thead>");
 	}
 	
-	//TODO JavaDoc
-	/**
-	 * 
-	 * @return
-	 */
+	//TODO  JavaDoc
 	protected String getRole(){
 		Object roleObj = session.getAttribute("role");
 		String role = "";
@@ -315,16 +291,11 @@ public abstract class ServletBase extends HttpServlet {
 	}
 	
 	//TODO JavaDoc
-	/**
-	 * 
-	 * @return
-	 */
 	protected String getName(){
 		String name = "";
 		Object nameObj = session.getAttribute("name");
 		if (nameObj != null) {
 			name = (String) nameObj; // if the name exists typecast the name
-			// to a string
 		}
 		return name;
 	}

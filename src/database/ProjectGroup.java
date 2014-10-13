@@ -25,7 +25,8 @@ import data.Role;
  *  @author SG
  *  @version 0.3
  */
-
+//TODO Don't forget to close both preparedstatements and resultsets!
+//Please redirect errors to handleSqlErrors(error) as error handler /J
 public class ProjectGroup extends AbstractCointainer {
 	protected String name;
 	protected long id;
@@ -89,12 +90,11 @@ public class ProjectGroup extends AbstractCointainer {
 		return membersList;
 	}
 
-	
+	//TODO JavaDoc
 	public int getNumberOfPMs() {
 		int amountOfPMs = 0;
 		ArrayList<User> users = (ArrayList<User>) getUsers();
 		for(int i = 0; i < users.size(); i++) {
-			System.out.println("Role:    " + users.get(i).getRole());
 			if(users.get(i).getRole().equals("ProjectManager")) {
 				amountOfPMs++;
 			}
@@ -153,9 +153,9 @@ public class ProjectGroup extends AbstractCointainer {
 			boolean signed = rs.getBoolean("signed");
 			ps.close();
 			rs.close();
-			
 			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed);
 		}catch (SQLException e) {
+			//TODO handleSqlErrors(e);
 			e.printStackTrace();
 		}
 		return null;
@@ -180,6 +180,7 @@ public class ProjectGroup extends AbstractCointainer {
 					+ "VALUES('', '" + report.getUserId() + "', '" + report.getGroupId() + "', '" + report.getDate() + "', '" + report.getDuration() + "',"
 							+ " '" + report.getType() + "', '" + report.getWeek() + "', '" + signed + ")" );
 			ps.executeUpdate();
+			//TODO Better check (>0) /J
 			wasAdded = true;
 			ps.close();
 		} catch (SQLException e) {
@@ -230,7 +231,7 @@ public class ProjectGroup extends AbstractCointainer {
 			try {
 				PreparedStatement ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role, isActiveInGroup) values("+ user.getUserId() +", " +
 					user.getGroupId() +", '" + user.getRole() + "', 1);");
-				if(ps.executeUpdate() != 0){
+				if(ps.executeUpdate() != 0){ // This is a correct check =) /J
 					wasAdded = true;
 				}
 				ps.close();
@@ -251,9 +252,6 @@ public class ProjectGroup extends AbstractCointainer {
 	 */
 	//TODO This method should not be necessary since a user has to be in a group, he/she must be moved instead (which is done in the user class).
 //	public boolean removeUser(User user) {
-//		boolean wasRemoved = false;
-//		return wasRemoved;
-//	}
 	
 	/**
 	 * Will produce an HTML representation of the project depending on the
@@ -263,7 +261,7 @@ public class ProjectGroup extends AbstractCointainer {
 	 * @return Returns the project in HTML representation.
 	 */
 	public String toHTML(Role requestingUserRole) {
-		// TODO Auto-generated method stub
+		// TODO See if any functionality could be moved here. /J
 		return null;
 	}
 	
@@ -299,6 +297,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE id = '" + id + "'");
 			ps.executeUpdate();
+			//TODO Better checks, close stmts rs and use own error handler. /J
 			ps.close();
 			return true;
 		}catch(SQLException e) {

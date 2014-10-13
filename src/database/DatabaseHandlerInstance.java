@@ -22,6 +22,9 @@ import java.util.List;
  * 
  */
 
+//TODO Remember to always close BOTH resultset and eventual preparedStatements!
+//TODO Please in case you catch a sql-error then redirect the error-object to handleSqlErrors(e);
+// I have left these problems for somebody else to fix /J
 
 public class DatabaseHandlerInstance {
 	private static DatabaseHandlerInstance instance = null;
@@ -61,9 +64,10 @@ public class DatabaseHandlerInstance {
 				String groupName = rs.getString("groupName");
 				pgList.add(new ProjectGroup(conn, id, groupName));
 			}
+			ps.close();
+			rs.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return pgList;
 	}
@@ -81,11 +85,11 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(groupName) VALUES ('" + projectGroup.name + "')" );
 			ps.executeUpdate();
+			//TODO Better check! ( >0 )  /J
 			wasAdded = true;
 			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}		
 		return wasAdded;
 	}
@@ -114,6 +118,7 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
 			ps.executeUpdate();
+			//TODO If we use isActive-attribute from db then multiple users with same name exists in db, needs to be handled. /J
 			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
@@ -123,8 +128,7 @@ public class DatabaseHandlerInstance {
 			User usr = new User(conn, user.getName(), user.getPassword(), userid, user.getGroupId(), user.getRole());
 			instance.getProjectGroup(user.getGroupId()).addUser(usr);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return wasAdded;
 	}	
@@ -168,6 +172,7 @@ public class DatabaseHandlerInstance {
 	 */
 	public synchronized User getUser(String userName) {
 		try {
+			//TODO Username is not unique if we use isActive, fix this! /J
 			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName= '" + userName + "'");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
@@ -200,10 +205,10 @@ public class DatabaseHandlerInstance {
 			ps = conn.prepareStatement("SELECT * from Users WHERE id =" + userId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
+			ps.close();
 			return getUser(rs.getString("userName"));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return null;
 	}
@@ -227,7 +232,7 @@ public class DatabaseHandlerInstance {
 			ps.close();
 			return new ProjectGroup(conn, id, groupName);
 		}catch (SQLException e) {
-			System.err.println(e);
+			handleSqlErrors(e);
 		}
 		return null;
 	}	
@@ -250,7 +255,7 @@ public class DatabaseHandlerInstance {
 			ps.close();
 			return new ProjectGroup(conn, id, groupName);
 		}catch (SQLException e) {
-			System.err.println(e);
+			handleSqlErrors(e);
 		}
 		return null;
 	}
@@ -271,13 +276,14 @@ public class DatabaseHandlerInstance {
 			if(!rs.next()) {
 				PreparedStatement ps2 = conn.prepareStatement("update ProjectGroups set groupName='" + newGroupName + "'" + "where id= '" + groupNumber + "'");
 				ps2.executeUpdate();
+				//TODO Better check! /J
 				ps2.close();
 				p.close();
 				rs.close();
 				return true;
 			}
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			handleSqlErrors(ex);
 		}
 		return false;
 	}
@@ -299,9 +305,7 @@ public class DatabaseHandlerInstance {
 			resultOK = true;
 		} catch (SQLException ex) {
 			resultOK = false;
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			handleSqlErrors(ex);
 		}
 		return resultOK;
 	}
@@ -316,9 +320,7 @@ public class DatabaseHandlerInstance {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			handleSqlErrors(ex);
 		}
 	}
 
@@ -334,12 +336,11 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("update Users set is_active = 0 where name = '"
 					+ name + "'");
 			ps.executeUpdate();
+			//TODO Better check! /J
 			ps.close();
 		} catch (SQLException ex) {
 			resultOk = false;
-			// System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			handleSqlErrors(ex);
 		}
 		return resultOk;
 	}
@@ -348,13 +349,12 @@ public class DatabaseHandlerInstance {
 	 * Get users in a project group
 	 * 
 	 * @param groupId The groupId of the project group that the users are in 
-	 * @return an ArrayList of Users
+	 * @return an ArrayList of Users or empty set.
 	 */
 	public ArrayList<User> getUsersInGroup(long groupId) {
 		ArrayList<User> usersInGroup = new ArrayList<User>();
 		for(User u : getAllUsers()) {
-			if(u.getGroupId() == groupId)
-			{
+			if(u.getGroupId() == groupId){
 				usersInGroup.add(u);
 			}
 		}
@@ -386,8 +386,7 @@ public class DatabaseHandlerInstance {
 			rs.close();
 			ps.close();
 		}catch (SQLException e) {
-			System.out.println("FAIL I getTimeReport");
-			System.err.println(e);	
+			handleSqlErrors(e);
 		}
 		return timeReport;
 	}
@@ -405,12 +404,13 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){	
+				//TODO I'm really not brave enough to believe this is working in all cases, please specify attributes! /J
 				list.add(createTimeReport(rs));	
 			}			
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {			
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}				
 		return list;
 	}
@@ -432,7 +432,7 @@ public class DatabaseHandlerInstance {
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {			
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}				
 		return list;
 	}
@@ -449,7 +449,7 @@ public class DatabaseHandlerInstance {
 			boolean signed = rs.getBoolean("signed");
 			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
 		} catch(SQLException e){
-			System.err.println(e);
+			handleSqlErrors(e);
 		}
 		return timeReport;
 	}
@@ -470,9 +470,7 @@ public class DatabaseHandlerInstance {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			handleSqlErrors(ex);
 		}
 	}
 
@@ -493,6 +491,7 @@ public class DatabaseHandlerInstance {
 		try{
 			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
 			ps.executeUpdate();
+			//TODO Usename not unique? please look at this! /J
 			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
@@ -502,12 +501,12 @@ public class DatabaseHandlerInstance {
 			ps.executeUpdate();
 			ps.close();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 			return false;
 		}
 		return true;
 	}
-
+	//TODO JavaDoc
 	public void changeSignatureOfTimeReport(String timereportId) {
 		TimeReport tr = instance.getTimeReport(Long.parseLong(timereportId));
 		boolean isSigned = tr.isSigned();		
@@ -516,6 +515,12 @@ public class DatabaseHandlerInstance {
 		}else{
 			tr.signTimeReport();
 		}
+	}
+	//TODO JavaDoc
+	private void handleSqlErrors(SQLException e){
+		//TODO Implement better error handling! /J
+		// As a suggestion use a container which always shows error messages! /J
+		e.printStackTrace();
 	}
 
 

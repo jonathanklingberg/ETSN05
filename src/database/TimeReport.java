@@ -27,6 +27,9 @@ import data.Role;
  * @author SG
  * @version 0.3
  */
+
+//TODO Don't forget to close both preparedstatements and resultsets!
+// Please redirect errors to handleSqlErrors(error) as error handler /J
 public class TimeReport extends AbstractCointainer {
 	private long id;
 	private long groupId;
@@ -152,9 +155,10 @@ public class TimeReport extends AbstractCointainer {
 					" WHERE id=" + id +";" );
 			ps.executeUpdate();
 			successfullyExecutedStatement = true;
+			//TODO close rs
 			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// TODO redirect to handleSqlError(e); /J
 			e.printStackTrace();
 		}
 		return successfullyExecutedStatement;
@@ -265,6 +269,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param type The type to change to.
 	 */
 	public void setType(long type) {
+		//TODO Validate type number if not already done /J
 		this.type = type;
 	}
 	
@@ -274,6 +279,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param duration The duration to change to.
 	 */
 	public void setDuration(long duration) {
+		//TODO Check SRS for conditions for this! /J
 		this.duration=duration;
 	}
 	
@@ -283,6 +289,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param week The week to change to.
 	 */
 	private void setWeek(long week) {
+		//TODO check no future week /J
 		this.week=week;
 		//See setId
 		
@@ -298,6 +305,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param date The date to change to.
 	 */
 	public void setDate(Date date) {
+		//TODO check not future date! /J
 		this.date=date;
 		java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
 		calenderWeek.setTime(date);
@@ -326,13 +334,13 @@ public class TimeReport extends AbstractCointainer {
 		//actually is to be removed.
 		boolean successfullyRemovedTimeReport = false;
 		try {
+			//TODO Does this work in reality? Are there really no foreign keys that are connected to this table? /J
 			PreparedStatement ps = conn.prepareStatement("DELETE from TimeReports WHERE id= " + id);
 			ps.executeUpdate();
 			successfullyRemovedTimeReport = true;
 			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return successfullyRemovedTimeReport;
 	}

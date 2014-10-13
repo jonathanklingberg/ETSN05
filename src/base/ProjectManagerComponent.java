@@ -50,22 +50,19 @@ public class ProjectManagerComponent extends ServletBase {
 		
 		String myName = getName();
 		
+		//TODO Give admin access to this component! /J
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("projectmanager")) {
-			out.println("<h1>Project management page " + "</h1>"); //Is not shown in mockup design!
+			//TODO this not shown in mockup design!
+			out.println("<h1>Project management page</h1>"); 
 			long groupId = instance.getUser(myName).getGroupId();
 			out.println("<p>Signed in as: Project Manager</p>");
 			
-			System.out.println("groupId = ");
-			System.out.println(groupId);
+			System.out.println("groupId = " + groupId);
 			ProjectGroup pg = instance.getProjectGroup(groupId);
-			out.println("<p>Assigned to project: "+ pg.getName() +"</p>");;
-			
-			
-			
-		
-			
+			out.println("<p>Assigned to project: "+ pg.getName() +"</p>");
 			String timereportId = request.getParameter("signtimereport");
 			
+			//TODO Better check! (against db) /J
 			if(timereportId != null && timereportId.length() > 0){
 				System.out.println("TimeReportId: " + timereportId);
 				instance.changeSignatureOfTimeReport(timereportId);
@@ -82,9 +79,6 @@ public class ProjectManagerComponent extends ServletBase {
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			printTimeReportTable(out, timeReports, null);
 
-
-
-
 			/* Do alot of stuff according to the SRS:
 			 * See all members of his group			X
 			 * See all groupmembers timereports
@@ -96,19 +90,13 @@ public class ProjectManagerComponent extends ServletBase {
 			 */
 
 
-
-
-
-
-
-
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println("</body></html>");
 
 
 		} else { // user is not admin or project manager
-//			response.sendRedirect("functionality.html");
-			// TODO FIX
+			System.err.println("Illigal action performed as: " + getRole() + "; Tried to access ProjectManagerComponent.");
+			response.sendRedirect("logincomponent");
 		}
 	}
 
@@ -122,7 +110,8 @@ public class ProjectManagerComponent extends ServletBase {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// Update db signed.....
+		doGet(request, response); // redirect post-data to GET-action
+		
 //		String checkbox = request.getParameter("signed");
 //		String reportid = request.getParameter("reportid");
 //		System.out.println("Signed: " + checkbox);
@@ -138,20 +127,12 @@ public class ProjectManagerComponent extends ServletBase {
 //		}
 	}
 
-	protected String getUserTableName() {		
-		return 	"<p>Members in project:</p>";
-	}
-
 	protected boolean isAdminOrProjectManagerComponent() {
 		return true;
 	}
 
 	protected boolean isAdminComponent() {
 		return false;
-	}
-
-	protected String getTimeReportTableName() {
-		return "Time reports in project";
 	}
 
 }

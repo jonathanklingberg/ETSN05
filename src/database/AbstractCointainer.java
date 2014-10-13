@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,4 +40,11 @@ public abstract class AbstractCointainer {
 	 * otherwise false
 	 */
 	public abstract boolean removeMe();
+	
+	//TODO JavaDoc
+	protected void handleSqlErrors(SQLException e){
+		//TODO Implement better error handling! /J
+		// As a suggestion use a container which always shows error messages! /J
+		e.printStackTrace();
+	}
 }

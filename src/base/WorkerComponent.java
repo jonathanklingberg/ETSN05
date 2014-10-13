@@ -54,16 +54,15 @@ public class WorkerComponent extends ServletBase {
 
 		// Check so that the current user is either a developer, tester or a
 		// system architect.
-		// Currently not giving the admin or PM access to WorkerComponent
+		// Currently not giving the admin or PM access to WorkerComponent?
 		if (isLoggedIn(request)
 				&& (role.equals("Developer") || role.equals("SystemArchitect") || role
 						.equals("Tester"))) {
-			out.println("<h1> Worker page " + "</h1>");// Is not shown in mockup
-														// design!
+			// TODO This is not shown in mockup
+			out.println("<h1> Worker page </h1>");
 
 			String userName = getName();
 			Long userId = (Long) session.getAttribute("userId");
-			// Prints username and project group name
 			User user = instance.getUser(userId);
 			long groupId = user.getGroupId();
 			ProjectGroup pg = instance.getProjectGroup(groupId);
@@ -100,11 +99,18 @@ public class WorkerComponent extends ServletBase {
 
 		} else {
 			System.err.println("Illegal action performed as: " + role
-					+ "; tried to access WorkerComponent.");
+					+ "; Tried to access WorkerComponent.");
 			response.sendRedirect("logincomponent");
 		}
 	}
-
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param request
+	 * @param out
+	 * @param userId
+	 * @return
+	 */
 	private String addNewTimeReport(HttpServletRequest request,
 			PrintWriter out, Long userId) {
 		String failMsg = null;
@@ -152,7 +158,7 @@ public class WorkerComponent extends ServletBase {
 		}
 		return failMsg;
 	}
-
+	//TODO JavaDoc
 	private boolean validType(int parseInt) {
 		boolean definedType = false;
 		if ((parseInt > 10 && parseInt < 20)
@@ -162,7 +168,7 @@ public class WorkerComponent extends ServletBase {
 		}
 		return definedType;
 	}
-
+	//TODO JavaDoc
 	private static boolean checkDate(String date) {
 		boolean rightFormat = false;
 		try {
@@ -177,7 +183,7 @@ public class WorkerComponent extends ServletBase {
 		}
 		return rightFormat;
 	}
-
+	//TODO JavaDoc
 	private String deleteTimeReport(HttpServletRequest request) {
 		String timeReportId = request.getParameter("deletetimereport");
 		if (timeReportId != null) {
@@ -197,6 +203,7 @@ public class WorkerComponent extends ServletBase {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response); // forward post-data to get-function /J
 	}
 
 	protected boolean isAdminOrProjectManagerComponent() {
