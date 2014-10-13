@@ -114,20 +114,29 @@ public class WorkerComponent extends ServletBase {
 
 		if (date != null) {
 			if (checkDate(date)) {
-				if (durationString!=null && Integer.parseInt(durationString)>0) {
-					
-					if (typeString!=null && !(typeString.trim().equals(""))) {
-						
-						int typeInt = Integer.parseInt(typeString);
-						if(Type.isType(typeInt)){
-							User currentUser = instance.getUser(userId);
-							java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
-							calenderWeek.setTime(Date.valueOf(date));
-							long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-							instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeInt, 
-									Long.parseLong(durationString), week, Date.valueOf(date), false));							
-						}else{
-							failMsg = "Unknown type!";
+				if (durationString!=null && !durationString.trim().equals("")) {
+					try{
+						Integer.parseInt(durationString);
+					}catch(NumberFormatException e){
+						failMsg = "Wrong format on duration!";
+						return failMsg;
+					}
+					if (typeString!=null && !typeString.trim().equals("")) {
+						try{
+							int typeInt = Integer.parseInt(typeString);
+							if(Type.isType(typeInt)){
+								User currentUser = instance.getUser(userId);
+								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+								calenderWeek.setTime(Date.valueOf(date));
+								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
+								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeInt, 
+										Long.parseLong(durationString), week, Date.valueOf(date), false));							
+							}else{
+								failMsg = "Unknown type!";
+							}
+						}catch(NumberFormatException e){
+							failMsg = "Wrong format on type!";
+							return failMsg;
 						}
 					} else {
 						failMsg = "Incorrect type format!";
