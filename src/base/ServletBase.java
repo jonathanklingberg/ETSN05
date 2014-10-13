@@ -54,7 +54,10 @@ public abstract class ServletBase extends HttpServlet {
 			 *  re-connection functionality in case the connection closes is 
 			 *  of high importance, please try if this actually works or if it
 			 *  needs to be implemented, something prints out the following success-msg
-			 *  multiple times but I can't see why that would be needed?
+			 *  multiple times but I can't see why there is? /J
+			 *  
+			 *  It's easy to test simply by manipulating the server name temporary 
+			 *  to something that cannot be resolved for example. (vmxxx.cs.lth.se) /J
 			 */
 		    System.out.println("Successfully connected to database!");
 	    //TODO BETTER ERROR HANDLING! /J
