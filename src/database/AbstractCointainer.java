@@ -5,16 +5,16 @@ import java.sql.Connection;
 import data.Role;
 
 /** 
- * A simple interface with two methods which all non-components 
- * classes will implement, thus all classes interacting with 
- * the database in any way should implement this interface
+ * An abstract class which acts as the super class for
+ * classes symbolizing different tables in the database.
  * 
  * @author SG
- * @version 0.2
+ * @version 0.3
  *
  */
 public abstract class AbstractCointainer {
 	protected Connection conn;
+	
 	/**
 	 * Creates an HTML representation of the object depending on
 	 * what object and which user that asks for it

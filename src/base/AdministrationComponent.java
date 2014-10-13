@@ -22,7 +22,7 @@ import database.User;
  * the input should not be taken care of here.
  * 
  * @author SG
- * @version 0.2
+ * @version 0.3
  */
 @WebServlet("/administrationcomponent")
 public class AdministrationComponent extends ServletBase {
@@ -263,6 +263,12 @@ public class AdministrationComponent extends ServletBase {
 		return null;
 	}
 	
+	/**
+	 * Lists all groups of the system
+	 * 
+	 * @param out
+	 * @param groupActionMessage
+	 */
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
 	 	 out.println("<p> Groups </p>");
 	 	out.println("Filter: <input id=\"groupfilter\" type=\"text\"></input>");
@@ -287,18 +293,37 @@ public class AdministrationComponent extends ServletBase {
 			 out.print("<p>"+ groupActionMessage +"</p>");
 	}
 
+	/**
+	 * 
+	 */
 	protected String getUserTableName() {
 		return "<p>System users: </p>";
 	}
 
+	/**
+	 * Determines whether this is an admin or 
+	 * project manager component.
+	 * 
+	 * @return true if it is an admin- or project manager 
+	 * component false otherwise
+	 */
 	protected boolean isAdminOrProjectManagerComponent() {
 		return true;
 	}
 
+	/**
+	 * Determines whether this is an admin component
+	 * 
+	 * @return true if it is an admin component, false 
+	 * otherwise
+	 */
 	protected boolean isAdminComponent() {
 		return true;
 	}
-
+	
+	/**
+	 * 
+	 */
 	protected String getTimeReportTableName() {
 		return "All time reports";
 	}

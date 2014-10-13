@@ -27,7 +27,7 @@ import database.DatabaseHandlerInstance;
  * taken care of here.
  * 
  * @author SG
- * @version 0.2
+ * @version 0.3
  * 
  */
 @WebServlet("/projectmanagercomponent")
@@ -82,11 +82,11 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
-			printTimeReportTable(out, timeReports);
-			
-			
-			
-			
+			printTimeReportTable(out, timeReports, null);
+
+
+
+
 			/* Do alot of stuff according to the SRS:
 			 * See all members of his group			X
 			 * See all groupmembers timereports

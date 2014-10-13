@@ -20,12 +20,12 @@ import data.Role;
  *  is done by making queries to the MySQL database via the connection
  *  attribute.
  *  
- *  The class also implements the DatabaseInterface which will provide
+ *  The class also extends the AbstractCointainer which will provide
  *  methods for generating the project to HTML, as well as removing the
  *  project from the database
  *  
  * @author SG
- * @version 0.2
+ * @version 0.3
  */
 public class TimeReport extends AbstractCointainer {
 	private long id;
@@ -283,6 +283,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param week The week to change to.
 	 */
 	private void setWeek(long week) {
+		this.week=week;
 		//See setId
 		
 		//Moreover the user will never enter an explicit value

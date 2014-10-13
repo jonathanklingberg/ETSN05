@@ -53,10 +53,10 @@ public abstract class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
-			Statement stmt = conn.createStatement();		    
-		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
+//			Statement stmt = conn.createStatement();		    
+//		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
 		    System.out.println("Successfully connected to database!"); // Success message in console
-		    stmt.close();
+//		    stmt.close();
 			
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
@@ -141,6 +141,8 @@ public abstract class ServletBase extends HttpServlet {
 	 	out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
     	out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
     	printUserTableHeader(out);
+    	System.out.println("uselist-size: " + userList.size());
+//    	int index = 0;
     	for(int i = 0; i < userList.size(); ++i) {			
     		String name = userList.get(i).getName();
     		System.out.println(name);
@@ -161,6 +163,8 @@ public abstract class ServletBase extends HttpServlet {
     		if (name.equals("admin")){
     			deleteCode = "";
     		}
+//    		System.out.println("index: " + index);
+//    		index++;
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
 
@@ -182,7 +186,7 @@ public abstract class ServletBase extends HttpServlet {
     		out.print("<p>"+ userActionMessage +"</p>");
     }
     // Print Time Report Table according to mockup design in SRS
-    protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports){
+    protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
     	out.println("<BR>");
     	out.println(getTimeReportTableName());
     	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
@@ -195,15 +199,17 @@ public abstract class ServletBase extends HttpServlet {
     		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
     		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
     	}
-    	out.println("</table>");	
-    	//out.println("<div id=\"testcont\">testcont</div>");
+
+    	out.println("</table>");
+
+    	if(userActionMessage != null)
+    		out.print("<p>"+ userActionMessage +"</p>");
+
     }
 
 	private void printTimeReport(PrintWriter out, String editCode,
 			String deleteCode, TimeReport tr) {
-		System.out.println("Trying to find user with id " + tr.getUserId());
 		User user = instance.getUser(tr.getUserId());
-		System.out.println("Found " + user.getName());
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getName() + "</td>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getRole() + "</td>" : "");
@@ -239,11 +245,11 @@ public abstract class ServletBase extends HttpServlet {
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
-		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "");
+		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "<td></td>");
 		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
-		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "");
-		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
-		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
+		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "<td></td>");
+		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "<td></td>");
+		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "<td></td>");
 		out.println("</tr>");
 	}
 

@@ -7,7 +7,7 @@ id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 userName VARCHAR(10) NOT NULL,
 password VARCHAR(10) NOT NULL,
 sessionId VARCHAR(255) ,
-isActive tinyint(1) ,
+isActive tinyint(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 UNIQUE KEY (userName)
 );
@@ -18,8 +18,14 @@ PRIMARY KEY (role)
 );
 
 CREATE TABLE Types(
-type INT UNSIGNED NOT NULL,
+type VARCHAR(1) NOT NULL,
 PRIMARY KEY (type)
+);
+
+
+CREATE TABLE Numbers(
+number INT UNSIGNED NOT NULL,
+PRIMARY KEY (number)
 );
 
 CREATE TABLE ProjectGroups(
@@ -46,12 +52,14 @@ userId INT UNSIGNED NOT NULL,
 groupId INT UNSIGNED NOT NULL,
 date DATE NOT NULL,
 duration INT UNSIGNED NOT NULL,
-type INT UNSIGNED NOT NULL,
+type VARCHAR(1) NOT NULL,
+number INT UNSIGNED NOT NULL,
 week INT UNSIGNED NOT NULL,
 signed TINYINT(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
-FOREIGN KEY (type) REFERENCES Types(type)
+FOREIGN KEY (type) REFERENCES Types(type),
+FOREIGN KEY (number) REFERENCES Numbers(number)
 );
 
 -- Create default users
@@ -89,8 +97,10 @@ INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (8, 4, '
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, 'Developer', 1);
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
 
--- Create a timereport for testing
-INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES( 2, 2, '2010-02-01', 2, 21, 2, 0);
+--Create timereport
+INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES(2, 2, 20141012, 60, 11, 1, 1);
+INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES(24, 3, 20141012, 60, 11, 1, 1);
+
 
 -- Create default types
 INSERT INTO Types VALUES(11);

@@ -30,7 +30,7 @@ import database.DatabaseHandlerInstance;
  * in the system. (Administrator, Project Manager, Project Worker). 
  * 
  * @author SG
- * @version 0.2
+ * @version 0.3
  *
  * 
  */
