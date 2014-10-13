@@ -17,7 +17,6 @@ import data.Type;
 import database.ProjectGroup;
 import database.TimeReport;
 import database.User;
-import database.DatabaseHandlerInstance;
 
 /**
  * This class will be used by project workers in order to communicate with the
@@ -74,16 +73,19 @@ public class WorkerComponent extends ServletBase {
 					+ " </p>");
 
 			timeReportActionMessage = deleteTimeReport(request);
-
+			//TODO something with timeReportActionMessage??
+			System.out.println("Please do seomthing to me: " + timeReportActionMessage);
 			// Display all project members in project group
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance
 					.getUser(userName).getGroupId());
+			out.println("<p>Members in project:</p>");
 			printUserTable(out, groupMembers, null);
 			String userActionMessage = null;
 			userActionMessage = addNewTimeReport(request, out, userId);
 			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
 					.getUsersTimeReportsOfUser(userId);
+			out.println("<p>Your time reports:</p>");
 			printTimeReportTable(out, timeReports, userActionMessage);
 
 			out.println("<div id=\"createTimeReport\" title=\"Add a new time report\">");
@@ -197,10 +199,6 @@ public class WorkerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	protected String getUserTableName() {
-		return "<p>Members in project:</p>";
-	}
-
 	protected boolean isAdminOrProjectManagerComponent() {
 		return false;
 	}
@@ -208,9 +206,4 @@ public class WorkerComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return false;
 	}
-
-	protected String getTimeReportTableName() {
-		return "Your time reports";
-	}
-
 }

@@ -41,7 +41,7 @@ public abstract class ServletBase extends HttpServlet {
 	protected DatabaseHandlerInstance instance;
 	protected HttpSession session;
 	/**
-	 * Constructs a servlet and makes a connection to the database. 
+	 * Constructs a servlet and makes a connection to the database.
 	 */
     public ServletBase() {
     	try{
@@ -49,23 +49,25 @@ public abstract class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 			           "user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
-//			Statement stmt = conn.createStatement();		    
-//		    ResultSet rs = stmt.executeQuery("select * from Users"); // Just for testing purposes
-		    System.out.println("Successfully connected to database!"); // Success message in console
-//		    stmt.close();
-			
+			//TODO see description below:
+			/**
+			 *  We're very dependent of this connection and some sort of 
+			 *  re-connection functionality in case the connection closes is 
+			 *  of high importance, please try if this actually works or if it
+			 *  needs to be implemented, something prints out the following success-msg
+			 *  multiple times but I can't see why that would be needed?
+			 */
+		    System.out.println("Successfully connected to database!");
+	    //TODO BETTER ERROR HANDLING!
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -79,14 +81,15 @@ public abstract class ServletBase extends HttpServlet {
     	HttpSession session = request.getSession(true);
     	Object objectState = session.getAttribute("state");
     	int state = LOGIN_FALSE;
-		if (objectState != null) 
-			state = (Integer) objectState; 
+		if (objectState != null){
+			state = (Integer) objectState; 			
+		}
 		return (state == LOGIN_TRUE);
 	}
 
     
     /**
-     * Can be used to construct form elements.
+     * Just eases the use of quotes when printing java-variables inside html-elements.
      * @param par Input string
      * @return output string = "par" 
      */
@@ -110,14 +113,14 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.grid.js\"></script>" +
 							"<script src=\"js/footable.memory.js\"></script>" +
 
-//							"<script src=\"js/footable.paginate.js\"></script>" +
+//							Not needed for our project but some other footable plugins might need this so leave it commented
+//							"<script src=\"js/footable.paginate.js\"></script>" + 
 
 							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
-//							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.standalone.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
     						"<title> The Base Block System </title></head><body>";
     	return intro;
@@ -131,14 +134,18 @@ public abstract class ServletBase extends HttpServlet {
     	return "";
     }
 
-    // Print User Table according to mockup design in SRS
+    //TODO JavaDoc
+    /**
+     *
+     * @param out
+     * @param userList
+     * @param userActionMessage
+     */
     protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-    	out.println(getUserTableName());
 	 	out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
     	out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
     	printUserTableHeader(out);
-    	System.out.println("uselist-size: " + userList.size());
-//    	int index = 0;
+    	System.out.println("Total number of users in system: " + userList.size());
     	for(int i = 0; i < userList.size(); ++i) {			
     		String name = userList.get(i).getName();
     		System.out.println(name);
@@ -159,8 +166,6 @@ public abstract class ServletBase extends HttpServlet {
     		if (name.equals("admin")){
     			deleteCode = "";
     		}
-//    		System.out.println("index: " + index);
-//    		index++;
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
 
@@ -176,15 +181,23 @@ public abstract class ServletBase extends HttpServlet {
     	           " <option value=\"Unspecified\">Unspecified</option> "+
     	        "</select>"+
     	   " </div>";
-
+    	//TODO something with editForm!
     	out.println("</table>");
-    	if(userActionMessage != null)
+    	if(userActionMessage != null){
     		out.print("<p>"+ userActionMessage +"</p>");
+       	}
     }
-    // Print Time Report Table according to mockup design in SRS
+    
+    // TODO javadoc
+    /**
+     * 
+     * @param out
+     * @param timeReports
+     * @param userActionMessage
+     */
     protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
-    	out.println("<BR>");
-    	out.println(getTimeReportTableName());
+    	out.println("</br>");
+    	out.println("<p>Your timereports:</p>");
     	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
     	printTimeReportTableHeader(out);
     	for(int i = 0; i < timeReports.size(); ++i){
@@ -195,14 +208,20 @@ public abstract class ServletBase extends HttpServlet {
     		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
     		printTimeReport(out, editCode, deleteCode, timeReports.get(i));
     	}
-
     	out.println("</table>");
-
-    	if(userActionMessage != null)
-    		out.print("<p>"+ userActionMessage +"</p>");
-
+    	if(userActionMessage != null){
+    		out.print("<p>"+ userActionMessage +"</p>");    		
+    	}
     }
 
+    //TODO JavaDoc
+    /**
+     * 
+     * @param out
+     * @param editCode
+     * @param deleteCode
+     * @param tr
+     */
 	private void printTimeReport(PrintWriter out, String editCode,
 			String deleteCode, TimeReport tr) {
 		User user = instance.getUser(tr.getUserId());
@@ -221,8 +240,13 @@ public abstract class ServletBase extends HttpServlet {
 		}		
 		out.println("<td>" + editCode +  "</td>");
 		out.println("<td>" + deleteCode + "</td></tr>");
-	}  
+	}
 
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param out
+	 */
 	private void printTimeReportTableHeader(PrintWriter out) {
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td><B>Username</B></td>" : "");
@@ -236,7 +260,18 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td><B>Remove</B></td>");	
 		out.println("</tr>");
 	}
-
+	
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param out
+	 * @param name
+	 * @param role
+	 * @param group
+	 * @param editCode
+	 * @param pw
+	 * @param deleteCode
+	 */
 	private void printUser(PrintWriter out, String name, String role, String group,
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
@@ -248,7 +283,12 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "<td></td>");
 		out.println("</tr>");
 	}
-
+	
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param out
+	 */
 	private void printUserTableHeader(PrintWriter out) {
 		out.println("<thead><tr>");
 		out.println("<th data-sort-initial=\"true\">Name</th>");
@@ -260,6 +300,11 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</tr></thead>");
 	}
 	
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @return
+	 */
 	protected String getRole(){
 		Object roleObj = session.getAttribute("role");
 		String role = "";
@@ -269,6 +314,11 @@ public abstract class ServletBase extends HttpServlet {
 		return role;
 	}
 	
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @return
+	 */
 	protected String getName(){
 		String name = "";
 		Object nameObj = session.getAttribute("name");
@@ -279,9 +329,7 @@ public abstract class ServletBase extends HttpServlet {
 		return name;
 	}
 
-	protected abstract String getTimeReportTableName();
 	protected abstract boolean isAdminOrProjectManagerComponent();
 	protected abstract boolean isAdminComponent();
-	protected abstract String getUserTableName();
 
 }

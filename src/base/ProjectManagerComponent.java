@@ -75,6 +75,7 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
+			out.println("<p>Members in project:</p>");
 			printUserTable(out, usersInGroup, null);
 			
 			// Prints a table with time reports from users of the same group
