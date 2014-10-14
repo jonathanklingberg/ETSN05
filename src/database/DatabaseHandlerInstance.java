@@ -205,8 +205,10 @@ public class DatabaseHandlerInstance {
 			ps = conn.prepareStatement("SELECT * from Users WHERE id =" + userId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
+			User temp = getUser(rs.getString("userName"));
 			ps.close();
-			return getUser(rs.getString("userName"));
+			rs.close();
+			return temp;
 		} catch (SQLException e) {
 			handleSqlErrors(e);
 		}
