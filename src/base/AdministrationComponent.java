@@ -221,17 +221,18 @@ public class AdministrationComponent extends ServletBase {
 							res = instance.addUser(new User(username, createPassword(), role, groupId));
 					}else{
 						return "Amount of project managers exceeded.";
+						//TODO change request? felmeddelandet finns inte i SRS:en!
 					}
 					if(!res){	
-						failMsg = "User already exists!";
+						failMsg = "Username does already exist! Please choose another one and try again!";
 					} else {
-						failMsg = "User added succesfully.";
+						failMsg = "Project member was created successfully!";
 					}
 				} else {
-					failMsg = "Group does not exist!";
+					failMsg = "The group does not exist! Please enter a valid group and try again!";
 				}
 			} else {
-				failMsg = "Incorrect username format!";
+				failMsg = "Wrong format on input! Please try again";
 			}	
 		}
 		return failMsg;
@@ -245,6 +246,7 @@ public class AdministrationComponent extends ServletBase {
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
+			//TODO finns inte i SRS, lägga till felmeddelanden i SRS??
 			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not removed user.";
 		}
 		return null;
@@ -301,10 +303,11 @@ public class AdministrationComponent extends ServletBase {
 		if(createNewGroup != null) {
 			boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
 			if(res) {
-				return "Group has been added.";
+				return "Project group was created successfully!";
 			} else {
-				return "Group name already taken, please try a new one";
+				return "The project group does already exist! Please enter another project group name and try again";
 			}
+			//TODO printa "Wrong format on input! Please try again!", har ingenstans att göra detta än?
 		}
 		return null;
 	}
@@ -325,7 +328,8 @@ public class AdministrationComponent extends ServletBase {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
-		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + ">Delete</a>";
+			//TODO Ändra knappnamn i dialogrutan för deleteUser till yes/no
+		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete project "+name+"?')") + ">Delete</a>";
 			String editURL = "administrationcomponent?editgroup="+id;
 		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
 			out.println("<tr>");
