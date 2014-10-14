@@ -19,7 +19,9 @@ public enum Type {
     public static boolean isType(int number){
     	boolean isType = false;
     	for (Type t : Type.values()){
-    		isType = t.value == number;
+    		if(t.value == number){
+    			isType=true;
+    		}
     	}
     	return isType;
     }

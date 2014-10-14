@@ -462,11 +462,13 @@ public class DatabaseHandlerInstance {
 	 */
 	public void addTimeReport(TimeReport tr) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, week, signed) values("
+			//NOT CORRECT YET!
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, number ,week, signed) values("
 					+ tr.getUserId() + ", " 
 					+ tr.getGroupId() + ", '"
 					+ tr.getDate().toString() + "', "
 					+ tr.getDuration() + ", " 
+					+ "D , " 
 					+ tr.getType() + ", " 
 					+ tr.getWeek() + ", 0);");
 			ps.executeUpdate();

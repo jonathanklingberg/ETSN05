@@ -199,7 +199,6 @@ public abstract class ServletBase extends HttpServlet {
      * @param userActionMessage
      */
     protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
-    	out.println("<p>Your timereports:</p>");
     	out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
     	printTimeReportTableHeader(out);
     	for(int i = 0; i < timeReports.size(); ++i){
