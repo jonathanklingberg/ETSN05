@@ -329,7 +329,7 @@ public class AdministrationComponent extends ServletBase {
 			String editURL = "administrationcomponent?editgroup="+id;
 		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
 			out.println("<tr>");
-	    	out.println("<td data-value='" + name + "'>" + name + "</td>");
+	    	out.println("<td data-value='" + name + "'><a href='projectmanager?projectId=" + id + "'>" + name + "</a></td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
