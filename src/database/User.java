@@ -349,4 +349,23 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 //			System.out.println("Name = " + entry.getKey().getName() + ", Session = " + entry.getValue().getId()); 
 //		}
 	}
+
+	public boolean inactivate() {
+		//TODO Don't forget to set 'activeInGroup' to false
+		//when removing the user
+		boolean successfullyRemoved = false;
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE Users set isActive = false WHERE id = " + userID);
+			ps.executeUpdate();
+			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = " + userID);
+			ps.executeUpdate();
+			//TODO kick logged in user!
+			killSession();
+			successfullyRemoved = true;
+		} catch (SQLException e) {
+			successfullyRemoved = false;
+			e.printStackTrace();
+		}
+		return successfullyRemoved;
+	}
 }

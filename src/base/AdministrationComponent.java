@@ -224,6 +224,8 @@ public class AdministrationComponent extends ServletBase {
 					}
 					if(!res){	
 						failMsg = "User already exists!";
+					} else {
+						failMsg = "User added succesfully.";
 					}
 				} else {
 					failMsg = "Group does not exist!";
@@ -243,7 +245,7 @@ public class AdministrationComponent extends ServletBase {
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
-			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not remove user.";
+			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not removed user.";
 		}
 		return null;
 	}
