@@ -497,10 +497,19 @@ public class DatabaseHandlerInstance {
 			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			long userId = rs.getLong("id");
+			long userId = rs.getLong("id");	
 			long groupId = instance.getProjectGroup(newGroupName).getId();
-			ps = conn.prepareStatement("update RoleInGroup set groupId = " + groupId + ", role = '" + role + "' where userId = " + userId);
-			ps.executeUpdate();
+			ps = conn.prepareStatement("select * from RoleInGroup where userId = " + userId + " AND groupId = " + groupId + " AND isActiveInGroup=true");
+			rs = ps.executeQuery();
+			if(!rs.next()) {
+				ps = conn.prepareStatement("update RoleInGroup set isActiveInGroup = false where userId = " + userId);
+				ps.executeUpdate();
+				ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role ,isActiveInGroup) VALUES(" +userId + ", " +groupId + ", '" + role + "', true)");
+				ps.executeUpdate();
+			} else {
+				ps = conn.prepareStatement("update RoleInGroup set role = '" + role + "' where userId = " + userId + " AND isActiveInGroup=true");
+				ps.executeUpdate();
+			}
 			ps.close();
 		} catch(SQLException e) {
 			handleSqlErrors(e);
