@@ -183,7 +183,8 @@ public abstract class ServletBase extends HttpServlet {
     	           " <option value=\"Unspecified\">Unspecified</option> "+
     	        "</select>"+
     	   " </div>";
-    	//TODO something with editForm! /J
+    	out.println(editForm);
+    	//TODO something with editForm! /J It already works, just leave the out.println(editForm) be /Soheil
     	out.println("</table>");
     	if(userActionMessage != null){
     		out.print("<p>"+ userActionMessage +"</p>");
