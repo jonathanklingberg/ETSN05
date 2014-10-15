@@ -8,9 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-
-
 /**
  *  This class is a singleton and contains operations that act over the 
  *  entire database. It is typically used by the 'Component' classes
