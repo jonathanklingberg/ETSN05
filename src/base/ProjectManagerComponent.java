@@ -77,6 +77,8 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
+			System.out.println("Got all time reports for group " + groupId + instance.getProjectGroup(groupId));
+			System.out.println("There were " + timeReports.size() + " of them");
 			printTimeReportTable(out, timeReports, null);
 
 			/* Do alot of stuff according to the SRS:

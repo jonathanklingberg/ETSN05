@@ -124,7 +124,8 @@ public class ProjectGroup extends AbstractCointainer {
 				Date date = rs.getDate("date");
 				boolean signed = rs.getBoolean("signed");
 				long number = rs.getLong("number");
-				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed, number));
+				char charType = type.charAt(0);
+				timeReportList.add(new TimeReport(conn, reportId, userId, id, charType, duration, week, date, signed, number));
 			}
 			ps.close();
 			rs.close();
@@ -153,10 +154,10 @@ public class ProjectGroup extends AbstractCointainer {
 			Date date = rs.getDate("date");
 			boolean signed = rs.getBoolean("signed");
 			long number = rs.getLong("number");
-			
+			char charType = type.charAt(0);
 			ps.close();
 			rs.close();
-			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed, number);
+			return new TimeReport(conn, reportId, userId, id, charType, duration, week, date, signed, number);
 		}catch (SQLException e) {
 			//TODO handleSqlErrors(e);
 			e.printStackTrace();

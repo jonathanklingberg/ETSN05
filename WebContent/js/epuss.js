@@ -13,7 +13,7 @@ $(document).ready(
 		});
 		$('#grouplist').footable();
 		
-		$('#logincredentials').html(  "admin - passwd <br>" +
+		$('#logincredentials').html(  "admin - adminpw <br>" +
 				"testuser -  passwd <br>" +
 				"devuser -  passwd <br>" +
 				"pmuser -  passwd <br>"
@@ -114,9 +114,10 @@ window.onload = function(){
 	        Submit: function() {
 	            var date = $("#date").val();
 	            var duration = $("#duration").val();
-	            var type = $("#type").val();
+	            var number = $("#number").val();
+	            var type = $( "#myType option:selected" ).val();
 	            $(this).dialog("close");
-	            var url = "workercomponent?addNewTimeReport="+ date + "&duration=" + duration + "&type=" + type;
+	            var url = "workercomponent?date="+ date + "&duration=" + duration + "&number=" + number + "&type=" + type;
 	            $(location).attr('href',url);
 	        }
 	    }
