@@ -118,12 +118,13 @@ public class ProjectGroup extends AbstractCointainer {
 			while(rs.next()){
 				long reportId = rs.getLong("id");
 				long userId = rs.getLong("userId");
-				long type = rs.getLong("type");
+				String type = rs.getString("type");
 				long duration = rs.getLong("duration");
 				long week = rs.getLong("week");
 				Date date = rs.getDate("date");
-				boolean signed = rs.getBoolean("signed");		
-				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed));
+				boolean signed = rs.getBoolean("signed");
+				long number = rs.getLong("number");
+				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed, number));
 			}
 			ps.close();
 			rs.close();
@@ -146,14 +147,16 @@ public class ProjectGroup extends AbstractCointainer {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long userId = rs.getLong("userId");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long duration = rs.getLong("duration");
 			long week = rs.getLong("week");
 			Date date = rs.getDate("date");
 			boolean signed = rs.getBoolean("signed");
+			long number = rs.getLong("number");
+			
 			ps.close();
 			rs.close();
-			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed);
+			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed, number);
 		}catch (SQLException e) {
 			//TODO handleSqlErrors(e);
 			e.printStackTrace();

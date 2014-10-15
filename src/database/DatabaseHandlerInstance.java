@@ -8,9 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-
-
 /**
  *  This class is a singleton and contains operations that act over the 
  *  entire database. It is typically used by the 'Component' classes
@@ -388,10 +385,11 @@ public class DatabaseHandlerInstance {
 			long groupId = rs.getLong("groupId");
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long week = rs.getLong("week");
+			long number = rs.getLong("number");
 			boolean signed = rs.getBoolean("signed");
-			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
 			rs.close();
 			ps.close();
 		}catch (SQLException e) {
@@ -453,10 +451,11 @@ public class DatabaseHandlerInstance {
 			long userId = rs.getLong("userId"); 
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long week = rs.getLong("week");
 			boolean signed = rs.getBoolean("signed");
-			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			long number = rs.getLong("number");
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
 		} catch(SQLException e){
 			handleSqlErrors(e);
 		}
@@ -469,12 +468,14 @@ public class DatabaseHandlerInstance {
 	 */
 	public void addTimeReport(TimeReport tr) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, week, signed) values("
+			//NOT CORRECT YET!
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, number ,week, signed) values("
 					+ tr.getUserId() + ", " 
 					+ tr.getGroupId() + ", '"
 					+ tr.getDate().toString() + "', "
 					+ tr.getDuration() + ", " 
-					+ tr.getType() + ", " 
+					+ tr.getType() + ", "  
+					+ tr.getNumber() + ", " 
 					+ tr.getWeek() + ", 0);");
 			ps.executeUpdate();
 			ps.close();
