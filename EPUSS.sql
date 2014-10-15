@@ -7,7 +7,6 @@ id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 userName VARCHAR(10) NOT NULL,
 password VARCHAR(10) NOT NULL,
 sessionId VARCHAR(255) ,
-isActive tinyint(1) NOT NULL,
 PRIMARY KEY ( id ) ,
 UNIQUE KEY (userName)
 );
@@ -63,16 +62,16 @@ FOREIGN KEY (number) REFERENCES Numbers(number)
 );
 
 -- Create default users
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('admin', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser2', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser2', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser2', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('testuser3', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('devuser3', 'passwd', NULL, 1);
-INSERT INTO Users(userName, password, sessionId, isActive) VALUES('pmuser3', 'passwd', NULL, 1);
+INSERT INTO Users(userName, password, sessionId) VALUES('admin', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('testuser', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('devuser', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('pmuser', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('testuser2', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('devuser2', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('pmuser2', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('testuser3', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('devuser3', 'passwd', NULL);
+INSERT INTO Users(userName, password, sessionId) VALUES('pmuser3', 'passwd', NULL);
 -- Create default Roles
 INSERT INTO Roles VALUES('ProjectManager');
 INSERT INTO Roles VALUES('Developer');

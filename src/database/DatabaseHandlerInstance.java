@@ -123,7 +123,7 @@ public class DatabaseHandlerInstance {
 			if(rs.next()) {
 				return false;
 			}
-			ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
+			ps = conn.prepareStatement("INSERT into Users(userName, password) VALUES('" + user.getName() + "', '" + user.getPassword());
 			ps.executeUpdate();
 			//TODO If we use isActive-attribute from db then multiple users with same name exists in db, needs to be handled. /J
 			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
@@ -150,7 +150,7 @@ public class DatabaseHandlerInstance {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, RoleInGroup.role, RoleInGroup.groupId FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
-					+ " WHERE RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
+					+ " WHERE RoleInGroup.isActiveInGroup = 1");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
