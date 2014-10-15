@@ -201,12 +201,12 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
-			Long timeReportId = timeReports.get(i).getId();
-			String editURL = "workercomponent?edittimereport="+timeReportId;
-			String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
-			String deleteURL = "workercomponent?deletetimereport="+timeReportId;
-			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
-			printTimeReport(out, editCode, deleteCode, timeReports.get(i));
+//			Long timeReportId = timeReports.get(i).getId();
+//			String editURL = "workercomponent?edittimereport="+timeReportId;
+//			String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
+//			String deleteURL = "workercomponent?deletetimereport="+timeReportId;
+//			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
+			printTimeReport(out,timeReports.get(i));
 		}
 		out.println("</table>");
 		if(userActionMessage != null){
@@ -222,8 +222,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param deleteCode
 	 * @param tr
 	 */
-	private void printTimeReport(PrintWriter out, String editCode,
-			String deleteCode, TimeReport tr) {
+	private void printTimeReport(PrintWriter out, TimeReport tr) {
 		User user = instance.getUser(tr.getUserId());
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getName() + "</td>" : "");
@@ -240,11 +239,13 @@ public abstract class ServletBase extends HttpServlet {
 		}	
 		
 		if(isWorkerComponent()){
+			String editCode = "<a href=\"#\" onclick=" + formElement("return editTimeReport('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
+		    String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
 			out.println("<td>" + tr.isSigned() + "</td>");
 			out.println("<td>" + editCode +  "</td>");
 			out.println("<td>" + deleteCode + "</td></tr>");
 		}
-
 	}
 
 	//TODO JavaDoc

@@ -53,7 +53,7 @@ public class WorkerComponent extends ServletBase {
 		PrintWriter out = response.getWriter();
 		session = request.getSession(true);
 		out.println(getPageIntro());
-		String timeReportActionMessage;
+		String timeReportActionMessage = null;
 		String role = getRole();
 
 		// Check so that the current user is either a developer, tester or a
@@ -75,7 +75,7 @@ public class WorkerComponent extends ServletBase {
 			out.println("<p> Assigned to project group: " + projectGroupName
 					+ " </p>");
 
-			timeReportActionMessage = deleteTimeReport(request);
+			
 			// TODO something with timeReportActionMessage??
             // System.out.println("Please do seomthing to me: " + timeReportActionMessage);
 			// Display all project members in project group
@@ -84,16 +84,39 @@ public class WorkerComponent extends ServletBase {
 			out.println("<p>Members in project:</p>");
 			printUserTable(out, groupMembers, null);
 			String userActionMessage = null;
-			userActionMessage = addNewTimeReport(request, out, userId);
-			if(timeReportActionMessage!=null){
-				userActionMessage=timeReportActionMessage;
-			}
+			
+			if(timeReportActionMessage == null)
+				timeReportActionMessage = deleteTimeReport(request);
+			if(timeReportActionMessage == null)
+				timeReportActionMessage = editTimeReport(request, out, userId);
+			if(timeReportActionMessage == null)
+				timeReportActionMessage = addNewTimeReport(request, out, userId);
+			
+			
+//			if(timeReportActionMessage!=null){
+//				userActionMessage=timeReportActionMessage;
+//			}
 			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
 					.getUsersTimeReportsOfUser(userId);
 			out.println("<p>Your time reports:</p>");
-			printTimeReportTable(out, timeReports, userActionMessage);
+			printTimeReportTable(out, timeReports, timeReportActionMessage);
 
+			
+			String editForm = "<div id=\"editTimeReport\" title=\"Edit time report\">" +
+					"Date: <input type=\"text\" id=\"oldDate\" placeholder=\"YYYY-MM-dd\"></input>"+
+					"Duration(min): <input type=\"text\" id=\"oldDuration\"></input>"+
+					"Number: <input type=\"text\" id=\"oldNumber\">" +
+					"<select id=\"oldType\"> " +
+	    	           " <option value=\"D\">Development</option> " +
+	    	           " <option value=\"I\">Informal</option> " +
+	    	            "<option value=\"F\">Formal</option>  " +
+	    	            "<option value=\"R\">Rework</option> "+
+	    	           "</select>" +
+						" </div>";
+			out.println(editForm);
+			
+			
 			out.println("<div id=\"createTimeReport\" title=\"Add a new time report\">");
 			out.println("Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input>");
 			out.println("Duration(min): <input type=\"text\" id=\"duration\"></input>");
@@ -135,7 +158,7 @@ public class WorkerComponent extends ServletBase {
 		String durationString = request.getParameter("duration");
 		String typeString = request.getParameter("type");
 		String numberString = request.getParameter("number");
-
+		if(date != null){
 			if (checkDate(date)) {
 				if (durationString!=null && !durationString.trim().equals("")) {
 					try{
@@ -175,8 +198,63 @@ public class WorkerComponent extends ServletBase {
 			} else {
 				resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 			}
+		}
 		return resultMsg;
 	}
+	
+	
+	private String editTimeReport(HttpServletRequest request,
+			PrintWriter out, Long userId){
+		String resultMsg = null;
+		String date =  request.getParameter("newDate");
+		String typeString = request.getParameter("newType");
+		String durationString = request.getParameter("newDuration");
+		String numberString = request.getParameter("newNumber");
+		String idString = request.getParameter("id");
+
+		System.out.println("date: " + date);
+		System.out.println("typeString: " + typeString);
+		System.out.println("durationString: " + durationString);
+		System.out.println("numberString: " + numberString);
+		System.out.println("idString: " + idString);
+
+		if(date != null){
+			if (checkDate(date)) {
+				if(typeString!=null && Type.isType(typeString.charAt(0))){
+					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")
+							&& idString != null && !idString.trim().equals("")) {
+						try{
+							Long duration = Long.parseLong(durationString);
+							Long number = Long.parseLong(numberString);
+							Long id = Long.parseLong(idString);
+							User currentUser = instance.getUser(userId);
+							java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+							calenderWeek.setTime(Date.valueOf(date));
+							long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
+							instance.editTimeReport(id, userId, currentUser.getGroupId(), typeString.charAt(0), duration, week, Date.valueOf(date), false, number );
+							resultMsg = "<p>Time report was edited successfully!</p>";
+						}catch(NumberFormatException e){
+							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+							System.out.println("fel i number format");
+							return resultMsg;
+						}
+					}else{
+						resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+						System.out.println("Fel i duration/number/id");
+					}
+				} else {
+					resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+					System.out.println("Fel i type");
+				}
+			} else {
+				resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+				System.out.println("Fel i andra date");
+			}
+		}
+		return resultMsg;
+	}
+	
+	
 	
 	/***
 	 * This method checks if the date input is in both correct format,
@@ -210,7 +288,7 @@ public class WorkerComponent extends ServletBase {
 		String timeReportId = request.getParameter("deletetimereport");
 		if (timeReportId != null) {
 			long deleteTimeReport = Long.parseLong(timeReportId);
-			return instance.getTimeReport(deleteTimeReport).removeMe() ? "Time reports was removed successfully."
+			return instance.getTimeReport(deleteTimeReport).removeMe() ? "Time report was removed successfully."
 					: "Could not remove time report.";
 		}
 		return null;

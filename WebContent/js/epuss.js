@@ -4,6 +4,10 @@ var oldGroup = "";
 var oldGroupId = -1;
 var oldGroupName = "";
 var deleteGroupHref = "";
+var oldId = -1;
+var oldDate = -1;
+var oldDuration = -1;
+var oldNumber = -1;
 
 $(document).ready(
 	function(){
@@ -188,6 +192,29 @@ window.onload = function(){
 	        }        
 	    }
 	});
+	
+	$("#editTimeReport").dialog({
+		autoOpen: false,
+		open: function () {
+	        $("#oldDate").val(oldDate);
+	        $("#oldDuration").val(oldDuration);
+	        $("#oldNumber").val(oldNumber);
+	    },
+		buttons: {
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
+	        Edit: function() {
+	            var date = $("#oldDate").val();
+	            var duration = $("#oldDuration").val();
+	            var number = $("#oldNumber").val();
+	            var type = $( "#oldType option:selected" ).text();
+	            $(this).dialog("close");
+	            var url = "workercomponent?newDate="+ date + "&newDuration=" + duration + "&newNumber=" + number + "&newType=" + type + "&id=" + oldId;
+	            $(location).attr('href',url);
+	        }
+	    }
+	});
 
 }
 
@@ -218,4 +245,12 @@ function createGroup(link) {
 		return true; 
 	} 
 	return false;
+}
+
+function editTimeReport(date, duration, number, id){
+	oldDate = date;
+	oldDuration = duration;
+	oldNumber = number;
+	oldId = id;
+    $("#editTimeReport").dialog("open");
 }

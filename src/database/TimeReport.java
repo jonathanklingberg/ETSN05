@@ -152,16 +152,9 @@ public class TimeReport extends AbstractCointainer {
 		boolean successfullyExecutedStatement = false;
 		try {
 			int signStatus = signed? 1: 0;
-			String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date);
-			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed=" + signStatus + 
-					", week=" + week + 
-					", type='" + type + 
-					"', duration="+ duration + 
-					", date=" + dateFormat +
-					", groupId=" + groupId + 
-					", userId=" + userId +  
-					", number=" + number + 
-					" WHERE id=" + id +";" );
+			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET userId= " + userId + ", groupId= " + groupId + ", date= '" + date.toString() +
+					"', duration= " + duration + ", type= '" + type + "', number=" + number + ", week= " + week + ", signed= " + signStatus +
+					" WHERE id= " + id);
 			int result = ps.executeUpdate();
 			if(result>0){
 				successfullyExecutedStatement = true;				
