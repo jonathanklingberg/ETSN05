@@ -26,7 +26,6 @@ import database.User;
  */
 @WebServlet("/administrationcomponent")
 public class AdministrationComponent extends ServletBase {
-	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
 
 	/**
@@ -330,14 +329,18 @@ public class AdministrationComponent extends ServletBase {
 			String deleteURL = "administrationcomponent?deletegroup="+id;
 			//TODO Ändra knappnamn i dialogrutan för deleteUser till yes/no
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete project "+name+"?')") + ">Delete</a>";
-			String editURL = "administrationcomponent?editgroup="+id;
-		    String editCode = "<a href=" + formElement(editURL) + "id=" + formElement(String.valueOf(id)) + "\" onclick="+formElement("return editGroup(this);") + ">Edit</a>";
+		    String editCode = "<a href = \"#\" onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
 			out.println("<tr>");
 	    	out.println("<td data-value='" + name + "'><a href='projectmanager?projectId=" + id + "'>" + name + "</a></td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
 		 }
+	    	String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
+	    			"<input type=\"text\" id=\"newGroupName\"/>" +
+	    			"</div>" +
+	    			"<br />";
+	    	out.println(editForm);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
 			 //TODO Add red style to all of your error-messages if possible please =)
