@@ -3,6 +3,7 @@ package base;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -191,9 +192,13 @@ public class WorkerComponent extends ServletBase {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			sdf.setLenient(false);
 			java.util.Date inputDate = sdf.parse(date);
-			Calendar cal = new GregorianCalendar();
-			System.out.println(cal.after(inputDate));
-			return !cal.before(inputDate);			
+			System.out.println(inputDate);	
+			
+			java.util.Date toDaysDate = new java.util.Date();
+			toDaysDate = sdf.parse(sdf.format(toDaysDate));
+
+			return inputDate.compareTo(toDaysDate)<=0;
+			
 		} catch (ParseException e) {
 		} catch (IllegalArgumentException e) {
 		}
