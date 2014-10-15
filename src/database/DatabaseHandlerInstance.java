@@ -30,7 +30,6 @@ public class DatabaseHandlerInstance {
 	private static DatabaseHandlerInstance instance = null;
 	private static Connection conn;
 	protected DatabaseHandlerInstance() {
-		DatabaseHandlerInstance.conn = conn;
 		try{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
@@ -50,9 +49,6 @@ public class DatabaseHandlerInstance {
 	    //TODO BETTER ERROR HANDLING! /J
 		} catch (SQLException ex) {
 			handleSqlErrors(ex);
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
