@@ -88,6 +88,7 @@ public class LoginComponent extends ServletBase {
 	        	User currUser = instance.getUser(name);
 	        	if(currUser != null && currUser.comparePassword(password)){
 	        		System.out.println("Login success!");
+	        		session.setMaxInactiveInterval(20*60);
 	        		session.setAttribute("user", currUser); // Used to store logged in users into hashMap (usersSessions)
 	        		currUser.printActiveSessions(); // Used for testing to see which users are currently online..
 	        		state = LOGIN_TRUE;
@@ -138,6 +139,10 @@ public class LoginComponent extends ServletBase {
 
 	@Override
 	protected boolean isAdminComponent() {
+		return false;
+	}
+	
+	protected boolean isWorkerComponent() {
 		return false;
 	}
 }
