@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  *  This class is a singleton and contains operations that act over the 
  *  entire database. It is typically used by the 'Component' classes
@@ -116,11 +115,16 @@ public class DatabaseHandlerInstance {
 
 		boolean wasAdded = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("INSERT into Users(userName, password, isActive) VALUES('" + user.getName() + "', '" + user.getPassword() + "', True)" );
+			PreparedStatement ps = conn.prepareStatement("select * from Users where userName = '" + user.getName() + "'");
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				return false;
+			}
+			ps = conn.prepareStatement("INSERT into Users(userName, password) VALUES('" + user.getName() + "', '" + user.getPassword());
 			ps.executeUpdate();
 			//TODO If we use isActive-attribute from db then multiple users with same name exists in db, needs to be handled. /J
 			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			rs.next();
 			long userid = Integer.parseInt(rs.getString("id"));
 			ps.close();
@@ -143,7 +147,7 @@ public class DatabaseHandlerInstance {
 		ArrayList<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, RoleInGroup.role, RoleInGroup.groupId FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
-					+ " WHERE RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
+					+ " WHERE RoleInGroup.isActiveInGroup = 1");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
@@ -383,8 +387,9 @@ public class DatabaseHandlerInstance {
 			long duration = rs.getLong("duration");
 			String type = rs.getString("type");
 			long week = rs.getLong("week");
+			long number = rs.getLong("number");
 			boolean signed = rs.getBoolean("signed");
-			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
 			rs.close();
 			ps.close();
 		}catch (SQLException e) {
@@ -450,7 +455,8 @@ public class DatabaseHandlerInstance {
 			String type = rs.getString("type");
 			long week = rs.getLong("week");
 			boolean signed = rs.getBoolean("signed");
-			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			long number = rs.getLong("number");
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
 		} catch(SQLException e){
 			handleSqlErrors(e);
 		}
@@ -463,12 +469,14 @@ public class DatabaseHandlerInstance {
 	 */
 	public void addTimeReport(TimeReport tr) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, week, signed) values("
+			//NOT CORRECT YET!
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, number ,week, signed) values("
 					+ tr.getUserId() + ", " 
 					+ tr.getGroupId() + ", '"
 					+ tr.getDate().toString() + "', "
 					+ tr.getDuration() + ", " 
-					+ tr.getType() + ", " 
+					+ tr.getType() + ", "  
+					+ tr.getNumber() + ", " 
 					+ tr.getWeek() + ", 0);");
 			ps.executeUpdate();
 			ps.close();
@@ -492,11 +500,16 @@ public class DatabaseHandlerInstance {
 	public boolean editUser(String oldUserName, String newUserName,
 			String newPassword, String newGroupName, String role) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
+			PreparedStatement ps = conn.prepareStatement("select * from Users where userName = '" + newUserName + "'");
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				return false;
+			}
+			ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
 			ps.executeUpdate();
 			//TODO Usename not unique? please look at this! /J
 			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			rs.next();
 			long userId = rs.getLong("id");	
 			long groupId = instance.getProjectGroup(newGroupName).getId();

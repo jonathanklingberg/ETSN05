@@ -37,6 +37,7 @@ public class TimeReport extends AbstractCointainer {
 	private String type;
 	private long duration;
 	private long week;
+	private long number;
 	private Date date;
 	private boolean signed;
 	
@@ -55,8 +56,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
-	public TimeReport(Connection conn, long id, long userId, long groupId, 
-			String type, long duration, long week, Date date, boolean signed) {
+	public TimeReport(Connection conn, long id, long userId, long groupId, String type, long duration, long week, Date date, boolean signed, long number) {
 			this.conn = conn;
 			this.id = id;
 			this.userId = userId;
@@ -66,6 +66,7 @@ public class TimeReport extends AbstractCointainer {
 			this.week = week;
 			this.date = date;
 			this.signed = signed;
+			this.number = number;
 	}
 	
 	/**
@@ -80,8 +81,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
-	public TimeReport(long userId, long groupId, String type, 
-			long duration, long week, Date date, boolean signed) {
+	public TimeReport(long userId, long groupId, String type, 	long duration, long week, Date date, boolean signed, long number) {
 		this.userId = userId;
 		this.groupId = groupId;
 		this.type = type;
@@ -89,6 +89,7 @@ public class TimeReport extends AbstractCointainer {
 		this.week = week;
 		this.date = date;
 		this.signed = signed;
+		this.number = number;
 	}
 	
 	
@@ -102,12 +103,14 @@ public class TimeReport extends AbstractCointainer {
 		boolean wasSigned = false;
 		try {
 			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed='1' WHERE id=" + id + ";" );
-			ps.executeUpdate();
-			wasSigned = true;
+			int result = ps.executeUpdate();
+			if(result>0){
+				wasSigned = true;				
+			}
 			ps.close();
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return wasSigned;
 	}
@@ -122,12 +125,13 @@ public class TimeReport extends AbstractCointainer {
 		boolean wasUnsigned = false;
 		try {
 			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed='0' WHERE id=" + id + ";" );
-			ps.executeUpdate();
-			wasUnsigned = true;
+			int result = ps.executeUpdate();
+			if(result>0){
+				wasUnsigned = true;				
+			}
 			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return wasUnsigned;
 	}
@@ -151,15 +155,16 @@ public class TimeReport extends AbstractCointainer {
 					", duration="+ duration + 
 					", date=" + dateFormat +
 					", groupId=" + groupId + 
-					", userId=" + userId + 
+					", userId=" + userId +  
+					", number=" + number + 
 					" WHERE id=" + id +";" );
-			ps.executeUpdate();
-			successfullyExecutedStatement = true;
-			//TODO close rs
+			int result = ps.executeUpdate();
+			if(result>0){
+				successfullyExecutedStatement = true;				
+			}
 			ps.close();
 		} catch (SQLException e) {
-			// TODO redirect to handleSqlError(e); /J
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return successfullyExecutedStatement;
 	}
@@ -189,6 +194,15 @@ public class TimeReport extends AbstractCointainer {
 	 */
 	public long getUserId() {
 		return userId;
+	}
+	
+	/**
+	 * Getter for the number of the time report.
+	 * 
+	 * @return The number to which the report belong.
+	 */
+	public long getNumber() {
+		return number;
 	}
 	
 	/**
@@ -270,7 +284,17 @@ public class TimeReport extends AbstractCointainer {
 	 */
 	public void setType(String type) {
 		//TODO Validate type number if not already done /J
+		//This is done before a TimeReport is created.
 		this.type = type;
+	}
+	
+	/**
+	 * Setter for the number of this time report
+	 * 
+	 * @param number The number to change to.
+	 */
+	public void setNumber(long number) {
+		this.number = number;
 	}
 	
 	/**
@@ -280,6 +304,7 @@ public class TimeReport extends AbstractCointainer {
 	 */
 	public void setDuration(long duration) {
 		//TODO Check SRS for conditions for this! /J
+		//This is done before a TimeReport is created.
 		this.duration=duration;
 	}
 	
@@ -290,6 +315,7 @@ public class TimeReport extends AbstractCointainer {
 	 */
 	private void setWeek(long week) {
 		//TODO check no future week /J
+		//This should be done when trying to submit a time report.
 		this.week=week;
 		//See setId
 		
@@ -306,6 +332,7 @@ public class TimeReport extends AbstractCointainer {
 	 */
 	public void setDate(Date date) {
 		//TODO check not future date! /J
+		//This should be done when trying to submit a time report.
 		this.date=date;
 		java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
 		calenderWeek.setTime(date);

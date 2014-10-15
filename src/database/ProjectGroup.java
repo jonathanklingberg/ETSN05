@@ -73,7 +73,7 @@ public class ProjectGroup extends AbstractCointainer {
 		ArrayList<User> membersList = new ArrayList<User>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
-					+ " WHERE RoleInGroup.groupId = " + id + " AND RoleInGroup.isActiveInGroup = 1 AND Users.isActive = 1");
+					+ " WHERE RoleInGroup.groupId = " + id + " AND RoleInGroup.isActiveInGroup = 1");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long userId = rs.getLong("id");
@@ -122,8 +122,9 @@ public class ProjectGroup extends AbstractCointainer {
 				long duration = rs.getLong("duration");
 				long week = rs.getLong("week");
 				Date date = rs.getDate("date");
-				boolean signed = rs.getBoolean("signed");		
-				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed));
+				boolean signed = rs.getBoolean("signed");
+				long number = rs.getLong("number");
+				timeReportList.add(new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed, number));
 			}
 			ps.close();
 			rs.close();
@@ -151,9 +152,11 @@ public class ProjectGroup extends AbstractCointainer {
 			long week = rs.getLong("week");
 			Date date = rs.getDate("date");
 			boolean signed = rs.getBoolean("signed");
+			long number = rs.getLong("number");
+			
 			ps.close();
 			rs.close();
-			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed);
+			return new TimeReport(conn, reportId, userId, id, type, duration, week, date, signed, number);
 		}catch (SQLException e) {
 			//TODO handleSqlErrors(e);
 			e.printStackTrace();
@@ -225,7 +228,6 @@ public class ProjectGroup extends AbstractCointainer {
 		//the administrator, since he isn't allowed to
 		//be a part of a group. 
 
-		//Do we need to set isActive to 1? 
 		boolean wasAdded = false;
 		if(!user.getName().equals("admin")){
 			try {
