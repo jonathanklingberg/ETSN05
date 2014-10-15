@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import data.Number;
 import data.Type;
 import database.ProjectGroup;
 import database.TimeReport;
@@ -95,7 +96,14 @@ public class WorkerComponent extends ServletBase {
 			out.println("<div id=\"createTimeReport\" title=\"Add a new time report\">");
 			out.println("Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input>");
 			out.println("Duration(min): <input type=\"text\" id=\"duration\"></input>");
-			out.println("Type: <input type=\"text\" id=\"type\">");
+			out.println("Number: <input type=\"text\" id=\"number\">");
+			String t = "<select id=\"myType\"> " + 
+	    	           " <option value=\"D\">Development</option> " +
+	    	           " <option value=\"I\">Informal</option> " +
+	    	            "<option value=\"F\">Formal</option>  " +
+	    	            "<option value=\"R\">Rework</option> "+
+	    	           "</select>";
+			out.println(t);
 			out.println("</div><br />");
 			out.println("<input type=\"button\" id=\"createTimeReportButton\" value=\"Add new\" />");
 
@@ -120,12 +128,13 @@ public class WorkerComponent extends ServletBase {
 			PrintWriter out, Long userId) {
 		String resultMsg = null;
 
+
 		// Get the parameters.
-		String date = request.getParameter("addNewTimeReport");
+		String date = request.getParameter("date");
 		String durationString = request.getParameter("duration");
 		String typeString = request.getParameter("type");
+		String numberString = request.getParameter("number");
 
-		if (date != null) {
 			if (checkDate(date)) {
 				if (durationString!=null && !durationString.trim().equals("")) {
 					try{
@@ -134,21 +143,24 @@ public class WorkerComponent extends ServletBase {
 						resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 						return resultMsg;
 					}
-					if (typeString!=null && !typeString.trim().equals("")) {
+					if (numberString!=null && !numberString.trim().equals("")) {
 						try{
-//							int typeInt = Integer.parseInt(typeString);
-//							if(Type.isType(typeInt)){
-//								User currentUser = instance.getUser(userId);
-//								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
-//								calenderWeek.setTime(Date.valueOf(date));
-//								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-//								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeInt, 
-//										Long.parseLong(durationString), week, Date.valueOf(date), false, 100));	
-//								resultMsg = "<p>Timereport was created successfully!</p>";
-//								//TODO get the number from the input.
-//							}else{
-//								resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-//							}
+							int numberInt = Integer.parseInt(numberString);
+							if(Number.isNumber(numberInt)){
+								if(typeString!=null && typeString.length()==1 && Type.isType(typeString.charAt(0))){
+									User currentUser = instance.getUser(userId);
+									java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+									calenderWeek.setTime(Date.valueOf(date));
+									long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
+									instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeString.charAt(0), 
+											Long.parseLong(durationString), week, Date.valueOf(date), false, numberInt));	
+									resultMsg = "<p>Time report was created successfully!</p>";
+								}else{
+									resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+								}
+							}else{
+								resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+							}
 						}catch(NumberFormatException e){
 							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 							return resultMsg;
@@ -162,7 +174,6 @@ public class WorkerComponent extends ServletBase {
 			} else {
 				resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 			}
-		}
 		return resultMsg;
 	}
 	
@@ -173,16 +184,19 @@ public class WorkerComponent extends ServletBase {
 	 * @return a boolean that represents if the inputed date is a valid date or not.
 	 */
 	private static boolean checkDate(String date) {
+		if(date==null){
+			return false;
+		}
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			sdf.setLenient(false);
 			java.util.Date inputDate = sdf.parse(date);
 			Calendar cal = new GregorianCalendar();
-			return cal.after(inputDate);			
+			System.out.println(cal.after(inputDate));
+			return !cal.before(inputDate);			
 		} catch (ParseException e) {
 		} catch (IllegalArgumentException e) {
-		}		
-		
+		}
 		return false;
 	}
 	

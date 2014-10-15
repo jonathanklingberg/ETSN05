@@ -34,7 +34,7 @@ public class TimeReport extends AbstractCointainer {
 	private long id;
 	private long groupId;
 	private long userId;
-	private String type;
+	private char type;
 	private long duration;
 	private long week;
 	private long number;
@@ -55,8 +55,10 @@ public class TimeReport extends AbstractCointainer {
 	 * @param week The week which the time report concerns
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
+	 * @param number A number that represents the type category
 	 */
-	public TimeReport(Connection conn, long id, long userId, long groupId, String type, long duration, long week, Date date, boolean signed, long number) {
+	public TimeReport(Connection conn, long id, long userId, long groupId, 
+			char type, long duration, long week, Date date, boolean signed, long number) {
 			this.conn = conn;
 			this.id = id;
 			this.userId = userId;
@@ -80,8 +82,10 @@ public class TimeReport extends AbstractCointainer {
 	 * @param week The week which the time report concerns
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
+	 * @param number A number that represents the type category
 	 */
-	public TimeReport(long userId, long groupId, String type, 	long duration, long week, Date date, boolean signed, long number) {
+	public TimeReport(long userId, long groupId, char type, 
+			long duration, long week, Date date, boolean signed, long number) {
 		this.userId = userId;
 		this.groupId = groupId;
 		this.type = type;
@@ -151,8 +155,8 @@ public class TimeReport extends AbstractCointainer {
 			String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date);
 			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET signed=" + signStatus + 
 					", week=" + week + 
-					", type=" + type + 
-					", duration="+ duration + 
+					", type='" + type + 
+					"', duration="+ duration + 
 					", date=" + dateFormat +
 					", groupId=" + groupId + 
 					", userId=" + userId +  
@@ -210,7 +214,7 @@ public class TimeReport extends AbstractCointainer {
 	 * 
 	 * @return The type of the report.
 	 */
-	public String getType() {
+	public char getType() {
 		return type;
 	}
 	
@@ -282,7 +286,7 @@ public class TimeReport extends AbstractCointainer {
 	 * 
 	 * @param type The type to change to.
 	 */
-	public void setType(String type) {
+	public void setType(char type) {
 		//TODO Validate type number if not already done /J
 		//This is done before a TimeReport is created.
 		this.type = type;
