@@ -30,7 +30,7 @@ PRIMARY KEY (number)
 CREATE TABLE ProjectGroups(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
 groupName VARCHAR(20) NOT NULL,
-PRIMARY KEY ( id ) ,
+PRIMARY KEY (id) ,
 UNIQUE KEY (groupName)
 );
 
@@ -40,11 +40,10 @@ userId INT UNSIGNED,
 groupId INT UNSIGNED NOT NULL,
 role VARCHAR(20) NOT NULL DEFAULT 1,
 isActiveInGroup TINYINT(1),
-PRIMARY KEY ( id ) ,
+PRIMARY KEY (id) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
 FOREIGN KEY (role) REFERENCES Roles(role)
 );
-
 
 CREATE TABLE TimeReports(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
@@ -56,7 +55,7 @@ type VARCHAR(1) NOT NULL,
 number INT UNSIGNED NOT NULL,
 week INT UNSIGNED NOT NULL,
 signed TINYINT(1) NOT NULL,
-PRIMARY KEY ( id ) ,
+PRIMARY KEY (id) ,
 FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
 FOREIGN KEY (type) REFERENCES Types(type),
 FOREIGN KEY (number) REFERENCES Numbers(number)
@@ -97,27 +96,31 @@ INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (8, 4, '
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, 'Developer', 1);
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
 
---Create timereport
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(2, 2, 20141012, 60, "D", 100, 1, 1);
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(24, 3, 20141012, 60, "I", 100, 1, 1);
- 
+INSERT INTO Numbers(number) VALUES(11);
+INSERT INTO Numbers(number) VALUES(12);
+INSERT INTO Numbers(number) VALUES(13);
+INSERT INTO Numbers(number) VALUES(14);
+INSERT INTO Numbers(number) VALUES(15);
+INSERT INTO Numbers(number) VALUES(16);
+INSERT INTO Numbers(number) VALUES(17);
+INSERT INTO Numbers(number) VALUES(18);
+INSERT INTO Numbers(number) VALUES(19);
+INSERT INTO Numbers(number) VALUES(21);
+INSERT INTO Numbers(number) VALUES(22);
+INSERT INTO Numbers(number) VALUES(23);
+INSERT INTO Numbers(number) VALUES(30);
+INSERT INTO Numbers(number) VALUES(41);
+INSERT INTO Numbers(number) VALUES(42);
+INSERT INTO Numbers(number) VALUES(43);
+INSERT INTO Numbers(number) VALUES(44);
+INSERT INTO Numbers(number) VALUES(100);
 
 -- Create default types
-INSERT INTO Types VALUES(11);
-INSERT INTO Types VALUES(12);
-INSERT INTO Types VALUES(13);
-INSERT INTO Types VALUES(14);
-INSERT INTO Types VALUES(15);
-INSERT INTO Types VALUES(16);
-INSERT INTO Types VALUES(17);
-INSERT INTO Types VALUES(18);
-INSERT INTO Types VALUES(19);
-INSERT INTO Types VALUES(21);
-INSERT INTO Types VALUES(22);
-INSERT INTO Types VALUES(23);
-INSERT INTO Types VALUES(30);
-INSERT INTO Types VALUES(41);
-INSERT INTO Types VALUES(42);
-INSERT INTO Types VALUES(43);
-INSERT INTO Types VALUES(44);
-INSERT INTO Types VALUES(100);
+INSERT INTO Types VALUES("D");
+INSERT INTO Types VALUES("I");
+INSERT INTO Types VALUES("F");
+INSERT INTO Types VALUES("R");
+
+--Create timereport
+INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(23, 2, 2014-10-12, 60, "I", 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(24, 3, 2014-10-12, 60, "D", 100, 1, 1);

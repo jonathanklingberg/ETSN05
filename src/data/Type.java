@@ -7,24 +7,24 @@ package data;
  * @version 0.2
  */
 public enum Type {
-    SDP(11), SRS(12), SVVS(13), STLDD(14), SVVI(15), SDDD(16), SVVR(17), SSD(18), 
-    ProjectFinalReport(19), FunctionalTesting(21), SystemTesting(22), RegressionTesting(23), Meeting(30),
-    Lecture(41), Exercise(42), ComputerExercise(43), OutsideReading(44), Other(100);
-    private int value;
+    Development('D'), Formal('F'), Informal('I'), Rework('R');
+    private char value;
 
-    private Type(int value) {
+    private Type(char value) {
     	this.value = value;
     }
     
-    public static boolean isType(int number){
-    	boolean isType = false;
+    public static boolean isType(char charType){
+    	boolean isExistingType = false;
     	for (Type t : Type.values()){
-    		isType = t.value == number;
+    		if(t.value == charType){
+    			isExistingType=true;
+    		}
     	}
-    	return isType;
+    	return isExistingType;
     }
     
-    public int getValue() {
+    public char getValue() {
     	return this.value;
     }
 };
