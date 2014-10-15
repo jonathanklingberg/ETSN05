@@ -355,16 +355,6 @@ public class AdministrationComponent extends ServletBase {
 		 }
 	}
 
-	/**
-	 * Determines whether this is an admin or 
-	 * project manager component.
-	 * 
-	 * @return 	true if it is an admin- or project manager component 
-	 * 			false otherwise
-	 */
-	protected boolean isAdminOrProjectManagerComponent() {
-		return true;
-	}
 
 	/**
 	 * Determines whether this is an admin component
@@ -377,6 +367,10 @@ public class AdministrationComponent extends ServletBase {
 	}
 
 	protected boolean isWorkerComponent() {
+		return false;
+	}
+
+	protected boolean isProjectManagerComponent() {
 		return false;
 	}
 }

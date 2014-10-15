@@ -232,14 +232,13 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td>" + tr.getDate() + "</td>");
 		out.println("<td>" + tr.getDuration() + "</td>");
 		out.println("<td>" + tr.getType() + "</td>");
-		out.println("<td>" + tr.getNumber() + "</td>");
-		//out.println("<td>" + tr.isSigned() + "</td>");
-		if(session.getAttribute("role").equals("ProjectManager") || session.getAttribute("role").equals("Admin")){
+		out.println("<td>" + tr.getNumber() + "</td>");		
+		
+		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
-			//			out.println("<td><form action=\"projectmanagercomponent\" method=\"POST\"><input type=\"hidden\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\"  checked =" +isSigned +"></input><input type=\"submit\" value=\"Submit\" /></form></td>");
 			out.println("<td><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
-		}		
-
+		}	
+		
 		if(isWorkerComponent()){
 			out.println("<td>" + tr.isSigned() + "</td>");
 			out.println("<td>" + editCode +  "</td>");
@@ -310,8 +309,11 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		return name;
 	}
-
-	protected abstract boolean isAdminOrProjectManagerComponent();
-	protected abstract boolean isWorkerComponent();	
+	
+	protected  boolean isAdminOrProjectManagerComponent() {
+		return isAdminComponent() || isProjectManagerComponent();
+	}
+	protected abstract boolean isWorkerComponent();
+	protected abstract boolean isProjectManagerComponent();
 	protected abstract boolean isAdminComponent();
 }

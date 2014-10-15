@@ -223,15 +223,15 @@ public class WorkerComponent extends ServletBase {
 		doGet(request, response); // forward post-data to get-function /J
 	}
 
-	protected boolean isAdminOrProjectManagerComponent() {
-		return false;
-	}
-
 	protected boolean isAdminComponent() {
 		return false;
 	}
 
 	protected boolean isWorkerComponent() {
 		return true;
+	}
+	
+	protected boolean isProjectManagerComponent() {
+		return false;
 	}
 }

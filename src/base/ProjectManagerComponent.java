@@ -113,24 +113,6 @@ public class ProjectManagerComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response); // redirect post-data to GET-action
-		
-//		String checkbox = request.getParameter("signed");
-//		String reportid = request.getParameter("reportid");
-//		System.out.println("Signed: " + checkbox);
-//		System.out.println("reportid: " + reportid);
-//		PrintWriter out = response.getWriter();
-		
-//		boolean signOK = instance.changeTimeReportSignature(reportid);
-		
-//		if("OK_from_db" == true){
-//			out.print("1"); // Everything OK / 
-//		}else{
-//			out.print("Something went wrong! / 0");
-//		}
-	}
-
-	protected boolean isAdminOrProjectManagerComponent() {
-		return true;
 	}
 
 	protected boolean isAdminComponent() {
@@ -139,5 +121,9 @@ public class ProjectManagerComponent extends ServletBase {
 	
 	protected boolean isWorkerComponent() {
 		return false;
+	}
+
+	protected boolean isProjectManagerComponent() {
+		return true;
 	}
 }
