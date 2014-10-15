@@ -45,6 +45,7 @@ FOREIGN KEY (groupId) REFERENCES ProjectGroups(id),
 FOREIGN KEY (role) REFERENCES Roles(role)
 );
 
+
 CREATE TABLE TimeReports(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
 userId INT UNSIGNED NOT NULL,
@@ -97,9 +98,9 @@ INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (9, 4, '
 INSERT INTO RoleInGroup (userId, groupId, role, isActiveInGroup) VALUES (10, 4, 'ProjectManager', 1);
 
 --Create timereport
-INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES(2, 2, 20141012, 60, 11, 1, 1);
-INSERT INTO TimeReports(userId, groupId, date, duration, type, week, signed) VALUES(24, 3, 20141012, 60, 11, 1, 1);
-
+INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(2, 2, 20141012, 60, "D", 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(24, 3, 20141012, 60, "I", 100, 1, 1);
+ 
 
 -- Create default types
 INSERT INTO Types VALUES(11);
