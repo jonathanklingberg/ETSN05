@@ -140,4 +140,9 @@ public class LoginComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return false;
 	}
+
+	@Override
+	protected boolean isWorkerComponent() {
+		return false;
+	}
 }

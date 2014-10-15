@@ -230,4 +230,8 @@ public class WorkerComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return false;
 	}
+	@Override
+	protected boolean isWorkerComponent() {
+		return true;
+	}
 }

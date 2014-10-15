@@ -365,4 +365,9 @@ public class AdministrationComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return true;
 	}
+
+	@Override
+	protected boolean isWorkerComponent() {
+		return false;
+	}
 }

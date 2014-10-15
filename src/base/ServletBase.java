@@ -238,8 +238,8 @@ public abstract class ServletBase extends HttpServlet {
 			//			out.println("<td><form action=\"projectmanagercomponent\" method=\"POST\"><input type=\"hidden\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\"  checked =" +isSigned +"></input><input type=\"submit\" value=\"Submit\" /></form></td>");
 			out.println("<td><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 		}		
-		out.println("<td>" + editCode +  "</td>");
-		out.println("<td>" + deleteCode + "</td></tr>");
+		out.println(isWorkerComponent() ? "<td>" + editCode +  "</td>" : "");
+		out.println(isWorkerComponent() ? "<td>" + deleteCode + "</td></tr>" : "");
 	}
 
 	//TODO JavaDoc
@@ -252,8 +252,8 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td><B>Time (min)</B></td>");
 		out.println("<td><B>Type</B></td>");
 		out.println("<td><B>Signed</B></td>");
-		out.println("<td><B>Edit</B></td>");
-		out.println("<td><B>Remove</B></td>");	
+		out.println(isWorkerComponent()? "<td><B>Edit</B></td>" : "");
+		out.println(isWorkerComponent()? "<td><B>Remove</B></td>" : "");	
 		out.println("</tr>");
 	}
 
@@ -305,6 +305,7 @@ public abstract class ServletBase extends HttpServlet {
 	}
 
 	protected abstract boolean isAdminOrProjectManagerComponent();
+	protected abstract boolean isWorkerComponent();	
 	protected abstract boolean isAdminComponent();
 
 }

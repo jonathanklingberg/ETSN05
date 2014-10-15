@@ -79,6 +79,7 @@ public class ProjectManagerComponent extends ServletBase {
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			System.out.println("Got all time reports for group " + groupId + instance.getProjectGroup(groupId));
 			System.out.println("There were " + timeReports.size() + " of them");
+			out.println("<p>Time reports:</p>");
 			printTimeReportTable(out, timeReports, null);
 
 			/* Do alot of stuff according to the SRS:
@@ -88,7 +89,6 @@ public class ProjectManagerComponent extends ServletBase {
 			 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
 			 * Sign and unsign all groupmembers' timereports
 			 * Assign and change roles in the project to group members
-			 * 
 			 */
 
 
@@ -134,6 +134,12 @@ public class ProjectManagerComponent extends ServletBase {
 	}
 
 	protected boolean isAdminComponent() {
+		return false;
+	}
+
+
+	@Override
+	protected boolean isWorkerComponent() {
 		return false;
 	}
 
