@@ -235,11 +235,11 @@ public abstract class ServletBase extends HttpServlet {
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
-		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "<td></td>");
+		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "");
 		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
-		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "<td></td>");
-		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "<td></td>");
-		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "<td></td>");
+		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "");
+		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
+		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");
 	}
 	
