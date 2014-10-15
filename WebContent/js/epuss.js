@@ -112,6 +112,10 @@ window.onload = function(){
 	
 	$("#createTimeReport").dialog({
 	    autoOpen: false,
+	    maxWidth: 360,
+	    maxHeight: 300,
+	    minWidth: 360,
+	    minHeight: 300,
 	    buttons: { 
 	    	Cancel: function () {
 	    		$(this).dialog("close");
@@ -195,6 +199,10 @@ window.onload = function(){
 	
 	$("#editTimeReport").dialog({
 		autoOpen: false,
+	    maxWidth: 360,
+	    maxHeight: 300,
+	    minWidth: 360,
+	    minHeight: 300,
 		open: function () {
 	        $("#oldDate").val(oldDate);
 	        $("#oldDuration").val(oldDuration);

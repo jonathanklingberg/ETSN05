@@ -201,11 +201,6 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
-//			Long timeReportId = timeReports.get(i).getId();
-//			String editURL = "workercomponent?edittimereport="+timeReportId;
-//			String editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit time report "+timeReportId+"?')") + "> edit </a>";
-//			String deleteURL = "workercomponent?deletetimereport="+timeReportId;
-//			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+timeReportId+"?')") + "> delete </a>";	
 			printTimeReport(out,timeReports.get(i));
 		}
 		out.println("</table>");

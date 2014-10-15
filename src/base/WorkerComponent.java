@@ -75,7 +75,6 @@ public class WorkerComponent extends ServletBase {
 			out.println("<p> Assigned to project group: " + projectGroupName
 					+ " </p>");
 
-			
 			// TODO something with timeReportActionMessage??
             // System.out.println("Please do seomthing to me: " + timeReportActionMessage);
 			// Display all project members in project group
@@ -83,7 +82,6 @@ public class WorkerComponent extends ServletBase {
 					.getUser(userName).getGroupId());
 			out.println("<p>Members in project:</p>");
 			printUserTable(out, groupMembers, null);
-			String userActionMessage = null;
 			
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = deleteTimeReport(request);
@@ -92,10 +90,6 @@ public class WorkerComponent extends ServletBase {
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = addNewTimeReport(request, out, userId);
 			
-			
-//			if(timeReportActionMessage!=null){
-//				userActionMessage=timeReportActionMessage;
-//			}
 			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
 					.getUsersTimeReportsOfUser(userId);
@@ -104,33 +98,33 @@ public class WorkerComponent extends ServletBase {
 
 			
 			String editForm = "<div id=\"editTimeReport\" title=\"Edit time report\">" +
-					"Date: <input type=\"text\" id=\"oldDate\" placeholder=\"YYYY-MM-dd\"></input>"+
-					"Duration(min): <input type=\"text\" id=\"oldDuration\"></input>"+
-					"Number: <input type=\"text\" id=\"oldNumber\">" +
-					"<select id=\"oldType\"> " +
+					"Date: <input type=\"text\" id=\"oldDate\" placeholder=\"YYYY-MM-dd\"></input><br>"+
+					"Duration(min): <input type=\"text\" id=\"oldDuration\"></input><br>"+
+					"Number: <input type=\"text\" id=\"oldNumber\"><br>" +
+					"Type: <select id=\"oldType\"> " +
 	    	           " <option value=\"D\">Development</option> " +
 	    	           " <option value=\"I\">Informal</option> " +
 	    	            "<option value=\"F\">Formal</option>  " +
 	    	            "<option value=\"R\">Rework</option> "+
 	    	           "</select>" +
-						" </div>";
+	    	           " </div>";
 			out.println(editForm);
 			
-			
-			out.println("<div id=\"createTimeReport\" title=\"Add a new time report\">");
-			out.println("Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input>");
-			out.println("Duration(min): <input type=\"text\" id=\"duration\"></input>");
-			out.println("Number: <input type=\"text\" id=\"number\">");
-			String t = "<select id=\"myType\"> " + 
-	    	           " <option value=\"D\">Development</option> " +
+			String addForm = "<div id=\"createTimeReport\" title=\"Add a new time report\">" + 
+					"Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input><br>" + 
+					"Duration(min): <input type=\"text\" id=\"duration\"></input><br>" +
+					"Number: <input type=\"text\" id=\"number\"><br>" +
+					"Typer: <select id=\"myType\"> " +
+					" <option value=\"D\">Development</option> " +
 	    	           " <option value=\"I\">Informal</option> " +
 	    	            "<option value=\"F\">Formal</option>  " +
 	    	            "<option value=\"R\">Rework</option> "+
-	    	           "</select>";
-			out.println(t);
-			out.println("</div><br />");
+	    	           "</select>" + 
+	    	           "</div>";
+			out.println(addForm);
+			
+			out.println("<br/>");
 			out.println("<input type=\"button\" id=\"createTimeReportButton\" value=\"Add new\" />");
-
 			out.println("<p><a href =" + formElement("logincomponent")
 					+ "> Log out </p>");
 
@@ -140,6 +134,7 @@ public class WorkerComponent extends ServletBase {
 			response.sendRedirect("logincomponent");
 		}
 	}
+	
 	//TODO JavaDoc
 	/**
 	 * 
@@ -151,41 +146,31 @@ public class WorkerComponent extends ServletBase {
 	private String addNewTimeReport(HttpServletRequest request,
 			PrintWriter out, Long userId) {
 		String resultMsg = null;
-
-
-		// Get the parameters.
 		String date = request.getParameter("date");
 		String durationString = request.getParameter("duration");
 		String typeString = request.getParameter("type");
 		String numberString = request.getParameter("number");
+		
 		if(date != null){
 			if (checkDate(date)) {
-				if (durationString!=null && !durationString.trim().equals("")) {
-					try{
-						Integer.parseInt(durationString);
-					}catch(NumberFormatException e){
-						resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-						return resultMsg;
-					}
-					if (numberString!=null && !numberString.trim().equals("")) {
+				char type = typeString.charAt(0);
+				if(typeString!=null && typeString.length()==1 && Type.isType(type)){
+					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")) {
 						try{
-							int numberInt = Integer.parseInt(numberString);
-							if(Number.isNumber(numberInt)){
-								if(typeString!=null && typeString.length()==1 && Type.isType(typeString.charAt(0))){
-									User currentUser = instance.getUser(userId);
-									java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
-									calenderWeek.setTime(Date.valueOf(date));
-									long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-									instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeString.charAt(0), 
-											Long.parseLong(durationString), week, Date.valueOf(date), false, numberInt));	
-									resultMsg = "<p>Time report was created successfully!</p>";
-								}else{
-									resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-								}
-							}else{
+							Long duration = Long.parseLong(durationString);
+							Long number = Long.parseLong(numberString);
+							if(Number.isNumber(number)){
+								User currentUser = instance.getUser(userId);
+								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+								calenderWeek.setTime(Date.valueOf(date));
+								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
+								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
+										duration, week, Date.valueOf(date), false, number));	
+								resultMsg = "<p>Time report was created successfully!</p>";
+							} else {
 								resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 							}
-						}catch(NumberFormatException e){
+						} catch(NumberFormatException e){
 							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 							return resultMsg;
 						}
@@ -202,7 +187,14 @@ public class WorkerComponent extends ServletBase {
 		return resultMsg;
 	}
 	
-	
+	//TODO JavaDoc
+	/**
+	 * 
+	 * @param request
+	 * @param out
+	 * @param userId
+	 * @return
+	 */
 	private String editTimeReport(HttpServletRequest request,
 			PrintWriter out, Long userId){
 		String resultMsg = null;
@@ -212,27 +204,26 @@ public class WorkerComponent extends ServletBase {
 		String numberString = request.getParameter("newNumber");
 		String idString = request.getParameter("id");
 
-		System.out.println("date: " + date);
-		System.out.println("typeString: " + typeString);
-		System.out.println("durationString: " + durationString);
-		System.out.println("numberString: " + numberString);
-		System.out.println("idString: " + idString);
-
 		if(date != null){
 			if (checkDate(date)) {
-				if(typeString!=null && Type.isType(typeString.charAt(0))){
+				char type = typeString.charAt(0);
+				if(typeString!=null && Type.isType(type)){
 					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")
 							&& idString != null && !idString.trim().equals("")) {
 						try{
 							Long duration = Long.parseLong(durationString);
 							Long number = Long.parseLong(numberString);
 							Long id = Long.parseLong(idString);
-							User currentUser = instance.getUser(userId);
-							java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
-							calenderWeek.setTime(Date.valueOf(date));
-							long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-							instance.editTimeReport(id, userId, currentUser.getGroupId(), typeString.charAt(0), duration, week, Date.valueOf(date), false, number );
-							resultMsg = "<p>Time report was edited successfully!</p>";
+							if(Number.isNumber(number)){
+								User currentUser = instance.getUser(userId);
+								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+								calenderWeek.setTime(Date.valueOf(date));
+								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
+								instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number );
+								resultMsg = "<p>Time report was edited successfully!</p>";
+							} else {
+								resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+							}
 						}catch(NumberFormatException e){
 							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
 							System.out.println("fel i number format");
@@ -255,7 +246,7 @@ public class WorkerComponent extends ServletBase {
 	}
 	
 	
-	
+	//TODO JavaDoc
 	/***
 	 * This method checks if the date input is in both correct format,
 	 * and that it is prior to 
