@@ -1,6 +1,9 @@
 var oldUserName = "";
 var oldPassword = "";
 var oldGroup = "";
+var oldGroupId = -1;
+var oldGroupName = "";
+var deleteGroupHref = "";
 
 $(document).ready(
 	function(){
@@ -151,6 +154,48 @@ window.onload = function(){
 	        }
 	    }
 	});
+	
+	$("#editGroupName").dialog({
+	    autoOpen: false,
+	    minWidth: 309,
+	    minHeight: 210,
+	    maxWidth: 309,
+	    maxHeight: 210,
+	    open: function () {
+	    	$("#newGroupName").val(oldGroupName);
+	    },            
+	    buttons: {        
+	        Cancel: function () {
+	            $(this).dialog("close");
+	        },
+	        Edit: function () {
+	            var newGroupName = $("#newGroupName").val();
+	            var url = "AdministrationComponent?editgroup=" + oldGroupId + "&groupname=" + newGroupName;
+	            $(location).attr('href', url);
+	        }
+	    }
+	});
+	
+	$("#deleteGroup").dialog({
+	    autoOpen: false,           
+	    buttons: {
+	        No: function () {
+	            $(this).dialog("close");
+	        },
+	        Yes: function () {
+	            $(this).dialog("close");
+	            $(location).attr('href', deleteGroupHref);
+	        }        
+	    }
+	});
+
+}
+
+function deleteGroup(link, groupName) {
+	deleteGroupHref = link.href;
+	document.getElementById("text").innerHTML = groupName;
+    $("#deleteGroup").dialog("open");
+    return false;
 }
 
 function editUser(name, password, group){
@@ -160,13 +205,10 @@ function editUser(name, password, group){
     $("#editUser").dialog("open");
 }
 
-function editGroup(link) { 
-	var name = prompt('Please enter a new name for the group.'); 
-	if (name != null) { 
-		link.href= link.href+"&groupname="+name; 
-		return true; 
-	} 
-	return false;
+function editGroup(groupId, oldName) { 
+	oldGroupId = groupId;
+	oldGroupName = oldName;
+	$("#editGroupName").dialog("open");
 }
 
 function createGroup(link) { 
