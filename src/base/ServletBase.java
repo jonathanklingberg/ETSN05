@@ -211,7 +211,7 @@ public abstract class ServletBase extends HttpServlet {
     	}
     	out.println("</table>");
     	if(userActionMessage != null){
-    		out.print("<p>"+ userActionMessage +"</p>"); // style text red please! /J
+    		out.print(userActionMessage); // style text red please! /J
     	}
     }
 

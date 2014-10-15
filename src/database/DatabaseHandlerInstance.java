@@ -381,10 +381,11 @@ public class DatabaseHandlerInstance {
 			long groupId = rs.getLong("groupId");
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long week = rs.getLong("week");
+			long number = rs.getLong("number");
 			boolean signed = rs.getBoolean("signed");
-			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
 			rs.close();
 			ps.close();
 		}catch (SQLException e) {
@@ -446,10 +447,11 @@ public class DatabaseHandlerInstance {
 			long userId = rs.getLong("userId"); 
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long week = rs.getLong("week");
 			boolean signed = rs.getBoolean("signed");
-			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
+			long number = rs.getLong("number");
+			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
 		} catch(SQLException e){
 			handleSqlErrors(e);
 		}
@@ -468,8 +470,8 @@ public class DatabaseHandlerInstance {
 					+ tr.getGroupId() + ", '"
 					+ tr.getDate().toString() + "', "
 					+ tr.getDuration() + ", " 
-					+ "D , " 
-					+ tr.getType() + ", " 
+					+ tr.getType() + ", "  
+					+ tr.getNumber() + ", " 
 					+ tr.getWeek() + ", 0);");
 			ps.executeUpdate();
 			ps.close();
