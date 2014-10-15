@@ -2,6 +2,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,8 +32,38 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 public class DatabaseHandlerInstance {
 	private static DatabaseHandlerInstance instance = null;
 	private static Connection conn;
-	protected DatabaseHandlerInstance(Connection conn) {
+	protected DatabaseHandlerInstance() {
 		DatabaseHandlerInstance.conn = conn;
+		try{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
+			           "user=puss1403&password=9dpa2oan");
+			//TODO see description below: /J
+			/**
+			 *  We're very dependent of this connection and some sort of 
+			 *  re-connection functionality in case the connection closes is 
+			 *  of high importance, please try if this actually works or if it
+			 *  needs to be implemented, something prints out the following success-msg
+			 *  multiple times but I can't see why there is? /J
+			 *  
+			 *  It's easy to test simply by manipulating the server name temporary 
+			 *  to something that cannot be resolved for example. (vmxxx.cs.lth.se) /J
+			 */
+		    System.out.println("Successfully connected to database!");
+	    //TODO BETTER ERROR HANDLING! /J
+		} catch (SQLException ex) {
+			handleSqlErrors(ex);
+		    System.out.println("SQLException: " + ex.getMessage());
+		    System.out.println("SQLState: " + ex.getSQLState());
+		    System.out.println("VendorError: " + ex.getErrorCode());
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -43,9 +74,9 @@ public class DatabaseHandlerInstance {
 	 * @return The WorkspaceInstance which will be the same in the entire
 	 *         system.
 	 */
-	public static DatabaseHandlerInstance getInstance(Connection conn) {  
+	public static DatabaseHandlerInstance getInstance() {  
 		if(instance == null) {
-			instance = new DatabaseHandlerInstance(conn);
+			instance = new DatabaseHandlerInstance();
 		}
 		return instance;
 	}
@@ -542,6 +573,7 @@ public class DatabaseHandlerInstance {
 	//TODO JavaDoc
 	private void handleSqlErrors(SQLException e){
 		//TODO Implement better error handling! /J
+		//
 		// As a suggestion use a container which always shows error messages! /J
 		e.printStackTrace();
 	}

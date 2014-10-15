@@ -43,35 +43,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * Constructs a servlet and makes a connection to the database.
 	 */
     public ServletBase() {
-    	try{
-    		Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
-			           "user=puss1403&password=9dpa2oan");
-			instance = DatabaseHandlerInstance.getInstance(conn);
-			//TODO see description below: /J
-			/**
-			 *  We're very dependent of this connection and some sort of 
-			 *  re-connection functionality in case the connection closes is 
-			 *  of high importance, please try if this actually works or if it
-			 *  needs to be implemented, something prints out the following success-msg
-			 *  multiple times but I can't see why there is? /J
-			 *  
-			 *  It's easy to test simply by manipulating the server name temporary 
-			 *  to something that cannot be resolved for example. (vmxxx.cs.lth.se) /J
-			 */
-		    System.out.println("Successfully connected to database!");
-	    //TODO BETTER ERROR HANDLING! /J
-		} catch (SQLException ex) {
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		instance = DatabaseHandlerInstance.getInstance();	
     }
     
     /**
