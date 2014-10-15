@@ -137,7 +137,7 @@ public class WorkerComponent extends ServletBase {
 								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
 								calenderWeek.setTime(Date.valueOf(date));
 								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeInt, 
+								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), typeString, 
 										Long.parseLong(durationString), week, Date.valueOf(date), false));							
 							}else{
 								failMsg = "Unknown type!";

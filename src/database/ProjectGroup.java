@@ -118,7 +118,7 @@ public class ProjectGroup extends AbstractCointainer {
 			while(rs.next()){
 				long reportId = rs.getLong("id");
 				long userId = rs.getLong("userId");
-				long type = rs.getLong("type");
+				String type = rs.getString("type");
 				long duration = rs.getLong("duration");
 				long week = rs.getLong("week");
 				Date date = rs.getDate("date");
@@ -146,7 +146,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long userId = rs.getLong("userId");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long duration = rs.getLong("duration");
 			long week = rs.getLong("week");
 			Date date = rs.getDate("date");

@@ -34,7 +34,7 @@ public class TimeReport extends AbstractCointainer {
 	private long id;
 	private long groupId;
 	private long userId;
-	private long type;
+	private String type;
 	private long duration;
 	private long week;
 	private Date date;
@@ -56,7 +56,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param signed A boolean stating whether the time report is signed
 	 */
 	public TimeReport(Connection conn, long id, long userId, long groupId, 
-			long type, long duration, long week, Date date, boolean signed) {
+			String type, long duration, long week, Date date, boolean signed) {
 			this.conn = conn;
 			this.id = id;
 			this.userId = userId;
@@ -80,7 +80,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 */
-	public TimeReport(long userId, long groupId, long type, 
+	public TimeReport(long userId, long groupId, String type, 
 			long duration, long week, Date date, boolean signed) {
 		this.userId = userId;
 		this.groupId = groupId;
@@ -196,7 +196,7 @@ public class TimeReport extends AbstractCointainer {
 	 * 
 	 * @return The type of the report.
 	 */
-	public long getType() {
+	public String getType() {
 		return type;
 	}
 	
@@ -268,7 +268,7 @@ public class TimeReport extends AbstractCointainer {
 	 * 
 	 * @param type The type to change to.
 	 */
-	public void setType(long type) {
+	public void setType(String type) {
 		//TODO Validate type number if not already done /J
 		this.type = type;
 	}

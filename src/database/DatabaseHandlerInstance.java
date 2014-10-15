@@ -381,7 +381,7 @@ public class DatabaseHandlerInstance {
 			long groupId = rs.getLong("groupId");
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long week = rs.getLong("week");
 			boolean signed = rs.getBoolean("signed");
 			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);
@@ -438,6 +438,7 @@ public class DatabaseHandlerInstance {
 		}				
 		return list;
 	}
+	
 	private TimeReport createTimeReport(ResultSet rs){
 		TimeReport timeReport = null;
 		try{
@@ -446,7 +447,7 @@ public class DatabaseHandlerInstance {
 			long userId = rs.getLong("userId"); 
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
-			long type = rs.getLong("type");
+			String type = rs.getString("type");
 			long week = rs.getLong("week");
 			boolean signed = rs.getBoolean("signed");
 			timeReport = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed);

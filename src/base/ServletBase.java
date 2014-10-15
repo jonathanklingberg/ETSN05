@@ -156,13 +156,14 @@ public abstract class ServletBase extends HttpServlet {
     		String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
 
     		String editCode = "";
+    		if(isAdminOrProjectManagerComponent()){
     		if(isAdminComponent()) {
     			editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
     		} else {
     			String editURL = "administrationcomponent?edituser="+name;
     			editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
     		}
-
+    		}
     		String deleteURL = "administrationcomponent?deleteuser="+name;
     		String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> delete </a>";
     		if (name.equals("admin")){
@@ -170,7 +171,6 @@ public abstract class ServletBase extends HttpServlet {
     		}
     		printUser(out, name, role, group, editCode, pw, deleteCode);
     	}		
-
     	String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
     	    "<input type=\"text\" id=\"oldUserName\" />Password:" +
     	       " <input type=\"text\" id=\"oldPassWord\"/>Group: " +
@@ -264,11 +264,11 @@ public abstract class ServletBase extends HttpServlet {
 		String editCode, String pw, String deleteCode) {
 		out.println("<tr>");
 		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
-		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "<td></td>");
+		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "");
 		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
-		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "<td></td>");
-		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "<td></td>");
-		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "<td></td>");
+		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "");
+		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
+		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
 		out.println("</tr>");
 	}
 	
@@ -279,7 +279,9 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(isAdminComponent()? "<th>Group</th>" : "");
 		out.println("<th>Role</th>");
 		out.println(isAdminComponent()? "<th>Password</th>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<th data-sort-ignore=\"true\">Edit</th>" : "");
+		if(isAdminOrProjectManagerComponent()) {
+		out.println("<th data-sort-ignore=\"true\">Edit" + (isAdminComponent() ? "" : " (role)") + "</th>");
+		}
 		out.println(isAdminComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");
 		out.println("</tr></thead>");
 	}
