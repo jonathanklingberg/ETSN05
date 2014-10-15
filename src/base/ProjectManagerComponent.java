@@ -136,5 +136,9 @@ public class ProjectManagerComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return false;
 	}
+	
+	protected boolean isWorkerComponent() {
+		return false;
+	}
 
 }

@@ -368,4 +368,8 @@ public class AdministrationComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return true;
 	}
+
+	protected boolean isWorkerComponent() {
+		return false;
+	}
 }

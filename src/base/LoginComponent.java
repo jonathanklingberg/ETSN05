@@ -141,4 +141,8 @@ public class LoginComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return false;
 	}
+	
+	protected boolean isWorkerComponent() {
+		return false;
+	}
 }
