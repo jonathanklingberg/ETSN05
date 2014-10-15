@@ -136,6 +136,9 @@ window.onload = function(){
 	        $("#oldGroupName").val(oldGroup);
 	    },            
 	    buttons: {
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
 	        Edit: function () {
 	            var name = $("#oldUserName").val();
 	            var password = $("#oldPassWord").val();
@@ -144,9 +147,6 @@ window.onload = function(){
 	            $(this).dialog("close");
 	            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&editUser=" + name +"&password=" + password + "&group=" + group + "&role=" + role;
 	            $(location).attr('href', url);
-	        },
-	        Cancel: function () {
-	            $(this).dialog("close");
 	        }
 	    }
 	});
