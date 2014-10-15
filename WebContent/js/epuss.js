@@ -3,6 +3,7 @@ var oldPassword = "";
 var oldGroup = "";
 var oldGroupId = -1;
 var oldGroupName = "";
+var deleteGroupHref = "";
 
 $(document).ready(
 	function(){
@@ -174,7 +175,27 @@ window.onload = function(){
 	        }
 	    }
 	});
+	
+	$("#deleteGroup").dialog({
+	    autoOpen: false,           
+	    buttons: {
+	        No: function () {
+	            $(this).dialog("close");
+	        },
+	        Yes: function () {
+	            $(this).dialog("close");
+	            $(location).attr('href', deleteGroupHref);
+	        }        
+	    }
+	});
 
+}
+
+function deleteGroup(link, groupName) {
+	deleteGroupHref = link.href;
+	document.getElementById("text").innerHTML = groupName;
+    $("#deleteGroup").dialog("open");
+    return false;
 }
 
 function editUser(name, password, group){

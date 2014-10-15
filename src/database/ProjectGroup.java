@@ -205,7 +205,7 @@ public class ProjectGroup extends AbstractCointainer {
 		//Don't forget to check that the time report is unsigned!
 		boolean wasRemoved = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = '" + report.getId() + "' AND signed = 0");
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = " + report.getId() + " AND signed = 0");
 			if(ps.executeUpdate() == 1){
 				wasRemoved = true;
 			}

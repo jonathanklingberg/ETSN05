@@ -328,19 +328,26 @@ public class AdministrationComponent extends ServletBase {
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
 			//TODO Ändra knappnamn i dialogrutan för deleteUser till yes/no
-		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return confirm('Are you sure you want to delete project "+name+"?')") + ">Delete</a>";
+
+		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return deleteGroup(this, '" + name + "')") + "value=\"Delete group\">Delete</a>";
 		    String editCode = "<a href = \"#\" onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
 			out.println("<tr>");
 	    	out.println("<td data-value='" + name + "'><a href='projectmanager?projectId=" + id + "'>" + name + "</a></td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
+	    	
 		 }
 	    	String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
 	    			"<input type=\"text\" id=\"newGroupName\"/>" +
 	    			"</div>" +
 	    			"<br />";
+	    	
 	    	out.println(editForm);
+	    	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
+				    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
+					"</div> <br />";
+	    	out.println(deleteForm);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
 			 //TODO Add red style to all of your error-messages if possible please =)
