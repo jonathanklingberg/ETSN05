@@ -131,18 +131,17 @@ public class LoginComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
-	@Override
-	protected boolean isAdminOrProjectManagerComponent() {
-		return false;
-	}
 
-	@Override
 	protected boolean isAdminComponent() {
 		return false;
 	}
-	
+
 	protected boolean isWorkerComponent() {
+		return false;
+	}
+
+
+	protected boolean isProjectManagerComponent() {
 		return false;
 	}
 }

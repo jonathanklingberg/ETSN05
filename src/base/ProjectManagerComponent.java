@@ -79,6 +79,7 @@ public class ProjectManagerComponent extends ServletBase {
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			System.out.println("Got all time reports for group " + groupId + instance.getProjectGroup(groupId));
 			System.out.println("There were " + timeReports.size() + " of them");
+			out.println("<p>Time reports:</p>");
 			printTimeReportTable(out, timeReports, null);
 
 			/* Do alot of stuff according to the SRS:
@@ -88,7 +89,6 @@ public class ProjectManagerComponent extends ServletBase {
 			 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
 			 * Sign and unsign all groupmembers' timereports
 			 * Assign and change roles in the project to group members
-			 * 
 			 */
 
 
@@ -113,24 +113,6 @@ public class ProjectManagerComponent extends ServletBase {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response); // redirect post-data to GET-action
-		
-//		String checkbox = request.getParameter("signed");
-//		String reportid = request.getParameter("reportid");
-//		System.out.println("Signed: " + checkbox);
-//		System.out.println("reportid: " + reportid);
-//		PrintWriter out = response.getWriter();
-		
-//		boolean signOK = instance.changeTimeReportSignature(reportid);
-		
-//		if("OK_from_db" == true){
-//			out.print("1"); // Everything OK / 
-//		}else{
-//			out.print("Something went wrong! / 0");
-//		}
-	}
-
-	protected boolean isAdminOrProjectManagerComponent() {
-		return true;
 	}
 
 	protected boolean isAdminComponent() {
@@ -141,4 +123,7 @@ public class ProjectManagerComponent extends ServletBase {
 		return false;
 	}
 
+	protected boolean isProjectManagerComponent() {
+		return true;
+	}
 }
