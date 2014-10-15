@@ -11,7 +11,7 @@ $(document).ready(
 		});
 		$('#grouplist').footable();
 		
-		$('#logincredentials').html(  "admin - passwd <br>" +
+		$('#logincredentials').html(  "admin - adminpw <br>" +
 				"testuser -  passwd <br>" +
 				"devuser -  passwd <br>" +
 				"pmuser -  passwd <br>"
