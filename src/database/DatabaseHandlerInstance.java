@@ -444,6 +444,7 @@ public class DatabaseHandlerInstance {
 		}				
 		return list;
 	}
+	
 	private TimeReport createTimeReport(ResultSet rs){
 		TimeReport timeReport = null;
 		try{

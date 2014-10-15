@@ -21,7 +21,6 @@ type VARCHAR(1) NOT NULL,
 PRIMARY KEY (type)
 );
 
-
 CREATE TABLE Numbers(
 number INT UNSIGNED NOT NULL,
 PRIMARY KEY (number)
@@ -121,6 +120,5 @@ INSERT INTO Types VALUES("I");
 INSERT INTO Types VALUES("F");
 INSERT INTO Types VALUES("R");
 
---Create timereport
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(23, 2, 2014-10-12, 60, "I", 100, 1, 1);
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(24, 3, 2014-10-12, 60, "D", 100, 1, 1);
+-- Create timereport
+INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(3, 3, 2014-10-12, 60, 'I', 100, 1, 1);
