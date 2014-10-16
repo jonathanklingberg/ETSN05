@@ -3,12 +3,16 @@ var oldPassword = "";
 var oldGroup = "";
 var oldGroupId = -1;
 var oldGroupName = "";
+var oldRole = "";
+var roleList = ["Developer", "ProjectManager", "SystemArchitect", "Tester", "Unspecified"];
 var deleteGroupHref = "";
 var oldId = -1;
 var oldDate = -1;
 var oldDuration = -1;
 var oldNumber = -1;
+var roleId = -1;
 var userNameToBePrinted = "";
+var timeReportToBePrinted = "";
 
 $(document).ready(
 	function(){
@@ -160,6 +164,7 @@ window.onload = function(){
 	        $("#oldUserName").val(oldUserName);
 	        $("#oldPassWord").val(oldPassword);
 	        $("#oldGroupName").val(oldGroup);
+	        $( "#myselect2>option:eq(" + roleList.indexOf(oldRole) + ")" ).attr("selected", "selected");
 	    },            
 	    buttons: {
 	    	Cancel: function () {
@@ -177,12 +182,30 @@ window.onload = function(){
 	    }
 	});
 	
+	$("#editRole").dialog({
+	    autoOpen: false,
+	    maxWidth: 360,
+	    maxHeight: 300,
+	    minWidth: 360,
+	    minHeight: 300,
+        //('#editRole').title += 
+	    buttons: { 
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
+	        Submit: function() {
+	            var role = $( "#roleType option:selected" ).val();
+	            $(this).dialog("close");
+	            var url = "projectmanagercomponent?roleId=" +roleId + "&role=" + role;
+	            $(location).attr('href',url);
+	        }
+	    }
+});
+	
+//http://jsfiddle.net/5b3cufzx/129/
+	
 	$("#editGroupName").dialog({
 	    autoOpen: false,
-	    minWidth: 309,
-	    minHeight: 210,
-	    maxWidth: 309,
-	    maxHeight: 210,
 	    open: function () {
 	    	$("#newGroupName").val(oldGroupName);
 	    },            
@@ -270,6 +293,32 @@ window.onload = function(){
 	        }        
 	    }
 	});
+	
+	$("#deleteTimeReport").dialog({
+	    autoOpen: false,           
+	    buttons: {
+	        No: function () {
+	            $(this).dialog("close");
+	        },
+	        Yes: function () {
+                var deleteTimeReportHref = "workercomponent?deletetimereport=" + timeReportToBePrinted;
+	            $(this).dialog("close");
+	            $(location).attr('href', deleteTimeReportHref);
+	        }        
+	    }
+	});
+}
+
+function deleteTimeReport(timeReportId){
+	document.getElementById("timeReportIDFix").innerHTML = "" + timeReportId;
+	timeReportToBePrinted = timeReportId;
+    $("#deleteTimeReport").dialog("open");
+}
+
+function editRole(id){
+	roleId = id;
+    $("#editRole").dialog("open");
+    return false;
 }
 
 function deleteGroup(link, groupName) {
@@ -279,10 +328,11 @@ function deleteGroup(link, groupName) {
     return false;
 }
 
-function editUser(name, password, group){
+function editUser(name, password, group, role){
 	oldUserName = name;
 	oldPassword = password;
 	oldGroup = group;
+	oldRole = role;
     $("#editUser").dialog("open");
 }
 

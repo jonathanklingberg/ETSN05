@@ -70,6 +70,13 @@ public class ProjectManagerComponent extends ServletBase {
 				System.out.println("TimeReportId not existing!");
 			}
 			
+			String roleIdString = request.getParameter("roleId");
+			if (roleIdString != null) {				
+				Long roleId = Long.parseLong(roleIdString);
+				String newRole = request.getParameter("role");
+				instance.changeRoleOfUser(newRole, roleId);
+			}
+			
 			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			out.println("<p>Members in project:</p>");
@@ -89,6 +96,9 @@ public class ProjectManagerComponent extends ServletBase {
 			 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
 			 * Sign and unsign all groupmembers' timereports
 			 * Assign and change roles in the project to group members
+			 * 
+			 * Maybe:
+			 * Be able to list, write and edit his own time reports
 			 */
 
 

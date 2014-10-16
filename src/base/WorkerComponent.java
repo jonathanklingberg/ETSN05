@@ -1,5 +1,6 @@
 package base;
 
+import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -75,9 +76,6 @@ public class WorkerComponent extends ServletBase {
 			out.println("<p> Assigned to project group: " + projectGroupName
 					+ " </p>");
 
-			// TODO something with timeReportActionMessage??
-            // System.out.println("Please do seomthing to me: " + timeReportActionMessage);
-			// Display all project members in project group
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance
 					.getUser(userName).getGroupId());
 			out.println("<p>Members in project:</p>");
@@ -135,92 +133,87 @@ public class WorkerComponent extends ServletBase {
 		}
 	}
 	
-	//TODO JavaDoc
 	/**
+	 * This method handles a new time report and sets its values to the input given.
 	 * 
-	 * @param request
-	 * @param out
-	 * @param userId
-	 * @return
+	 * @param request This is the servlet request
+	 * @param out the printwriter used to print out html code
+	 * @param userId the id of the current user.
+	 * @return String containing a result message either containing a success message or a failure message.
 	 */
 	private String addNewTimeReport(HttpServletRequest request,
 			PrintWriter out, Long userId) {
-		String resultMsg = null;
-		String date = request.getParameter("date");
-		String durationString = request.getParameter("duration");
-		String typeString = request.getParameter("type");
-		String numberString = request.getParameter("number");
-		
-		if(date != null){
-			if (checkDate(date)) {
-				char type = typeString.charAt(0);
-				if(typeString!=null && typeString.length()==1 && Type.isType(type)){
-					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")) {
-						try{
-							Long duration = Long.parseLong(durationString);
-							Long number = Long.parseLong(numberString);
-							if(Number.isNumber(number)){
-								User currentUser = instance.getUser(userId);
-								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
-								calenderWeek.setTime(Date.valueOf(date));
-								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
-										duration, week, Date.valueOf(date), false, number));	
-								resultMsg = "<p class=\"success-message\">Time report was created successfully!</p>";
-							} else {
-								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-							}
-						} catch(NumberFormatException e){
-							resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-							return resultMsg;
-						}
-					} else {
-						resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-					}
-				} else {
-					resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-				}
-			} else {
-				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-			}
-		}
-		return resultMsg;
+		return handleTimeReports(request, out, userId, false);
 	}
 	
-	//TODO JavaDoc
 	/**
+	 * This method handles a existing time report and updates its values to the input given.
 	 * 
-	 * @param request
-	 * @param out
-	 * @param userId
-	 * @return
+	 * @param request This is the servlet request
+	 * @param out the printwriter used to print out html code
+	 * @param userId the id of the current user.
+	 * @return String containing a result message either containing a success message or a failure message.
 	 */
 	private String editTimeReport(HttpServletRequest request,
 			PrintWriter out, Long userId){
+		return handleTimeReports(request, out, userId, true);
+	}
+	
+	/***
+	 * 
+	 * This method handles time reports, either updates or creates new time reports.
+	 * 
+	 * @param request This is the servlet request
+	 * @param out the printwriter used to print out html code
+	 * @param userId the id of the current user.
+	 * @param existingReport boolean stating if the time report is new or previously existed.
+	 * @return
+	 */
+	private String handleTimeReports(HttpServletRequest request,
+			PrintWriter out, Long userId, boolean existingReport){
 		String resultMsg = null;
-		String date =  request.getParameter("newDate");
-		String typeString = request.getParameter("newType");
-		String durationString = request.getParameter("newDuration");
-		String numberString = request.getParameter("newNumber");
-		String idString = request.getParameter("id");
-
+		String idString = null;
+		Long id = null;
+		String date =  existingReport ? request.getParameter("newDate") : request.getParameter("date");
+		String typeString = existingReport ? request.getParameter("newType") : request.getParameter("type");
+		String durationString = existingReport ? request.getParameter("newDuration") : request.getParameter("duration");
+		String numberString = existingReport ? request.getParameter("newNumber") : request.getParameter("number");
+		if(existingReport && request.getParameter("newType")!=null){
+			idString = request.getParameter("id");
+			if(idString == null || idString.trim().equals("")){
+				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+				return resultMsg;
+			}
+		}
+			
 		if(date != null){
 			if (checkDate(date)) {
 				char type = typeString.charAt(0);
 				if(typeString!=null && Type.isType(type)){
-					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")
-							&& idString != null && !idString.trim().equals("")) {
+					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")) {
 						try{
 							Long duration = Long.parseLong(durationString);
 							Long number = Long.parseLong(numberString);
-							Long id = Long.parseLong(idString);
+							if(existingReport){
+								id = Long.parseLong(idString);
+							}
 							if(Number.isNumber(number)){
 								User currentUser = instance.getUser(userId);
 								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
 								calenderWeek.setTime(Date.valueOf(date));
 								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-								instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number );
-								resultMsg = "<pclass=\"success-message\">Time report was edited successfully!</p>";
+								
+								if(existingReport){
+									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number )){
+										resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+									} else {
+										resultMsg = "<p class=\"failure-message\">Time report was signed while you were editing it</p>";
+									}
+								}else{
+									instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
+											duration, week, Date.valueOf(date), false, number));
+									resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+								}
 							} else {
 								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							}
@@ -238,11 +231,9 @@ public class WorkerComponent extends ServletBase {
 				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 			}
 		}
-		return resultMsg;
+		return resultMsg;	
 	}
-	
-	
-	//TODO JavaDoc
+
 	/***
 	 * This method checks if the date input is in both correct format,
 	 * and that it is prior to 
@@ -270,7 +261,13 @@ public class WorkerComponent extends ServletBase {
 		return false;
 	}
 	
-	//TODO JavaDoc
+	/***
+	 * This method deletes a existing time report and returns a success message if it is successfully removed.
+	 * If the sql query is unsuccessful it will give a fail message.
+	 * 
+	 * @param request the servlet request.
+	 * @return a String containing the result.
+	 */
 	private String deleteTimeReport(HttpServletRequest request) {
 		String timeReportId = request.getParameter("deletetimereport");
 		if (timeReportId != null) {
@@ -293,14 +290,23 @@ public class WorkerComponent extends ServletBase {
 		doGet(request, response); // forward post-data to get-function /J
 	}
 
+	/***
+	 * Method stating that this component isn't the admin component through a boolean variable false.
+	 */
 	protected boolean isAdminComponent() {
 		return false;
 	}
 
+	/***
+	 * Method stating that this component is the worker component through a boolean variable true.
+	 */
 	protected boolean isWorkerComponent() {
 		return true;
 	}
 	
+	/***
+	 * Method stating that this component isn't the projectmanager component through a boolean variable false.
+	 */
 	protected boolean isProjectManagerComponent() {
 		return false;
 	}
