@@ -123,8 +123,7 @@ public class WorkerComponent extends ServletBase {
 			
 			out.println("<br/>");
 			out.println("<input type=\"button\" id=\"createTimeReportButton\" value=\"Add new\" />");
-			out.println("<p><a href =" + formElement("logincomponent")
-					+ "> Log out </p>");
+			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 
 		} else {
 			System.err.println("Illegal action performed as: " + role

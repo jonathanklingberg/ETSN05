@@ -126,6 +126,7 @@ public abstract class ServletBase extends HttpServlet {
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
 							"<title> The Base Block System </title></head><body>";
+		
 		return intro;
 	}
 
@@ -145,7 +146,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input><br/>");
+		out.println("<input class=\"form-control\" id=\"userfilter\" type=\"text\" placeholder=\"Filter Users\"></input><br/>");
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
 		printUserTableHeader(out);
 		System.out.println("Total number of users in system: " + userList.size());
@@ -221,7 +222,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
-		out.println("Filter Reports: <input id=\"reportsfilter\" type=\"text\" placeholder=\"Ex. week:2 type:D\"></input>");
+		out.println("<input class=\"form-control\" id=\"reportsfilter\" type=\"text\" placeholder=\"Filter Reports\"></input>");
 		out.println("<table class=\"footable\" id=\"reportstable\" data-filter=\"#reportsfilter\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
