@@ -12,7 +12,6 @@
 
 .btn {
 	width: 200px;
-/* 	margin: 10px; */
 }
 
 .usertable-tools{	
@@ -21,6 +20,14 @@
 
 .grouptable-tools{	
 	margin: 20px 0px 20px 0px;
+}
+
+.reportstable-tools{
+	margin: 20px 0px 70px 0px;
+}
+
+#reportsfilter{
+	float:left;
 }
 
 .form-control{	

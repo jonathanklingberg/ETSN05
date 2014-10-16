@@ -72,13 +72,11 @@ public class WorkerComponent extends ServletBase {
 			long groupId = user.getGroupId();
 			ProjectGroup pg = instance.getProjectGroup(groupId);
 			String projectGroupName = pg.getName();
-			out.println("<p> Signed in as: " + userName + " </p>");
-			out.println("<p> Assigned to project group: " + projectGroupName
-					+ " </p>");
+			out.println("<p> User:<strong> " + userName + " </strong></p>");
+			out.println("<p> Group: <strong>" + projectGroupName + "</strong> </p>");
 
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance
 					.getUser(userName).getGroupId());
-			out.println("<p>Members in project:</p>");
 			printUserTable(out, groupMembers, null);
 			
 			if(timeReportActionMessage == null)
@@ -91,7 +89,6 @@ public class WorkerComponent extends ServletBase {
 			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
 					.getUsersTimeReportsOfUser(userId);
-			out.println("<p>Your time reports:</p>");
 			printTimeReportTable(out, timeReports, timeReportActionMessage);
 
 			
@@ -120,7 +117,6 @@ public class WorkerComponent extends ServletBase {
 	    	           "</select>" + 
 	    	           "</div>";
 			out.println(addForm);
-			out.println("<input type=\"button\" id=\"createTimeReportButton\" value=\"Add new\" />");
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 
 		} else {

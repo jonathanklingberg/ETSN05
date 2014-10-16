@@ -306,8 +306,8 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 		if(usersSessions.containsKey(this.name)){
 			usersSessions.get(this.name).invalidate(); // kick currently logged in user. /J
 		}
-		System.out.println("*********"+this.name+" WENT ONLINE***********");
 		usersSessions.put(this.name, event.getSession()); // replace/add the new user to map. /J
+		System.out.println("*********"+this.name+" WENT ONLINE***********");
 	}
 
 	/**
@@ -317,8 +317,8 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 */
 	@Override
 	public void valueUnbound(HttpSessionBindingEvent event) {
-		System.out.println("*********"+this.name+" WENT OFFLINE***********");
 		usersSessions.remove(this);
+		System.out.println("*********"+this.name+" WENT OFFLINE***********");
 	}
 	
 	/**
@@ -327,8 +327,9 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 */
 	public void killSession(){
 		if(usersSessions.containsKey(this.name)){
-			System.out.println("*********"+this.name+" WENT OFFLINE***********");
+			usersSessions.remove(this);
 			usersSessions.get(this.name).invalidate();			
+			System.out.println("*********"+this.name+" WENT OFFLINE***********");
 		}
 	}
 	
