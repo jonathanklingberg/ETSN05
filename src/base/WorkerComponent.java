@@ -226,20 +226,16 @@ public class WorkerComponent extends ServletBase {
 							}
 						}catch(NumberFormatException e){
 							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-							System.out.println("fel i number format");
 							return resultMsg;
 						}
 					}else{
 						resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-						System.out.println("Fel i duration/number/id");
 					}
 				} else {
 					resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-					System.out.println("Fel i type");
 				}
 			} else {
 				resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
-				System.out.println("Fel i andra date");
 			}
 		}
 		return resultMsg;
