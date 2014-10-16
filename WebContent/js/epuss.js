@@ -8,7 +8,6 @@ var oldId = -1;
 var oldDate = -1;
 var oldDuration = -1;
 var oldNumber = -1;
-
 $(document).ready(
 	function(){
 		$("body").hide();
@@ -223,7 +222,25 @@ window.onload = function(){
 	        }
 	    }
 	});
-
+	
+	$("#addGroup").dialog({
+	    autoOpen: false,
+	    maxWidth: 309,
+	    maxHeight: 216,
+	    minWidth: 309,
+	    minHeight: 216,    
+	    buttons: {
+	        Cancel: function () {
+	            $(this).dialog("close");
+	        },
+	        Add: function () {
+	            var newGroupName = $("#addGroupName").val();
+	            $(this).dialog("close");
+	            var url = "AdministrationComponent?addNewGroup=" + newGroupName;
+	            $(location).attr('href', url);
+	        }
+	    }
+	});
 }
 
 function deleteGroup(link, groupName) {
@@ -246,13 +263,8 @@ function editGroup(groupId, oldName) {
 	$("#editGroupName").dialog("open");
 }
 
-function createGroup(link) { 
-	var name = prompt('Please enter a name for the new group.');  
-	if (name != null) { 
-		link.href = link.href+name; 
-		return true; 
-	} 
-	return false;
+function createGroup() { 
+	$("#addGroup").dialog("open");
 }
 
 function editTimeReport(date, duration, number, id){

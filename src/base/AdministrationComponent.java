@@ -156,9 +156,15 @@ public class AdministrationComponent extends ServletBase {
 			out.println("</div><br>");
 			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
 			listGroups(out, groupActionMessage);
-			// It's recommended to gather all js in a separate .js-file, that includes onclick-events just as a reminder =)
-			out.println("<br><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
+			
+			String addGroup = "<div id=\"addGroup\" title=\"Add new Group\"> " +
+		    "Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
+		    " </div>  <br />";
+		    String aTag = "<a id=\"addNewGroupButton\" value=\"Add Group\" href = \"#\" onclick="+ formElement("return createGroup();") + "><input type=\"button\" value=\"Add new\"/></a>";
+			out.println(aTag);
+//			out.println("<br><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
+			out.println(addGroup);
 			out.println("</body></html>");
 
 		} else {
