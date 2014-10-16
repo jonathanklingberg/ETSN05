@@ -201,11 +201,18 @@ public class ProjectGroup extends AbstractCointainer {
 	 * @return True if the time report was successfully removed,
 	 * otherwise false
 	 */
-	public boolean removeTimeReport(TimeReport report) {
+	public boolean removeTimeReport(TimeReport report, String userName) {
+		
 		//Don't forget to check that the time report is unsigned!
 		boolean wasRemoved = false;
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = " + report.getId() + " AND signed = 0");
+			PreparedStatement ps = null;
+			if(userName.equals("admin")) {
+				ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = " + report.getId());
+				
+			} else {
+				ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = " + report.getId() + " AND signed = 0");
+			}
 			if(ps.executeUpdate() == 1){
 				wasRemoved = true;
 			}
@@ -293,7 +300,7 @@ public class ProjectGroup extends AbstractCointainer {
 				usersTobeDeleted.get(i).removeMe();
 			}
 			for(int i = 0; i < timeReportsToDelete.size(); i++) {
-				removeTimeReport(timeReportsToDelete.get(i));
+				removeTimeReport(timeReportsToDelete.get(i), "admin");
 			}
 			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = '" + id + "'");
 			ps.executeUpdate();

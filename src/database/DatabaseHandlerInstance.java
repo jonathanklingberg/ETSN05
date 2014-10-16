@@ -120,7 +120,7 @@ public class DatabaseHandlerInstance {
 			if(rs.next()) {
 				return false;
 			}
-			ps = conn.prepareStatement("INSERT into Users(userName, password) VALUES('" + user.getName() + "', '" + user.getPassword());
+			ps = conn.prepareStatement("INSERT into Users(userName, password) VALUES('" + user.getName() + "', '" + user.getPassword() + "')");
 			ps.executeUpdate();
 			//TODO If we use isActive-attribute from db then multiple users with same name exists in db, needs to be handled. /J
 			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
@@ -204,19 +204,22 @@ public class DatabaseHandlerInstance {
 	 * @return The user if it is found in the database, otherwise null
 	 */
 	public User getUser(long userId) {
+		User user = null;
 		try {
 			PreparedStatement ps;
 			ps = conn.prepareStatement("SELECT * from Users WHERE id =" + userId);
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			User temp = getUser(rs.getString("userName"));
+			if(rs.next()) {
+				user = getUser(rs.getString("userName"));
+			} else {
+				user = new User("<i>**removed user**</i>", "<i>**removedUserPassword**</i>", "<i>**removed user**</i>", -1);
+			}
 			ps.close();
 			rs.close();
-			return temp;
 		} catch (SQLException e) {
 			handleSqlErrors(e);
 		}
-		return null;
+		return user;
 	}
 
 
@@ -513,10 +516,14 @@ public class DatabaseHandlerInstance {
 	public boolean editUser(String oldUserName, String newUserName,
 			String newPassword, String newGroupName, String role) {
 		try{
-			PreparedStatement ps = conn.prepareStatement("select * from Users where userName = '" + newUserName + "'");
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				return false;
+			PreparedStatement ps;
+			ResultSet rs;
+			if(!oldUserName.equals(newUserName)){
+				ps = conn.prepareStatement("select * from Users where userName = '" + newUserName + "' AND id != ");
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					return false;
+				}
 			}
 			ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
 			ps.executeUpdate();
