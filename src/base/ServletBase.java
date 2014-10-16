@@ -145,7 +145,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
+		out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input><br/>");
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
 		printUserTableHeader(out);
 		System.out.println("Total number of users in system: " + userList.size());
@@ -158,7 +158,7 @@ public abstract class ServletBase extends HttpServlet {
 
 			String editCode = "";
 			if(isAdminComponent()) {
-				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
+				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else {
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";

@@ -185,13 +185,15 @@ public class AdministrationComponent extends ServletBase {
 		String newGroupName = request.getParameter("group");
 		String role = request.getParameter("role");
 		ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
-		boolean groupExists = false;
-		for(int i = 0; i < groups.size(); i++) {
-			if(groups.get(i).getName().equals(newGroupName)) {
-				groupExists = true;
-			}
-		}
 		if(oldUserName != null) {
+			boolean groupExists = false;
+			for(int i = 0; i < groups.size(); i++) {
+				if(groups.get(i).getName().equals(newGroupName)) {
+					groupExists = true;
+				}
+			}
+			String currentRole = instance.getUser(oldUserName).getRole();
+			boolean pmDemotion = currentRole.equals("ProjectManager") && !currentRole.equals(role);
 			if(newPassword.length() == 6) {
 				if(checkNewName(newUserName)) {
 					if(groupExists) {
@@ -199,6 +201,9 @@ public class AdministrationComponent extends ServletBase {
 						if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
 							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
 							if(res) {
+								if(pmDemotion){
+									instance.getUser(newUserName).killSession();
+								}
 								return "User edited succesfully.";
 							} else {
 								return "User not edited.";
@@ -347,12 +352,12 @@ public class AdministrationComponent extends ServletBase {
 	 * @param groupActionMessage
 	 */
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
-	 	 out.println("<p> Groups </p>");
+	 	out.println("<p> Groups </p>");
 	 	out.println("Filter: <input id=\"groupfilter\" type=\"text\"></input>");
-		 out.println("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
-		 out.println("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
-		 List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
-		 for(int i = 0; i < projectGroups.size(); i++) {
+		out.println("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
+		out.println("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
+		List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
+		for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
@@ -367,16 +372,16 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("</tr>");
 	    	
 		 }
-	    	String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
-	    			"<input type=\"text\" id=\"newGroupName\"/>" +
-	    			"</div>" +
-	    			"<br />";
-	    	
-	    	out.println(editForm);
-	    	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
-				    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
-					"</div> <br />";
-	    	out.println(deleteForm);
+		String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
+    			"<input type=\"text\" id=\"newGroupName\"/>" +
+    			"</div>" +
+    			"<br />";
+    	
+    	out.println(editForm);
+    	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
+			    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
+				"</div> <br />";
+    	out.println(deleteForm);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
 			 //TODO Add red style to all of your error-messages if possible please =)

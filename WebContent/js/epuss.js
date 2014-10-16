@@ -3,6 +3,8 @@ var oldPassword = "";
 var oldGroup = "";
 var oldGroupId = -1;
 var oldGroupName = "";
+var oldRole = "";
+var roleList = ["Developer", "ProjectManager", "SystemArchitect", "Tester", "Unspecified"];
 var deleteGroupHref = "";
 var oldId = -1;
 var oldDate = -1;
@@ -147,6 +149,7 @@ window.onload = function(){
 	        $("#oldUserName").val(oldUserName);
 	        $("#oldPassWord").val(oldPassword);
 	        $("#oldGroupName").val(oldGroup);
+	        $( "#myselect2>option:eq(" + roleList.indexOf(oldRole) + ")" ).attr("selected", "selected");
 	    },            
 	    buttons: {
 	    	Cancel: function () {
@@ -266,10 +269,11 @@ function deleteGroup(link, groupName) {
     return false;
 }
 
-function editUser(name, password, group){
+function editUser(name, password, group, role){
 	oldUserName = name;
 	oldPassword = password;
 	oldGroup = group;
+	oldRole = role;
     $("#editUser").dialog("open");
 }
 
