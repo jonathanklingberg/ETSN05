@@ -56,6 +56,22 @@ public class AdministrationComponent extends ServletBase {
 			}
 		return ok;
 	}
+	
+	private boolean checkNewGroupName(String name) {
+		int length = name.length();
+		boolean ok = (length >= 1 && length <= 20);
+		if (ok)
+			for (int i = 0; i < length; i++) {
+				int ci = (int) name.charAt(i);
+				boolean thisOk = ((ci >= 48 && ci <= 57)
+						|| (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
+				// String extra = (thisOk ? "OK" : "notOK");
+				// System.out.println("bokst:" + name.charAt(i) + " " +
+				// (int)name.charAt(i) + " " + extra);
+				ok = ok && thisOk;
+			}
+		return ok;
+	}
 
 	 /**
 	 * Creates a random password.
@@ -213,26 +229,26 @@ public class AdministrationComponent extends ServletBase {
 			if(checkNewName(username)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
-				long groupId = p.getId();
-					boolean res = false;
-					int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
-					if(!role.equals("ProjectManager") || amountOfPMs < 5) {
-							res = instance.addUser(new User(username, createPassword(), role, groupId));
-					}else{
-						return "Amount of project managers exceeded.";
-						//TODO change request? felmeddelandet finns inte i SRS:en!
-					}
-					if(!res){	
-						failMsg = "Username does already exist! Please choose another one and try again!";
+					long groupId = p.getId();
+						boolean res = false;
+						int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
+						if(!role.equals("ProjectManager") || amountOfPMs < 5) {
+								res = instance.addUser(new User(username, createPassword(), role, groupId));
+						}else{
+							return "Amount of project managers exceeded.";
+							//TODO change request? felmeddelandet finns inte i SRS:en!
+						}
+						if(!res){	
+							failMsg = "Username does already exist! Please choose another one and try again!";
+						} else {
+							failMsg = "Project member was created successfully!";
+						}
 					} else {
-						failMsg = "Project member was created successfully!";
+						failMsg = "The group does not exist! Please enter a valid group and try again!";
 					}
 				} else {
-					failMsg = "The group does not exist! Please enter a valid group and try again!";
-				}
-			} else {
-				failMsg = "Wrong format on input! Please try again";
-			}	
+					failMsg = "Wrong format on input! Please try again";
+				}	
 		}
 		return failMsg;
 	}
@@ -278,12 +294,17 @@ public class AdministrationComponent extends ServletBase {
 		if (editGroup != null) {
 			long groupNumber = Long.parseLong(editGroup);
 			String newGroupName = request.getParameter("groupname");
-			if(newGroupName != null){
-				boolean res = instance.changeGroupName(groupNumber, newGroupName);	
-				if(!res) {
-					return "Group name already taken, please try a new one.";
+			if(newGroupName != null) {
+				if(checkNewGroupName(newGroupName)) {
+					boolean res = instance.changeGroupName(groupNumber, newGroupName);	
+					if(!res) {
+						return "Group name already taken, please try a new one.";
+					} else {
+						return "Group name has been updated.";
+					}
 				} else {
-					return "Group name has been updated.";
+					// TODO make change request for error message! / s
+					return "Wrong format on input! Please try again!";
 				}
 			}
 		}
@@ -300,13 +321,16 @@ public class AdministrationComponent extends ServletBase {
 	private String createNewGroup(HttpServletRequest request, PrintWriter out) {
 		String createNewGroup = request.getParameter("addNewGroup");
 		if(createNewGroup != null) {
-			boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
-			if(res) {
-				return "Project group was created successfully!";
+			if(checkNewGroupName(createNewGroup)) {
+				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
+				if(res) {
+					return "Project group was created successfully!";
+				} else {
+					return "The project group does already exist! Please enter another project group name and try again";
+				}
 			} else {
-				return "The project group does already exist! Please enter another project group name and try again";
+				return "Wrong format on input! Please try again!";
 			}
-			//TODO printa "Wrong format on input! Please try again!", har ingenstans att göra detta än?
 		}
 		return null;
 	}
