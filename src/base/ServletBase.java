@@ -145,7 +145,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input>");
+		out.println("Filter Users: <input id=\"userfilter\" type=\"text\"></input><br/>");
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
 		printUserTableHeader(out);
 		System.out.println("Total number of users in system: " + userList.size());
@@ -160,23 +160,28 @@ public abstract class ServletBase extends HttpServlet {
 
 			String editCode = "";
 			if(isAdminComponent()) {
-				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "')") + " >Edit user</a>";
+				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				editCode = "<a href=\"#\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
-			} else {
+							} else {
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
-
-			String deleteURL = "administrationcomponent?deleteuser="+name;
-			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> Delete </a>";
+	
+			String deleteCode = "<a href='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
 			}
+
 			printUser(out, name, role, group, editCode, pw, deleteCode);
+
 		}
 		String editForm = "";
 		if(isAdminComponent()){		
+			String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
+				    "<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
+					"</div> <br />";
+	    	out.println(deleteForm);
 			editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
 					"<input type=\"text\" id=\"oldUserName\" />Password:" +
 					" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
@@ -199,6 +204,7 @@ public abstract class ServletBase extends HttpServlet {
 					"</select>" +
 					"</div>";
 		}
+
 		out.println(editForm);
 		//TODO something with editForm! /J It already works, just leave the out.println(editForm) be /Soheil
 		out.println("</table>");

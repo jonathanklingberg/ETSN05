@@ -498,8 +498,11 @@ public class DatabaseHandlerInstance {
 	 */
 	public boolean editTimeReport(long id, long userId, long groupId,
 			char type, long duration, long week, Date date, boolean signed, long number){
-		TimeReport tr = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
-		return tr.updateTimeReport();
+		if(!instance.getTimeReport(id).isSigned()){
+			TimeReport tr = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
+			return tr.updateTimeReport();
+		}
+		return false;
 	}
 
 
