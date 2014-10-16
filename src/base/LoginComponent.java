@@ -54,6 +54,8 @@ public class LoginComponent extends ServletBase {
     	
 	String html = "<form name=\"input\" method=\"post\">";
 	  html += "<div class=\"login-screen\">";
+	  html += "<div id=\"loginheader\"><h1>EPUSS</h1>";
+	  html += "</div>";
 	  html += "<div id=\"logincredentials\" class=\"login-form\">";
       html += "  <div class=\"form-group\">";
       html += "    <input type=\"text\" id=\"login-name\" placeholder=\"Enter your name\" value=\"\" class=\"form-control login-field\" name=\"userName\">";

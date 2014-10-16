@@ -54,6 +54,9 @@ public class ProjectManagerComponent extends ServletBase {
 		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || getRole().equalsIgnoreCase("admin"))) {
 			//TODO this not shown in mockup design!
 			out.println("<h1>Project management page</h1>");
+			if(getRole().equalsIgnoreCase("admin")){
+				out.print("<a id=\"back-btn\" class=\"btn btn-block btn-lg btn-warning\" href=\"administrationcomponent\">Go back</a>");
+			}
 			String groupIdString = (String)request.getParameter("adminProjectId");
 			System.out.println("groupIdString is: " +groupIdString);
 			long groupId = -1;
