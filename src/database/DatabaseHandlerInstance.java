@@ -204,19 +204,22 @@ public class DatabaseHandlerInstance {
 	 * @return The user if it is found in the database, otherwise null
 	 */
 	public User getUser(long userId) {
+		User user = null;
 		try {
 			PreparedStatement ps;
 			ps = conn.prepareStatement("SELECT * from Users WHERE id =" + userId);
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			User temp = getUser(rs.getString("userName"));
+			if(rs.next()) {
+				user = getUser(rs.getString("userName"));
+			} else {
+				user = new User("<i>**removed user**</i>", "<i>**removedUserPassword**</i>", "<i>**removed user**</i>", -1);
+			}
 			ps.close();
 			rs.close();
-			return temp;
 		} catch (SQLException e) {
 			handleSqlErrors(e);
 		}
-		return null;
+		return user;
 	}
 
 
