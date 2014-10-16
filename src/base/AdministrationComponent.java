@@ -192,7 +192,7 @@ public class AdministrationComponent extends ServletBase {
 			}
 			User oldUser = instance.getUser(oldUserName);
 			String currentRole = oldUser.getRole();
-			boolean pmDemotion = currentRole.equals("ProjectManager") && !currentRole.equals(role);
+			boolean pmDemotionOrPromotion = (currentRole.equals("ProjectManager") || role.equals("ProjectManager")) && !currentRole.equals(role);
 			boolean groupChanged = !instance.getProjectGroup(oldUser.getGroupId()).getName().equals(newGroupName);
 			if(newPassword.length() == 6) {
 				if(checkNewName(newUserName)) {
@@ -201,7 +201,7 @@ public class AdministrationComponent extends ServletBase {
 						if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
 							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
 							if(res) {
-								if(pmDemotion || groupChanged){
+								if(pmDemotionOrPromotion || groupChanged){
 									instance.getUser(newUserName).killSession();
 								}
 								return "User edited succesfully.";
