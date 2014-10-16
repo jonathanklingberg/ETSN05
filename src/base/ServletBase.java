@@ -213,8 +213,6 @@ public abstract class ServletBase extends HttpServlet {
 	/**
 	 * 
 	 * @param out
-	 * @param editCode
-	 * @param deleteCode
 	 * @param tr
 	 */
 	private void printTimeReport(PrintWriter out, TimeReport tr) {
@@ -237,9 +235,16 @@ public abstract class ServletBase extends HttpServlet {
 			String editCode = "<a href=\"#\" onclick=" + formElement("return editTimeReport('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
 		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
 		    String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
-			out.println("<td>" + tr.isSigned() + "</td>");
-			out.println("<td>" + editCode +  "</td>");
-			out.println("<td>" + deleteCode + "</td></tr>");
+			boolean signed = tr.isSigned();
+		    out.println("<td>" + signed + "</td>");
+		    if(signed){
+		    	out.println("<td> </td>");
+		    	out.println("<td> </td></tr>");
+		    } else {
+				out.println("<td>" + editCode +  "</td>");
+				out.println("<td>" + deleteCode + "</td></tr>");
+		    }
+
 		}
 	}
 
