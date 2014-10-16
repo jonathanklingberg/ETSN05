@@ -140,7 +140,7 @@ public class AdministrationComponent extends ServletBase {
 				userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
-			out.println("<p>System users: </p>");
+			out.println("<a class=\"btn btn-block btn-lg btn-primary\" id=\"createUserButton\" >Add user</a>");
 			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
@@ -153,17 +153,15 @@ public class AdministrationComponent extends ServletBase {
 		    	           " <option value=\"Unspecified\">Unspecified</option> "+
 		    	        "</select>";
 			out.println(t);
-			out.println("</div><br>");
-			out.println("<input type=\"button\" id=\"createUserButton\" value=\"Add new\" />");
+			out.println("</div>");
+			String addGroupButton = "<a id=\"addNewGroupButton\" class=\"btn btn-block btn-lg btn-primary\" onclick="+ formElement("return createGroup();") + ">Add group</a>";
+			out.println(addGroupButton);
 			listGroups(out, groupActionMessage);
-			
-			String addGroup = "<div id=\"addGroup\" title=\"Add new Group\"> " +
-		    "Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
-		    " </div>  <br />";
-		    String aTag = "<br><a id=\"addNewGroupButton\" value=\"Add Group\" href = \"#\" onclick="+ formElement("return createGroup();") + "><input type=\"button\" value=\"Add new\"/></a>";
-			out.println(aTag);
-			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
-			out.println(addGroup);
+			String addGroupModal = "<div id=\"addGroup\" title=\"Add new Group\"> " +
+							"Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
+							" </div>  <br />";
+			out.println(addGroupModal);
+			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 			out.println("</body></html>");
 
 		} else {
@@ -351,8 +349,7 @@ public class AdministrationComponent extends ServletBase {
 	 * @param groupActionMessage
 	 */
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
-	 	out.println("<p> Groups </p>");
-	 	out.println("Filter: <input id=\"groupfilter\" type=\"text\"></input>");
+	 	out.println("<input id=\"groupfilter\" class=\"form-control\" type=\"text\" placeholder=\"Filter groups\"></input>");
 		out.println("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
 		out.println("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
 		List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 

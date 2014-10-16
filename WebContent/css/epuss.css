@@ -9,3 +9,7 @@
 .btn:not(.btn-danger) {
 	float:right;
 }
+
+table{
+	margin-bottom:50px;
+}
