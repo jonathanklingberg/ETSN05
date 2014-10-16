@@ -122,6 +122,7 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/epuss.css\"/>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/flat-ui.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
@@ -221,7 +222,8 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
-		out.println("<table class=\"footable\" border=" + formElement("1") + ">");	
+		out.println("Filter Reports: <input id=\"reportsfilter\" type=\"text\" placeholder=\"Ex. week:2 type:D\"></input>");
+		out.println("<table class=\"footable\" id=\"reportstable\" data-filter=\"#reportsfilter\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
 			printTimeReport(out,timeReports.get(i));
@@ -231,6 +233,7 @@ public abstract class ServletBase extends HttpServlet {
 			    "<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
 				"</div> <br />";
     	out.println(deleteForm);
+printUserTableFooter(out);
 		out.println("</table>");
 		if(userActionMessage != null){
 			out.print(userActionMessage); // style text red please! /J
@@ -246,17 +249,18 @@ public abstract class ServletBase extends HttpServlet {
 	private void printTimeReport(PrintWriter out, TimeReport tr) {
 		User user = instance.getUser(tr.getUserId());
 		out.println("<tr>");
-		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getName() + "</td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td>" + user.getRole() + "</td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td>" + tr.getWeek() + "</td>" : "");
-		out.println("<td>" + tr.getDate() + "</td>");
-		out.println("<td>" + tr.getDuration() + "</td>");
-		out.println("<td>" + tr.getType() + "</td>");
-		out.println("<td>" + tr.getNumber() + "</td>");		
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + user.getRole() + "'>" + user.getRole() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='week:" + tr.getWeek() + "' >" + tr.getWeek() + "</td>" : "");
+		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
+		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
+		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
+		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
 		
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
-			out.println("<td><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
+			boolean signed = tr.isSigned();
+			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 		}	
 		
 		if(isWorkerComponent()){
@@ -269,7 +273,7 @@ public abstract class ServletBase extends HttpServlet {
 		    
 		 //   String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
 			boolean signed = tr.isSigned();
-		    out.println("<td>" + signed + "</td>");
+		    out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
 		    if(signed){
 		    	out.println("<td> </td>");
 		    	out.println("<td> </td></tr>");
@@ -283,31 +287,18 @@ public abstract class ServletBase extends HttpServlet {
 
 	//TODO JavaDoc
 	private void printTimeReportTableHeader(PrintWriter out) {
-		out.println("<tr>");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>Username</B></td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>Role</B></td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td><B>Week</B></td>" : "");
-		out.println("<td><B>Date</B></td>");
-		out.println("<td><B>Time (min)</B></td>");
-		out.println("<td><B>Type</B></td>");
-		out.println("<td><B>Number</B></td>");
-		out.println("<td><B>Signed</B></td>");
-		out.println(isWorkerComponent()? "<td><B>Edit</B></td>" : "");
-		out.println(isWorkerComponent()? "<td><B>Remove</B></td>" : "");	
-		out.println("</tr>");
-	}
-
-	//TODO Try to move this to USER.toHTML() /J
-	private void printUser(PrintWriter out, String name, String role, String group,
-			String editCode, String pw, String deleteCode) {
-		out.println("<tr>");
-		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
-		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "");
-		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
-		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "");
-		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
-		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
-		out.println("</tr>");
+		out.println("<thead><tr>");
+		out.println(isAdminOrProjectManagerComponent()? "<th>Username</th>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<th>Role</th>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<th>Week</th>" : "");
+		out.println("<th data-sort-initial=\"true\">Date</th>");
+		out.println("<th title=\"To filter: time:120\">Time (min)</th>");
+		out.println("<th>Type</th>");
+		out.println("<th>Number</th>");
+		out.println("<th title=\"To filter: signed:true\">Signed</th>");
+		out.println(isWorkerComponent()? "<th data-sort-ignore=\"true\">Edit</th>" : "");
+		out.println(isWorkerComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");	
+		out.println("</thead></tr>");
 	}
 
 	//TODO JavaDocs
@@ -322,6 +313,36 @@ public abstract class ServletBase extends HttpServlet {
 		}
 		out.println(isAdminComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");
 		out.println("</tr></thead>");
+	}
+	
+	private void printUserTableFooter(PrintWriter out) {
+		out.println("<tfoot><tr>");
+		int colspanTotalTimeTitle = 1;
+		int colspanTotalTimeValue = 6;
+		if(isAdminOrProjectManagerComponent()){
+			colspanTotalTimeTitle = 4;
+			colspanTotalTimeValue = 4;
+		}
+		out.println("<td colspan='"+ colspanTotalTimeTitle+"'>"
+				+ "		<span style=\"font-weight:bold; float:right;\">Total:</span>"
+				+ "</td>"
+				+ "<td colspan='"+ colspanTotalTimeValue+"'>"
+				+ "		<span id=\"totalTime\" style=\"font-weight:bold;\"></span> minutes"
+				+ "</td>");
+		out.println("</tr></tfoot>");
+	}
+
+	//TODO Try to move this to USER.toHTML() /J
+	private void printUser(PrintWriter out, String name, String role, String group,
+			String editCode, String pw, String deleteCode) {
+		out.println("<tr>");
+		out.println("<td data-value='name:" + name + "'>" + name + "</td>");
+		out.println(isAdminComponent() ? ("<td data-value='group:" + group + "'>" + group + "</td>") : "");
+		out.println("<td data-value='role:" + role + "'>" + role + "</td>");
+		out.println(isAdminComponent()? ("<td data-value='" + pw + "'>" + pw + "</td>") : "");
+		out.println(isAdminOrProjectManagerComponent()? ("<td>" + editCode + "</td>") : "");
+		out.println(isAdminComponent()? ("<td>" + deleteCode + "</td>") : "");
+		out.println("</tr>");
 	}
 
 	//TODO  JavaDoc

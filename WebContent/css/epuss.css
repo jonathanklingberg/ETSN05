@@ -5,3 +5,7 @@
 .failure-message{
 	color: red;
 }
+
+.btn:not(.btn-danger) {
+	float:right;
+}

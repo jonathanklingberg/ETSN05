@@ -51,11 +51,19 @@ public class ProjectManagerComponent extends ServletBase {
 		String myName = getName();
 		
 		//TODO Give admin access to this component! /J
-		if (isLoggedIn(request) && getRole().equalsIgnoreCase("projectmanager")) {
+		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || getRole().equalsIgnoreCase("admin"))) {
 			//TODO this not shown in mockup design!
-			out.println("<h1>Project management page</h1>"); 
-			long groupId = instance.getUser(myName).getGroupId();
-			out.println("<p>Signed in as: Project Manager</p>");
+			out.println("<h1>Project management page</h1>");
+			String groupIdString = (String)request.getParameter("adminProjectId");
+			System.out.println("groupIdString is: " +groupIdString);
+			long groupId = -1;
+			if(groupIdString != null) {
+				groupId = Long.parseLong(groupIdString);
+			} else {
+				groupId = instance.getUser(myName).getGroupId();
+			}
+			
+			out.println("<p>Signed in as: " +getRole() +"</p>");
 			
 			System.out.println("groupId = " + groupId);
 			ProjectGroup pg = instance.getProjectGroup(groupId);

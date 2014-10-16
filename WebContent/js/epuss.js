@@ -21,7 +21,6 @@ $(document).ready(
 		$("body").on("submit", function(){
 			$("body").fadeOut(1000);
 		});
-		$('#grouplist').footable();
 		
 		$('#logincredentials').html(  "admin - adminpw <br>" +
 				"testuser -  passwd <br>" +
@@ -85,8 +84,22 @@ $(function () {
 			filter: {
 				minimum: 1,
 			}
+    	}).bind({
+		    'footable_filtered' : function(e) {
+				countTotalTime(this);
+			 }
     });
-
+    
+    var countTotalTime = function(table){
+    	var totalContainer = $('#totalTime', table);
+    	var totalTime = 0;
+    	$(".duration-value", table).filter(":visible").each(function () {
+    		totalTime += $(this).data("duration");
+    	});
+    	totalContainer.text(totalTime);
+    }
+    
+    countTotalTime($('#reportstable'));
 });
 
 window.onload = function(){
