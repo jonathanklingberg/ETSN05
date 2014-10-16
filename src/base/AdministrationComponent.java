@@ -248,7 +248,6 @@ public class AdministrationComponent extends ServletBase {
 								res = instance.addUser(new User(username, createPassword(), role, groupId));
 						}else{
 							return "Amount of project managers exceeded.";
-							//TODO change request? felmeddelandet finns inte i SRS:en!
 						}
 						if(!res){	
 							failMsg = "Username does already exist! Please choose another one and try again!";
@@ -273,7 +272,6 @@ public class AdministrationComponent extends ServletBase {
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
-			//TODO finns inte i SRS, lägga till felmeddelanden i SRS??
 			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not removed user.";
 		}
 		return null;
@@ -315,7 +313,6 @@ public class AdministrationComponent extends ServletBase {
 						return "Group name has been updated.";
 					}
 				} else {
-					// TODO make change request for error message! / s
 					return "Wrong format on input! Please try again!";
 				}
 			}

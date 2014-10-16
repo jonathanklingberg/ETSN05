@@ -530,7 +530,6 @@ public class DatabaseHandlerInstance {
 			}
 			ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
 			ps.executeUpdate();
-			//TODO Usename not unique? please look at this! /J
 			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
 			rs = ps.executeQuery();
 			rs.next();

@@ -226,6 +226,11 @@ public abstract class ServletBase extends HttpServlet {
 		for(int i = 0; i < timeReports.size(); ++i){
 			printTimeReport(out,timeReports.get(i));
 		}
+
+    	String deleteForm =  "<div id=\"deleteTimeReport\" title=\"Delete time report\"> " +
+			    "<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
+				"</div> <br />";
+    	out.println(deleteForm);
 		out.println("</table>");
 		if(userActionMessage != null){
 			out.print(userActionMessage); // style text red please! /J
@@ -256,8 +261,13 @@ public abstract class ServletBase extends HttpServlet {
 		
 		if(isWorkerComponent()){
 			String editCode = "<a href=\"#\" onclick=" + formElement("return editTimeReport('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
-		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
-		    String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
+//		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
+		   
+		    
+		    String deleteCode = "<a href=\"#\" onclick="+formElement("return deleteTimeReport(" + tr.getId() + ")") + ">delete</a>";
+
+		    
+		 //   String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
 			boolean signed = tr.isSigned();
 		    out.println("<td>" + signed + "</td>");
 		    if(signed){
