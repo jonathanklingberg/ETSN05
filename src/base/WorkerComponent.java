@@ -207,8 +207,8 @@ public class WorkerComponent extends ServletBase {
 										resultMsg = "<p class=\"failure-message\">Time report was signed while you were editing it</p>";
 									}
 								}else{
-									instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
-											duration, week, Date.valueOf(date), false, number));
+									instance.addTimeReport(new TimeReport(currentUser.getGroupId(), null, type, 
+											userId, duration, week, Date.valueOf(date), false, number));
 									resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
 								}
 							} else {

@@ -34,12 +34,15 @@ public class TimeReport extends AbstractCointainer {
 	private long id;
 	private long groupId;
 	private long userId;
+	private String role;
 	private char type;
 	private long duration;
 	private long week;
 	private long number;
 	private Date date;
 	private boolean signed;
+
+	
 	
 	/**
 	 * Constructor which should be used when the time report
@@ -49,6 +52,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param conn A connection to the database
 	 * @param id	The id of the time report
 	 * @param userId The user id the time report belongs to
+	 * @param role TODO
 	 * @param groupId The group id the time reports belongs to
 	 * @param type The type of the time report
 	 * @param duration The duration of the time report
@@ -57,12 +61,13 @@ public class TimeReport extends AbstractCointainer {
 	 * @param signed A boolean stating whether the time report is signed
 	 * @param number A number that represents the type category
 	 */
-	public TimeReport(Connection conn, long id, long userId, long groupId, 
-			char type, long duration, long week, Date date, boolean signed, long number) {
+	public TimeReport(Connection conn, long id, long userId, String role, 
+			long groupId, char type, long duration, long week, Date date, boolean signed, long number) {
 			this.conn = conn;
 			this.id = id;
 			this.userId = userId;
 			this.groupId = groupId;
+			this.role = role;
 			this.type = type;
 			this.duration = duration;
 			this.week = week;
@@ -74,20 +79,21 @@ public class TimeReport extends AbstractCointainer {
 	/**
 	 * Constructor which only should be used when the time report is about
 	 * to be created in the database
-	 * 
-	 * @param userId The user id the time report belongs to
 	 * @param groupId The group id the time reports belongs to
+	 * @param role TODO
 	 * @param type The type of the time report
+	 * @param userId The user id the time report belongs to
 	 * @param duration The duration of the time report
 	 * @param week The week which the time report concerns
 	 * @param date The date which the time report was created
 	 * @param signed A boolean stating whether the time report is signed
 	 * @param number A number that represents the type category
 	 */
-	public TimeReport(long userId, long groupId, char type, 
-			long duration, long week, Date date, boolean signed, long number) {
+	public TimeReport(long groupId, String role, char type, 
+			long userId, long duration, long week, Date date, boolean signed, long number) {
 		this.userId = userId;
 		this.groupId = groupId;
+		this.role = role;
 		this.type = type;
 		this.duration = duration;
 		this.week = week;
@@ -367,5 +373,9 @@ public class TimeReport extends AbstractCointainer {
 			handleSqlErrors(e);
 		}
 		return successfullyRemovedTimeReport;
+	}
+
+	public String getRole() {
+		return role;
 	}
 }

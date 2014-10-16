@@ -99,14 +99,14 @@ public class ProjectManagerComponent extends ServletBase {
 
 			/* Do alot of stuff according to the SRS:
 			 * See all members of his group			X
-			 * See all groupmembers timereports
+			 * See all groupmembers timereports		X
 			 * See summation of timereports. (time, role, activity etc etc) See SRS 6.7) (footable)
 			 * Sort all data in table on (time, role, activity etc etc in ascending order) (footable)
-			 * Sign and unsign all groupmembers' timereports
-			 * Assign and change roles in the project to group members
+			 * Sign and unsign all groupmembers' timereports	X
+			 * Assign and change roles in the project to group members	X
 			 * 
 			 * Maybe:
-			 * Be able to list, write and edit his own time reports
+			 * Be able to write and edit his own time reports
 			 */
 
 

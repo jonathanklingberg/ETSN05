@@ -386,6 +386,7 @@ public class DatabaseHandlerInstance {
 			rs.next();
 			long userId = rs.getLong("userId"); 
 			long groupId = rs.getLong("groupId");
+			String role = rs.getString("role");
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
 			String type = rs.getString("type");
@@ -393,7 +394,7 @@ public class DatabaseHandlerInstance {
 			long number = rs.getLong("number");
 			boolean signed = rs.getBoolean("signed");
 			char charType = type.charAt(0);
-			timeReport = new TimeReport(conn, id, userId, groupId, charType, duration, week, date, signed, number);
+			timeReport = new TimeReport(conn, id, userId, role, groupId, charType, duration, week, date, signed, number);
 			rs.close();
 			ps.close();
 		}catch (SQLException e) {
@@ -453,6 +454,7 @@ public class DatabaseHandlerInstance {
 		try{
 			long id = rs.getLong("id");
 			long groupId = rs.getLong("groupId");
+			String role = rs.getString("role");
 			long userId = rs.getLong("userId"); 
 			Date date = rs.getDate("date");
 			long duration = rs.getLong("duration");
@@ -461,7 +463,7 @@ public class DatabaseHandlerInstance {
 			boolean signed = rs.getBoolean("signed");
 			long number = rs.getLong("number");
 			char charType = type.charAt(0);
-			timeReport = new TimeReport(conn, id, userId, groupId, charType, duration, week, date, signed, number);
+			timeReport = new TimeReport(conn, id, userId, role, groupId, charType, duration, week, date, signed, number);
 		} catch(SQLException e){
 			handleSqlErrors(e);
 		}
@@ -499,7 +501,7 @@ public class DatabaseHandlerInstance {
 	public boolean editTimeReport(long id, long userId, long groupId,
 			char type, long duration, long week, Date date, boolean signed, long number){
 		if(!instance.getTimeReport(id).isSigned()){
-			TimeReport tr = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
+			TimeReport tr = new TimeReport(conn, id, userId, null, groupId, type, duration, week, date, signed, number);
 			return tr.updateTimeReport();
 		}
 		return false;

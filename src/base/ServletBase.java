@@ -168,11 +168,11 @@ public abstract class ServletBase extends HttpServlet {
 				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				editCode = "<a href=\"#\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
-							} else {
+			} else {
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
-	
+
 			String deleteCode = "<a href='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
@@ -233,17 +233,17 @@ public abstract class ServletBase extends HttpServlet {
 			printTimeReport(out,timeReports.get(i));
 		}
 
-    	String deleteForm =  "<div id=\"deleteTimeReport\" title=\"Delete time report\"> " +
-			    "<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
+		String deleteForm =  "<div id=\"deleteTimeReport\" title=\"Delete time report\"> " +
+				"<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
 				"</div> <br />";
-    	out.println(deleteForm);
-printUserTableFooter(out);
+		out.println(deleteForm);
+		printUserTableFooter(out);
 		out.println("</table>");
 		if(userActionMessage != null){
 			out.print(userActionMessage); // style text red please! /J
 		}
 	}
-	
+
 	//TODO JavaDoc
 	/**
 	 * 
@@ -254,37 +254,37 @@ printUserTableFooter(out);
 		User user = instance.getUser(tr.getUserId());
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + user.getRole() + "'>" + user.getRole() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + tr.getRole() + "'>" + tr.getRole() + "</td>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='week:" + tr.getWeek() + "' >" + tr.getWeek() + "</td>" : "");
 		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
 		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
 		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
-		
+
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 		}	
-		
+
 		if(isWorkerComponent()){
 			String editCode = "<a href=\"#\" onclick=" + formElement("return editTimeReport('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
-//		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
-		   
-		    
-		    String deleteCode = "<a href=\"#\" onclick="+formElement("return deleteTimeReport(" + tr.getId() + ")") + ">delete</a>";
+			//		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
 
-		    
-		 //   String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
+
+			String deleteCode = "<a href=\"#\" onclick="+formElement("return deleteTimeReport(" + tr.getId() + ")") + ">delete</a>";
+
+
+			//   String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
 			boolean signed = tr.isSigned();
-		    out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
-		    if(signed){
-		    	out.println("<td> </td>");
-		    	out.println("<td> </td></tr>");
-		    } else {
+			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
+			if(signed){
+				out.println("<td> </td>");
+				out.println("<td> </td></tr>");
+			} else {
 				out.println("<td>" + editCode +  "</td>");
 				out.println("<td>" + deleteCode + "</td></tr>");
-		    }
+			}
 
 		}
 	}
@@ -318,7 +318,7 @@ printUserTableFooter(out);
 		out.println(isAdminComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");
 		out.println("</tr></thead>");
 	}
-	
+
 	private void printUserTableFooter(PrintWriter out) {
 		out.println("<tfoot><tr>");
 		int colspanTotalTimeTitle = 1;
@@ -368,7 +368,7 @@ printUserTableFooter(out);
 		}
 		return name;
 	}
-	
+
 	protected  boolean isAdminOrProjectManagerComponent() {
 		return isAdminComponent() || isProjectManagerComponent();
 	}
