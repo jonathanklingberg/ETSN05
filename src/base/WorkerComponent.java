@@ -213,7 +213,7 @@ public class WorkerComponent extends ServletBase {
 									instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
 											duration, week, Date.valueOf(date), false, number));
 								}
-								resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+//								resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
 							} else {
 								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							}
