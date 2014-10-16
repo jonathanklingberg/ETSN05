@@ -166,22 +166,22 @@ public class WorkerComponent extends ServletBase {
 								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
 								instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
 										duration, week, Date.valueOf(date), false, number));	
-								resultMsg = "<p>Time report was created successfully!</p>";
+								resultMsg = "<p class=\"success-message\">Time report was created successfully!</p>";
 							} else {
-								resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							}
 						} catch(NumberFormatException e){
-							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+							resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							return resultMsg;
 						}
 					} else {
-						resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+						resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 					}
 				} else {
-					resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+					resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 				}
 			} else {
-				resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 			}
 		}
 		return resultMsg;
@@ -220,22 +220,22 @@ public class WorkerComponent extends ServletBase {
 								calenderWeek.setTime(Date.valueOf(date));
 								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
 								instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number );
-								resultMsg = "<p>Time report was edited successfully!</p>";
+								resultMsg = "<pclass=\"success-message\">Time report was edited successfully!</p>";
 							} else {
-								resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							}
 						}catch(NumberFormatException e){
-							resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+							resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							return resultMsg;
 						}
 					}else{
-						resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+						resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 					}
 				} else {
-					resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+					resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 				}
 			} else {
-				resultMsg = "<p style=\"color=red;\">Wrong format on input! Please try again!</p>";
+				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 			}
 		}
 		return resultMsg;
