@@ -192,8 +192,10 @@ public class AdministrationComponent extends ServletBase {
 					groupExists = true;
 				}
 			}
-			String currentRole = instance.getUser(oldUserName).getRole();
+			User oldUser = instance.getUser(oldUserName);
+			String currentRole = oldUser.getRole();
 			boolean pmDemotion = currentRole.equals("ProjectManager") && !currentRole.equals(role);
+			boolean groupChanged = !instance.getProjectGroup(oldUser.getGroupId()).getName().equals(newGroupName);
 			if(newPassword.length() == 6) {
 				if(checkNewName(newUserName)) {
 					if(groupExists) {
@@ -201,7 +203,7 @@ public class AdministrationComponent extends ServletBase {
 						if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
 							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
 							if(res) {
-								if(pmDemotion){
+								if(pmDemotion || groupChanged){
 									instance.getUser(newUserName).killSession();
 								}
 								return "User edited succesfully.";
@@ -366,7 +368,7 @@ public class AdministrationComponent extends ServletBase {
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return deleteGroup(this, '" + name + "')") + "value=\"Delete group\">Delete</a>";
 		    String editCode = "<a href = \"#\" onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
 			out.println("<tr>");
-	    	out.println("<td data-value='" + name + "'><a href='projectmanager?projectId=" + id + "'>" + name + "</a></td>");
+	    	out.println("<td data-value='" + name + "'><a href='ProjectManagerComponent?projectId=" + id + "'>" + name + "</a></td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");

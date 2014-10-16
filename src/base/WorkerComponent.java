@@ -204,12 +204,16 @@ public class WorkerComponent extends ServletBase {
 								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
 								
 								if(existingReport){
-									instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number );
+									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number )){
+										resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+									} else {
+										resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+									}
 								}else{
 									instance.addTimeReport(new TimeReport(userId, currentUser.getGroupId(), type, 
 											duration, week, Date.valueOf(date), false, number));
 								}
-								resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+//								resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
 							} else {
 								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
 							}

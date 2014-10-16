@@ -149,17 +149,21 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
 		printUserTableHeader(out);
 		System.out.println("Total number of users in system: " + userList.size());
-		for(int i = 0; i < userList.size(); ++i) {			
-			String name = userList.get(i).getName();
+		for(int i = 0; i < userList.size(); ++i) {	
+			User user = userList.get(i);
+			Long userId = user.getUserId();
+			String name = user.getName();
 			System.out.println(name);
-			String pw = userList.get(i).getPassword();
-			String role = userList.get(i).getRole();
-			String group = instance.getProjectGroup(userList.get(i).getGroupId()).getName();
+			String pw = user.getPassword();
+			String role = user.getRole();
+			String group = instance.getProjectGroup(user.getGroupId()).getName();
 
 			String editCode = "";
 			if(isAdminComponent()) {
 				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
-			} else {
+			} else if(isProjectManagerComponent()){	
+				editCode = "<a href=\"#\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
+							} else {
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
@@ -170,23 +174,37 @@ public abstract class ServletBase extends HttpServlet {
 			}
 
 			printUser(out, name, role, group, editCode, pw, deleteCode);
-		}		
-    	String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
-			    "<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
-				"</div> <br />";
-    	out.println(deleteForm);
-		String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
-				"<input type=\"text\" id=\"oldUserName\" />Password:" +
-				" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
-				" <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
-				"<select id=\"myselect2\"> " + 
-				" <option value=\"Developer\">Developer</option> " +
-				" <option value=\"ProjectManager\">ProjectManager</option> " +
-				"<option value=\"SystemArchitect\">SystemArchitect</option>  " +
-				"<option value=\"Tester\">Tester</option> "+
-				" <option value=\"Unspecified\">Unspecified</option> "+
-				"</select>"+
-				" </div>";
+
+		}
+		String editForm = "";
+		if(isAdminComponent()){		
+			String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
+				    "<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
+					"</div> <br />";
+	    	out.println(deleteForm);
+			editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
+					"<input type=\"text\" id=\"oldUserName\" />Password:" +
+					" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
+					" <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
+					"<select id=\"myselect2\"> " + 
+					" <option value=\"Developer\">Developer</option> " +
+					" <option value=\"ProjectManager\">ProjectManager</option> " +
+					"<option value=\"SystemArchitect\">SystemArchitect</option>  " +
+					"<option value=\"Tester\">Tester</option> "+
+					" <option value=\"Unspecified\">Unspecified</option> "+
+					"</select>"+
+					" </div>";
+		}else if(isProjectManagerComponent()){
+			editForm = "<div id=\"editRole\" title=\"Edit\">" +
+					"Role: <br /><select id=\"roleType\">" +
+					"<option value=\"Developer\">Developer</option>" +
+					"<option value=\"SystemArchitect\">System Architect</option>" +
+					"<option value=\"Tester\">Tester</option>" +
+					"<option value=\"Unspecified\">Unspecified</option>" +
+					"</select>" +
+					"</div>";
+		}
+
 		out.println(editForm);
 		//TODO something with editForm! /J It already works, just leave the out.println(editForm) be /Soheil
 		out.println("</table>");
