@@ -11,6 +11,7 @@ var oldDate = -1;
 var oldDuration = -1;
 var oldNumber = -1;
 var userNameToBePrinted = "";
+var timeReportToBePrinted = "";
 
 $(document).ready(
 	function(){
@@ -260,6 +261,26 @@ window.onload = function(){
 	        }        
 	    }
 	});
+	
+	$("#deleteTimeReport").dialog({
+	    autoOpen: false,           
+	    buttons: {
+	        No: function () {
+	            $(this).dialog("close");
+	        },
+	        Yes: function () {
+                var deleteTimeReportHref = "workercomponent?deletetimereport=" + timeReportToBePrinted;
+	            $(this).dialog("close");
+	            $(location).attr('href', deleteTimeReportHref);
+	        }        
+	    }
+	});
+}
+
+function deleteTimeReport(timeReportId){
+	document.getElementById("timeReportIDFix").innerHTML = "" + timeReportId;
+	timeReportToBePrinted = timeReportId;
+    $("#deleteTimeReport").dialog("open");
 }
 
 function deleteGroup(link, groupName) {
