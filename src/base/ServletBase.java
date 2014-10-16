@@ -208,7 +208,7 @@ public abstract class ServletBase extends HttpServlet {
 			out.print(userActionMessage); // style text red please! /J
 		}
 	}
-
+	
 	//TODO JavaDoc
 	/**
 	 * 
