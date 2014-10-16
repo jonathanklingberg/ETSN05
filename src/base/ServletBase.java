@@ -166,7 +166,9 @@ public abstract class ServletBase extends HttpServlet {
 			if(isAdminComponent()) {
 				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
+				if(role.equals("Admin") == false){
 				editCode = "<a href=\"#\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
+				}
 			} else {
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
@@ -176,7 +178,6 @@ public abstract class ServletBase extends HttpServlet {
 			if (name.equals("admin")){
 				deleteCode = "";
 			}
-
 			printUser(out, name, role, group, editCode, pw, deleteCode);
 
 		}
