@@ -48,6 +48,7 @@ CREATE TABLE TimeReports(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
 userId INT UNSIGNED NOT NULL,
 groupId INT UNSIGNED NOT NULL,
+role VARCHAR(20) NOT NULL,
 date DATE NOT NULL,
 duration INT UNSIGNED NOT NULL,
 type VARCHAR(1) NOT NULL,
@@ -121,7 +122,7 @@ INSERT INTO Types VALUES("F");
 INSERT INTO Types VALUES("R");
 
 -- Create timereport
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(3, 3, 2014-10-12, 60, 'I', 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, role, date, duration, type, number, week, signed) VALUES(3, 3, 'Developer', 2014-10-12, 60, 'I', 100, 1, 1);
 drop schema puss1403;
 CREATE DATABASE puss1403;
 USE puss1403;
@@ -172,6 +173,7 @@ CREATE TABLE TimeReports(
 id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
 userId INT UNSIGNED NOT NULL,
 groupId INT UNSIGNED NOT NULL,
+role VARCHAR(20) NOT NULL,
 date DATE NOT NULL,
 duration INT UNSIGNED NOT NULL,
 type VARCHAR(1) NOT NULL,
@@ -245,8 +247,8 @@ INSERT INTO Types VALUES("F");
 INSERT INTO Types VALUES("R");
 
 -- Create timereport
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(3, 3, '2014-10-12', 60, 'I', 100, 1, 1);
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(20, 3, '2014-10-12', 60, 'I', 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, role,  date, duration, type, number, week, signed) VALUES(3, 3, 'Developer', '2014-10-12', 60, 'I', 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, role, date, duration, type, number, week, signed) VALUES(20, 3, 'Developer', '2014-10-12', 60, 'I', 100, 1, 1);
 
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(3, 2, '2014-10-12', 60, 'I', 100, 1, 1);
-INSERT INTO TimeReports(userId, groupId, date, duration, type, number, week, signed) VALUES(20, 2, '2014-10-12', 60, 'I', 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, role, date, duration, type, number, week, signed) VALUES(3, 2, 'Developer', '2014-10-12', 60, 'I', 100, 1, 1);
+INSERT INTO TimeReports(userId, groupId, role, date, duration, type, number, week, signed) VALUES(20, 2, 'Developer', '2014-10-12', 60, 'I', 100, 1, 1);
