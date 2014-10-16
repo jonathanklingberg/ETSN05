@@ -140,7 +140,8 @@ public class AdministrationComponent extends ServletBase {
 				userActionMessage = editExistingUser(request, out);
 			
 			ArrayList<User> users = instance.getAllUsers();
-			out.println("<a class=\"btn btn-block btn-lg btn-primary\" id=\"createUserButton\" >Add user</a>");
+			out.println("<div class=\"usertable-tools\"><input class=\"form-control filter\" id=\"userfilter\" type=\"text\" placeholder=\"Filter Users\"></input>");
+			out.println("<a class=\"btn btn-block btn-lg btn-primary\" id=\"createUserButton\" >Add user</a></div>");
 			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
@@ -154,8 +155,9 @@ public class AdministrationComponent extends ServletBase {
 		    	        "</select>";
 			out.print(t);
 			out.print("</div>");
+			String groupFilter = "<input id=\"groupfilter\" class=\"form-control\" type=\"text\" placeholder=\"Filter groups\">";
 			String addGroupButton = "<a id=\"addNewGroupButton\" class=\"btn btn-block btn-lg btn-primary\" onclick="+ formElement("return createGroup();") + ">Add group</a>";
-			out.print(addGroupButton);
+			out.print("<div class=\"grouptable-tools\">" + addGroupButton + groupFilter + "</div>");
 			listGroups(out, groupActionMessage);
 			String addGroupModal = "<div id=\"addGroup\" title=\"Add new Group\"> " +
 							"Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
@@ -349,7 +351,6 @@ public class AdministrationComponent extends ServletBase {
 	 * @param groupActionMessage
 	 */
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
-	 	out.print("<input id=\"groupfilter\" class=\"form-control\" type=\"text\" placeholder=\"Filter groups\">");
 		out.print("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
 		out.print("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
 		List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 

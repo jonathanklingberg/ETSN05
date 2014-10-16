@@ -150,7 +150,6 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println("<input class=\"form-control\" id=\"userfilter\" type=\"text\" placeholder=\"Filter Users\"></input>");
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
 		printUserTableHeader(out);
 		System.out.println("Total number of users in system: " + userList.size());
