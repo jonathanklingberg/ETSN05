@@ -22,11 +22,11 @@ $(document).ready(
 			$("body").fadeOut(1000);
 		});
 		
-		$('#logincredentials').html(  "admin - adminpw <br>" +
-				"testuser -  passwd <br>" +
-				"devuser -  passwd <br>" +
-				"pmuser -  passwd <br>"
-		);
+//		$('#logincredentials').html(  "admin - adminpw <br>" +
+//				"testuser -  passwd <br>" +
+//				"devuser -  passwd <br>" +
+//				"pmuser -  passwd <br>"
+//		);
 		$('.signedCheckbox').on('change', function(){
 			var reportId = $(this).siblings('.timereportid').val();
 			window.location = "projectmanagercomponent?signtimereport="+reportId;			

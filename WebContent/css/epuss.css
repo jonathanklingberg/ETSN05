@@ -10,6 +10,34 @@
 	float:right;
 }
 
+.btn {
+	width: 200px;
+	margin: 10px;
+}
+
+.table-tools{	
+	margin: 50px 0px 20px 0px;
+}
+
+.form-control{	
+	max-width: 400px;
+}
+
 table{
-	margin-bottom:50px;
+/* 	margin:20px 0px 80px 0px; */
+}
+
+.login-screen{
+	height: 100%;
+	padding: 120px 0px;
+}
+#logincredentials{
+	margin: 0 auto;
+	width: 90%;
+	max-width: 500px;
+	min-width: 250px;
+	height: 230px;
+}
+body{
+	padding:15px;
 }

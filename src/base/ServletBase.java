@@ -114,6 +114,7 @@ public abstract class ServletBase extends HttpServlet {
 				"<script src=\"js/footable.filter.js\"></script>" +
 				"<script src=\"js/footable.grid.js\"></script>" +
 				"<script src=\"js/footable.memory.js\"></script>" +
+//				"<script src=\"js/flat-ui.min.js\"></script>" +
 
 //							Not needed for our project but some other footable plugins might need this so leave it commented
 //							"<script src=\"js/footable.paginate.js\"></script>" + /J
@@ -121,11 +122,13 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/epuss.css\"/>" +
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/flat-ui.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
+							
+							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/epuss.css\"/>" +
 							"<title> The Base Block System </title></head><body>";
 		
 		return intro;
@@ -147,7 +150,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println("<input class=\"form-control\" id=\"userfilter\" type=\"text\" placeholder=\"Filter Users\"></input><br/>");
+		out.println("<input class=\"form-control\" id=\"userfilter\" type=\"text\" placeholder=\"Filter Users\"></input>");
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
 		printUserTableHeader(out);
 		System.out.println("Total number of users in system: " + userList.size());
@@ -182,7 +185,7 @@ public abstract class ServletBase extends HttpServlet {
 		if(isAdminComponent()){		
 			String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
 				    "<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
-					"</div> <br />";
+					"</div>";
 	    	out.println(deleteForm);
 			editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
 					"<input type=\"text\" id=\"oldUserName\" />Password:" +

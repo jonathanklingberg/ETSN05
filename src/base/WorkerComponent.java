@@ -120,8 +120,6 @@ public class WorkerComponent extends ServletBase {
 	    	           "</select>" + 
 	    	           "</div>";
 			out.println(addForm);
-			
-			out.println("<br/>");
 			out.println("<input type=\"button\" id=\"createTimeReportButton\" value=\"Add new\" />");
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 

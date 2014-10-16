@@ -152,14 +152,14 @@ public class AdministrationComponent extends ServletBase {
 		    	            "<option value=\"Tester\">Tester</option> "+
 		    	           " <option value=\"Unspecified\">Unspecified</option> "+
 		    	        "</select>";
-			out.println(t);
-			out.println("</div>");
+			out.print(t);
+			out.print("</div>");
 			String addGroupButton = "<a id=\"addNewGroupButton\" class=\"btn btn-block btn-lg btn-primary\" onclick="+ formElement("return createGroup();") + ">Add group</a>";
-			out.println(addGroupButton);
+			out.print(addGroupButton);
 			listGroups(out, groupActionMessage);
 			String addGroupModal = "<div id=\"addGroup\" title=\"Add new Group\"> " +
 							"Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
-							" </div>  <br />";
+							" </div>";
 			out.println(addGroupModal);
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 			out.println("</body></html>");
@@ -349,9 +349,9 @@ public class AdministrationComponent extends ServletBase {
 	 * @param groupActionMessage
 	 */
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
-	 	out.println("<input id=\"groupfilter\" class=\"form-control\" type=\"text\" placeholder=\"Filter groups\"></input>");
-		out.println("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
-		out.println("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
+	 	out.print("<input id=\"groupfilter\" class=\"form-control\" type=\"text\" placeholder=\"Filter groups\">");
+		out.print("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
+		out.print("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
 		List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
@@ -366,17 +366,15 @@ public class AdministrationComponent extends ServletBase {
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
-	    	
 		 }
 		String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
     			"<input type=\"text\" id=\"newGroupName\"/>" +
-    			"</div>" +
-    			"<br />";
+    			"</div>";
     	
     	out.println(editForm);
     	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
 			    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
-				"</div> <br />";
+				"</div>";
     	out.println(deleteForm);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
