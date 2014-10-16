@@ -63,11 +63,11 @@ public class ProjectManagerComponent extends ServletBase {
 				groupId = instance.getUser(myName).getGroupId();
 			}
 			
-			out.println("<p>Signed in as: " +getRole() +"</p>");
+			out.println("<p>User:<strong> " +getRole() +"</strong></p>");
 			
 			System.out.println("groupId = " + groupId);
 			ProjectGroup pg = instance.getProjectGroup(groupId);
-			out.println("<p>Assigned to project: "+ pg.getName() +"</p>");
+			out.println("<p>Group:<strong> "+ pg.getName() +"</strong></p>");
 			String timereportId = request.getParameter("signtimereport");
 			
 			//TODO Better check! (against db) /J
@@ -87,14 +87,12 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
-			out.println("<p>Members in project:</p>");
 			printUserTable(out, usersInGroup, null);
 			
 			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			System.out.println("Got all time reports for group " + groupId + ": " + instance.getProjectGroup(groupId).getName());
 			System.out.println("There were " + timeReports.size() + " of them");
-			out.println("<p>Time reports:</p>");
 			printTimeReportTable(out, timeReports, null);
 
 			/* Do alot of stuff according to the SRS:
@@ -108,9 +106,7 @@ public class ProjectManagerComponent extends ServletBase {
 			 * Maybe:
 			 * Be able to write and edit his own time reports
 			 */
-
-
-			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
+			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 			out.println("</body></html>");
 
 
