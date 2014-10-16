@@ -160,9 +160,8 @@ public class AdministrationComponent extends ServletBase {
 			String addGroup = "<div id=\"addGroup\" title=\"Add new Group\"> " +
 		    "Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
 		    " </div>  <br />";
-		    String aTag = "<a id=\"addNewGroupButton\" value=\"Add Group\" href = \"#\" onclick="+ formElement("return createGroup();") + "><input type=\"button\" value=\"Add new\"/></a>";
+		    String aTag = "<br><a id=\"addNewGroupButton\" value=\"Add Group\" href = \"#\" onclick="+ formElement("return createGroup();") + "><input type=\"button\" value=\"Add new\"/></a>";
 			out.println(aTag);
-//			out.println("<br><a href=\"administrationcomponent?addNewGroup=\" onclick="+ formElement("return createGroup(this);") + "><input type=\"button\" value=\"Add new\"/></a>");
 			out.println("<p><a href =" + formElement("logincomponent") + "> Log out </p>");
 			out.println(addGroup);
 			out.println("</body></html>");

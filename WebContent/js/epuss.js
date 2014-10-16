@@ -8,6 +8,8 @@ var oldId = -1;
 var oldDate = -1;
 var oldDuration = -1;
 var oldNumber = -1;
+var userNameToBePrinted = "";
+
 $(document).ready(
 	function(){
 		$("body").hide();
@@ -241,6 +243,20 @@ window.onload = function(){
 	        }
 	    }
 	});
+
+	$("#deleteUser").dialog({
+	    autoOpen: false,           
+	    buttons: {
+	        No: function () {
+	            $(this).dialog("close");
+	        },
+	        Yes: function () {
+                var deleteUserHref = "administrationcomponent?deleteuser=" + userNameToBePrinted;
+	            $(this).dialog("close");
+	            $(location).attr('href', deleteUserHref);
+	        }        
+	    }
+	});
 }
 
 function deleteGroup(link, groupName) {
@@ -273,4 +289,11 @@ function editTimeReport(date, duration, number, id){
 	oldNumber = number;
 	oldId = id;
     $("#editTimeReport").dialog("open");
+}
+
+function deleteUser(userName) {
+	userNameToBePrinted = userName;
+	document.getElementById("userNameText").innerHTML = userName;
+    $("#deleteUser").dialog("open");
+    return false;
 }

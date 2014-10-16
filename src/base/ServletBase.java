@@ -163,14 +163,18 @@ public abstract class ServletBase extends HttpServlet {
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
-
-			String deleteURL = "administrationcomponent?deleteuser="+name;
-			String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + "> Delete </a>";
+	
+			String deleteCode = "<a href='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
 			}
+
 			printUser(out, name, role, group, editCode, pw, deleteCode);
 		}		
+    	String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
+			    "<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
+				"</div> <br />";
+    	out.println(deleteForm);
 		String editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
 				"<input type=\"text\" id=\"oldUserName\" />Password:" +
 				" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
