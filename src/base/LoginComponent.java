@@ -140,7 +140,6 @@ public class LoginComponent extends ServletBase {
 		return false;
 	}
 
-
 	protected boolean isProjectManagerComponent() {
 		return false;
 	}

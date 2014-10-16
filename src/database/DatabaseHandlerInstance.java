@@ -498,8 +498,11 @@ public class DatabaseHandlerInstance {
 	 */
 	public boolean editTimeReport(long id, long userId, long groupId,
 			char type, long duration, long week, Date date, boolean signed, long number){
-		TimeReport tr = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
-		return tr.updateTimeReport();
+		if(!instance.getTimeReport(id).isSigned()){
+			TimeReport tr = new TimeReport(conn, id, userId, groupId, type, duration, week, date, signed, number);
+			return tr.updateTimeReport();
+		}
+		return false;
 	}
 
 
@@ -540,8 +543,7 @@ public class DatabaseHandlerInstance {
 				ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role ,isActiveInGroup) VALUES(" +userId + ", " +groupId + ", '" + role + "', true)");
 				ps.executeUpdate();
 			} else {
-				ps = conn.prepareStatement("update RoleInGroup set role = '" + role + "' where userId = " + userId + " AND isActiveInGroup=true");
-				ps.executeUpdate();
+				changeRoleOfUser(role, userId);
 			}
 			ps.close();
 		} catch(SQLException e) {
@@ -549,6 +551,17 @@ public class DatabaseHandlerInstance {
 			return false;
 		}
 		return true;
+	}
+
+	public void changeRoleOfUser(String newRole, long userId){
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement("update RoleInGroup set role = '" + newRole + "' where userId = " + userId + " AND isActiveInGroup=true");
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	//TODO JavaDoc
 	public void changeSignatureOfTimeReport(String timereportId) {
