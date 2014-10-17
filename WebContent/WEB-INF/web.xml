@@ -18,6 +18,7 @@
   <servlet-mapping>
     <servlet-name>LoginComponent</servlet-name>
     <url-pattern>/LoginComponent</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
