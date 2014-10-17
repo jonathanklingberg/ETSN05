@@ -356,7 +356,7 @@ public class AdministrationComponent extends ServletBase {
 			//TODO Ändra knappnamn i dialogrutan för deleteUser till yes/no
 
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return deleteGroup(this, '" + name + "')") + "value=\"Delete group\">Delete</a>";
-		    String editCode = "<a onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
+		    String editCode = "<a href = \"#\"onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
 			out.println("<tr>");
 	    	out.println("<td data-value='" + name + "'><a href='ProjectManagerComponent?adminProjectId=" + id + "'>" + name + "</a></td>");
 	    	out.println("<td>" + editCode + "</td>");
