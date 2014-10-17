@@ -105,7 +105,7 @@ $(function () {
 window.onload = function(){
 	$("#createUser").dialog({
 	    autoOpen: false,
-	    maxWidth: 309,
+	    maxWidth: 320,
 	    maxHeight: 310,
 	    minWidth: 309,
 	    minHeight: 310,
@@ -117,7 +117,7 @@ window.onload = function(){
 	            var name = $("#name").val();
 	            var password = $("#password").val();
 	            var group = $("#group").val();
-	            var role = $("#myselect").val();
+	            var role = $("#pmCheckbox").prop('checked') ? "ProjectManager" : "Unspecified";
 	            $(this).dialog("close");
 	            var url = "AdministrationComponent?addNewUser="+ name + "&password=" + password + "&group=" +  group + "&role=" + role;
 	            $(location).attr('href',url);
