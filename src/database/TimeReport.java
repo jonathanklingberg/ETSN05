@@ -158,7 +158,7 @@ public class TimeReport extends AbstractCointainer {
 		boolean successfullyExecutedStatement = false;
 		try {
 			int signStatus = signed? 1: 0;
-			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET userId= " + userId + ", groupId= " + groupId + ", date= '" + date.toString() +
+			PreparedStatement ps = conn.prepareStatement("UPDATE TimeReports SET userId= " + userId + ", groupId= " + groupId + ", role= '" + role + "', date= '" + date.toString() +
 					"', duration= " + duration + ", type= '" + type + "', number=" + number + ", week= " + week + ", signed= " + signStatus +
 					" WHERE id= " + id);
 			int result = ps.executeUpdate();

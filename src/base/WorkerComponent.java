@@ -118,7 +118,7 @@ public class WorkerComponent extends ServletBase {
 	    	           "</div>";
 			out.println(addForm);
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
-
+			System.out.print("ROLE :"+ role);
 		} else {
 			System.err.println("Illegal action performed as: " + role
 					+ "; Tried to access WorkerComponent.");

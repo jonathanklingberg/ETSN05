@@ -480,7 +480,7 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, role, date, duration, type, number ,week, signed) values("
 					+ tr.getUserId() + ", " 
 					+ tr.getGroupId() + ", '"
-					+ tr.getRole() + ", '"
+					+ tr.getRole() + "', '"
 					+ tr.getDate().toString() + "', "
 					+ tr.getDuration() + ", '" 
 					+ tr.getType() + "', "  
