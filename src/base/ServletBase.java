@@ -250,7 +250,7 @@ public abstract class ServletBase extends HttpServlet {
 		deleteForm += "<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
 				"</div> <br />";
 		out.println(deleteForm);
-		printUserTableFooter(out);
+		printTimeReportTableFooter(out);
 		out.println("</table>");
 		if(userActionMessage != null){
 			out.print(userActionMessage); // style text red please! /J
@@ -342,7 +342,7 @@ public abstract class ServletBase extends HttpServlet {
 	}
 	
 	
-	private void printUserTableFooter(PrintWriter out) {
+	private void printTimeReportTableFooter(PrintWriter out) {
 		out.println("<tfoot><tr>");
 		int colspanTotalTimeTitle = 1;
 		int colspanTotalTimeValue = 6;
