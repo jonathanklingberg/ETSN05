@@ -339,14 +339,15 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(isAdminComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");
 		out.println("</tr></thead>");
 	}
-
+	
+	
 	private void printUserTableFooter(PrintWriter out) {
 		out.println("<tfoot><tr>");
 		int colspanTotalTimeTitle = 1;
 		int colspanTotalTimeValue = 6;
 		if(isAdminOrProjectManagerComponent()){
 			colspanTotalTimeTitle = 4;
-			colspanTotalTimeValue = 4;
+			colspanTotalTimeValue = 6;
 		}
 		out.println("<td colspan='"+ colspanTotalTimeTitle+"'>"
 				+ "		<span style=\"font-weight:bold; float:right;\">Total:</span>"
