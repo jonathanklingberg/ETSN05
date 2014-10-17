@@ -89,34 +89,12 @@ public class WorkerComponent extends ServletBase {
 			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
 					.getUsersTimeReportsOfUser(userId);
-			printTimeReportTable(out, timeReports, timeReportActionMessage);
+			printTimeReportTable(out, timeReports, timeReportActionMessage, userId);
 
 			
-			String editForm = "<div id=\"editTimeReport\" title=\"Edit time report\">" +
-					"Date: <input type=\"text\" id=\"oldDate\" placeholder=\"YYYY-MM-dd\"></input><br>"+
-					"Duration(min): <input type=\"text\" id=\"oldDuration\"></input><br>"+
-					"Number: <input type=\"text\" id=\"oldNumber\"><br>" +
-					"Type: <select id=\"oldType\"> " +
-	    	           " <option value=\"D\">Development</option> " +
-	    	           " <option value=\"I\">Informal</option> " +
-	    	            "<option value=\"F\">Formal</option>  " +
-	    	            "<option value=\"R\">Rework</option> "+
-	    	           "</select>" +
-	    	           " </div>";
-			out.println(editForm);
+			out.println(getEditTimeReportForm());
+			out.println(getAddTimeReportForm());
 			
-			String addForm = "<div id=\"createTimeReport\" title=\"Add a new time report\">" + 
-					"Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input><br>" + 
-					"Duration(min): <input type=\"text\" id=\"duration\"></input><br>" +
-					"Number: <input type=\"text\" id=\"number\"><br>" +
-					"Typer: <select id=\"myType\"> " +
-					" <option value=\"D\">Development</option> " +
-	    	           " <option value=\"I\">Informal</option> " +
-	    	            "<option value=\"F\">Formal</option>  " +
-	    	            "<option value=\"R\">Rework</option> "+
-	    	           "</select>" + 
-	    	           "</div>";
-			out.println(addForm);
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 			System.out.print("ROLE :"+ role);
 		} else {
@@ -126,150 +104,6 @@ public class WorkerComponent extends ServletBase {
 		}
 	}
 	
-	/**
-	 * This method handles a new time report and sets its values to the input given.
-	 * 
-	 * @param request This is the servlet request
-	 * @param out the printwriter used to print out html code
-	 * @param userId the id of the current user.
-	 * @return String containing a result message either containing a success message or a failure message.
-	 */
-	private String addNewTimeReport(HttpServletRequest request,
-			PrintWriter out, Long userId, String role) {
-		return handleTimeReports(request, out, userId, role, false);
-	}
-	
-	/**
-	 * This method handles a existing time report and updates its values to the input given.
-	 * 
-	 * @param request This is the servlet request
-	 * @param out the printwriter used to print out html code
-	 * @param userId the id of the current user.
-	 * @return String containing a result message either containing a success message or a failure message.
-	 */
-	private String editTimeReport(HttpServletRequest request,
-			PrintWriter out, Long userId, String role){
-		return handleTimeReports(request, out, userId, role, true);
-	}
-	
-	/***
-	 * 
-	 * This method handles time reports, either updates or creates new time reports.
-	 * 
-	 * @param request This is the servlet request
-	 * @param out the printwriter used to print out html code
-	 * @param userId the id of the current user.
-	 * @param existingReport boolean stating if the time report is new or previously existed.
-	 * @return
-	 */
-	private String handleTimeReports(HttpServletRequest request,
-			PrintWriter out, Long userId, String role, boolean existingReport){
-		String resultMsg = null;
-		String idString = null;
-		Long id = null;
-		String date =  existingReport ? request.getParameter("newDate") : request.getParameter("date");
-		String typeString = existingReport ? request.getParameter("newType") : request.getParameter("type");
-		String durationString = existingReport ? request.getParameter("newDuration") : request.getParameter("duration");
-		String numberString = existingReport ? request.getParameter("newNumber") : request.getParameter("number");
-		if(existingReport && request.getParameter("newType")!=null){
-			idString = request.getParameter("id");
-			if(idString == null || idString.trim().equals("")){
-				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-				return resultMsg;
-			}
-		}
-			
-		if(date != null){
-			if (checkDate(date)) {
-				char type = typeString.charAt(0);
-				if(typeString!=null && Type.isType(type)){
-					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")) {
-						try{
-							Long duration = Long.parseLong(durationString);
-							Long number = Long.parseLong(numberString);
-							if(existingReport){
-								id = Long.parseLong(idString);
-							}
-							if(Number.isNumber(number)){
-								User currentUser = instance.getUser(userId);
-								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
-								calenderWeek.setTime(Date.valueOf(date));
-								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
-								
-								if(existingReport){
-									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), role, type, duration, week, Date.valueOf(date), false, number )){
-										resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
-									} else {
-										resultMsg = "<p class=\"failure-message\">Time report was signed while you were editing it</p>";
-									}
-								}else{
-									instance.addTimeReport(new TimeReport(currentUser.getGroupId(), role, type, 
-											userId, duration, week, Date.valueOf(date), false, number));
-									resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
-								}
-							} else {
-								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-							}
-						}catch(NumberFormatException e){
-							resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-							return resultMsg;
-						}
-					}else{
-						resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-					}
-				} else {
-					resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-				}
-			} else {
-				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
-			}
-		}
-		return resultMsg;	
-	}
-
-	/***
-	 * This method checks if the date input is in both correct format,
-	 * and that it is prior to 
-	 * @param date taken from the input.
-	 * @return a boolean that represents if the inputed date is a valid date or not.
-	 */
-	private static boolean checkDate(String date) {
-		if(date==null){
-			return false;
-		}
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			sdf.setLenient(false);
-			java.util.Date inputDate = sdf.parse(date);
-			System.out.println(inputDate);	
-			
-			java.util.Date toDaysDate = new java.util.Date();
-			toDaysDate = sdf.parse(sdf.format(toDaysDate));
-
-			return inputDate.compareTo(toDaysDate)<=0;
-			
-		} catch (ParseException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		return false;
-	}
-	
-	/***
-	 * This method deletes a existing time report and returns a success message if it is successfully removed.
-	 * If the sql query is unsuccessful it will give a fail message.
-	 * 
-	 * @param request the servlet request.
-	 * @return a String containing the result.
-	 */
-	private String deleteTimeReport(HttpServletRequest request) {
-		String timeReportId = request.getParameter("deletetimereport");
-		if (timeReportId != null) {
-			long deleteTimeReport = Long.parseLong(timeReportId);
-			return instance.getTimeReport(deleteTimeReport).removeMe() ? "Time report was removed successfully."
-					: "Could not remove time report.";
-		}
-		return null;
-	}
 
 	/**
 	 * Handles input from the worker and displays information.

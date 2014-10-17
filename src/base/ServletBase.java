@@ -2,14 +2,19 @@ package base;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import data.Number;
+import data.Type;
 import database.TimeReport;
 import database.User;
 import database.DatabaseHandlerInstance;
@@ -226,17 +231,23 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param timeReports
 	 * @param userActionMessage
 	 */
-	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage){
+	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage, long userId){
 		out.println("<div class=\"reportstable-tools\"><input class=\"form-control\" id=\"reportsfilter\" type=\"text\" placeholder=\"Filter Reports\"></input>");
-		out.println("<a type=\"button\" class=\"btn btn-block btn-lg btn-primary\" id=\"createTimeReportButton\">Add report</a></div>");
+		out.println(isWorkerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary\" id=\"createTimeReportButtonWorker\">Add report</a></div>" :"");
+		out.println(isProjectManagerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary\" id=\"createTimeReportButtonProjectManager\">Add report</a></div>" :"");
 		out.println("<table class=\"footable\" id=\"reportstable\" data-filter=\"#reportsfilter\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
-			printTimeReport(out,timeReports.get(i));
+			printTimeReport(out,timeReports.get(i), userId);
 		}
-
-		String deleteForm =  "<div id=\"deleteTimeReport\" title=\"Delete time report\"> " +
-				"<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
+		
+		String deleteForm = "";
+		if(isWorkerComponent()){
+			deleteForm = "<div id=\"deleteTimeReportWorker\" title=\"Delete time report\"> ";
+		} else if(isProjectManagerComponent()){
+			deleteForm = "<div id=\"deleteTimeReportProjectManager\" title=\"Delete time report\">";
+		}
+		deleteForm += "<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
 				"</div> <br />";
 		out.println(deleteForm);
 		printUserTableFooter(out);
@@ -252,7 +263,7 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param out
 	 * @param tr
 	 */
-	private void printTimeReport(PrintWriter out, TimeReport tr) {
+	private void printTimeReport(PrintWriter out, TimeReport tr, long userId) {
 		User user = instance.getUser(tr.getUserId());
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
@@ -263,29 +274,38 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
 		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
 
+		
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
+			
+			String editCodePM = "<a href=\"#\" onclick=" + formElement("return editTimeReportProjectManager('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+			
+			String deleteCodePM = "<a href=\"#\" onclick="+formElement("return deleteTimeReportProjectManager(" + tr.getId() + ")") + ">delete</a>";
+
+			if(userId == tr.getUserId()){
+			out.println("<td>" + editCodePM +  "</td>");
+			out.println("<td>" + deleteCodePM + "</td></tr>");
+			} else {
+				out.println("<td> </td>");
+				out.println("<td> </td></tr>");
+			}
 		}	
 
 		if(isWorkerComponent()){
-			String editCode = "<a href=\"#\" onclick=" + formElement("return editTimeReport('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
-			//		    String deleteURL = "workercomponent?deletetimereport="+tr.getId();
-
-
-			String deleteCode = "<a href=\"#\" onclick="+formElement("return deleteTimeReport(" + tr.getId() + ")") + ">delete</a>";
-
-
-			//   String deleteCode = "<a href=" + formElement(deleteURL) +" onclick="+formElement("return confirm('Are you sure you want to delete time report "+tr.getId()+"?')") + "> delete </a>";
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
+			
+			String editCodeWorker = "<a href=\"#\" onclick=" + formElement("return editTimeReportWorker('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+			String deleteCodeWorker = "<a href=\"#\" onclick="+formElement("return deleteTimeReportWorker(" + tr.getId() + ")") + ">delete</a>";
+			
 			if(signed){
 				out.println("<td> </td>");
 				out.println("<td> </td></tr>");
 			} else {
-				out.println("<td>" + editCode +  "</td>");
-				out.println("<td>" + deleteCode + "</td></tr>");
+				out.println("<td>" + editCodeWorker +  "</td>");
+				out.println("<td>" + deleteCodeWorker + "</td></tr>");
 			}
 
 		}
@@ -302,8 +322,8 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<th>Type</th>");
 		out.println("<th>Number</th>");
 		out.println("<th title=\"To filter: signed:true\">Signed</th>");
-		out.println(isWorkerComponent()? "<th data-sort-ignore=\"true\">Edit</th>" : "");
-		out.println(isWorkerComponent()? "<th data-sort-ignore=\"true\">Remove</th>" : "");	
+		out.println((isWorkerComponent() || isProjectManagerComponent())? "<th data-sort-ignore=\"true\">Edit</th>" : "");
+		out.println((isWorkerComponent() || isProjectManagerComponent())? "<th data-sort-ignore=\"true\">Remove</th>" : "");	
 		out.println("</thead></tr>");
 	}
 
@@ -338,6 +358,197 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("</tr></tfoot>");
 	}
 
+	
+	//TODO Javadoc
+	public String getEditTimeReportForm(){
+		String editForm = "";
+		if(isWorkerComponent()){
+			editForm = "<div id=\"editTimeReportProjectManager\" title=\"Edit time report\">"; 
+		} else if (isProjectManagerComponent()){
+			editForm =  "<div id=\"editTimeReportProjectManager\" title=\"Edit time report\">"; 
+		}
+		
+		editForm += "Date: <input type=\"text\" id=\"oldDate\" placeholder=\"YYYY-MM-dd\"></input><br>"+
+				"Duration(min): <input type=\"text\" id=\"oldDuration\"></input><br>"+
+				"Number: <input type=\"text\" id=\"oldNumber\"><br>" +
+				"Type: <select id=\"oldType\"> " +
+    	           " <option value=\"D\">Development</option> " +
+    	           " <option value=\"I\">Informal</option> " +
+    	            "<option value=\"F\">Formal</option>  " +
+    	            "<option value=\"R\">Rework</option> "+
+    	           "</select>" +
+    	           " </div>";
+		return editForm;
+	}
+	
+	//TODO Javadoc
+	public String getAddTimeReportForm(){
+		String addForm = "";
+		if(isWorkerComponent()){
+			addForm = "<div id=\"createTimeReportWorker\" title=\"Add a new time report\">"; 
+		} else if (isProjectManagerComponent()){
+			addForm = "<div id=\"createTimeReportProjectManager\" title=\"Add a new time report\">"; 
+		}
+		addForm += "Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input><br>" + 
+				"Duration(min): <input type=\"text\" id=\"duration\"></input><br>" +
+				"Number: <input type=\"text\" id=\"number\"><br>" +
+				"Typer: <select id=\"myType\"> " +
+				" <option value=\"D\">Development</option> " +
+    	           " <option value=\"I\">Informal</option> " +
+    	            "<option value=\"F\">Formal</option>  " +
+    	            "<option value=\"R\">Rework</option> "+
+    	           "</select>" + 
+    	           "</div>";
+		return addForm;
+	}
+	
+	
+	/**
+	 * This method handles a new time report and sets its values to the input given.
+	 * 
+	 * @param request This is the servlet request
+	 * @param out the printwriter used to print out html code
+	 * @param userId the id of the current user.
+	 * @return String containing a result message either containing a success message or a failure message.
+	 */
+	public String addNewTimeReport(HttpServletRequest request,
+			PrintWriter out, Long userId, String role) {
+		return handleTimeReports(request, out, userId, role, false);
+	}
+	
+	/**
+	 * This method handles a existing time report and updates its values to the input given.
+	 * 
+	 * @param request This is the servlet request
+	 * @param out the printwriter used to print out html code
+	 * @param userId the id of the current user.
+	 * @return String containing a result message either containing a success message or a failure message.
+	 */
+	public String editTimeReport(HttpServletRequest request,
+			PrintWriter out, Long userId, String role){
+		return handleTimeReports(request, out, userId, role, true);
+	}
+	
+	/***
+	 * 
+	 * This method handles time reports, either updates or creates new time reports.
+	 * 
+	 * @param request This is the servlet request
+	 * @param out the printwriter used to print out html code
+	 * @param userId the id of the current user.
+	 * @param existingReport boolean stating if the time report is new or previously existed.
+	 * @return
+	 */
+	private String handleTimeReports(HttpServletRequest request,
+			PrintWriter out, Long userId, String role, boolean existingReport){
+		String resultMsg = null;
+		String idString = null;
+		Long id = null;
+		String date =  existingReport ? request.getParameter("newDate") : request.getParameter("date");
+		String typeString = existingReport ? request.getParameter("newType") : request.getParameter("type");
+		String durationString = existingReport ? request.getParameter("newDuration") : request.getParameter("duration");
+		String numberString = existingReport ? request.getParameter("newNumber") : request.getParameter("number");
+		if(existingReport && request.getParameter("newType")!=null){
+			idString = request.getParameter("id");
+			if(idString == null || idString.trim().equals("")){
+				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+				return resultMsg;
+			}
+		}
+			
+		if(date != null){
+			if (checkDate(date)) {
+				char type = typeString.charAt(0);
+				if(typeString!=null && Type.isType(type)){
+					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")) {
+						try{
+							Long duration = Long.parseLong(durationString);
+							Long number = Long.parseLong(numberString);
+							if(existingReport){
+								id = Long.parseLong(idString);
+							}
+							if(Number.isNumber(number)){
+								User currentUser = instance.getUser(userId);
+								java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
+								calenderWeek.setTime(Date.valueOf(date));
+								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
+								
+								if(existingReport){
+									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), role, type, duration, week, Date.valueOf(date), false, number )){
+										resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+									} else {
+										resultMsg = "<p class=\"failure-message\">Time report was signed while you were editing it</p>";
+									}
+								}else{
+									instance.addTimeReport(new TimeReport(currentUser.getGroupId(), role, type, 
+											userId, duration, week, Date.valueOf(date), false, number));
+									resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+								}
+							} else {
+								resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+							}
+						}catch(NumberFormatException e){
+							resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+							return resultMsg;
+						}
+					}else{
+						resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+					}
+				} else {
+					resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+				}
+			} else {
+				resultMsg = "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+			}
+		}
+		return resultMsg;	
+	}
+
+	/***
+	 * This method checks if the date input is in both correct format,
+	 * and that it is prior to 
+	 * @param date taken from the input.
+	 * @return a boolean that represents if the inputed date is a valid date or not.
+	 */
+	private static boolean checkDate(String date) {
+		if(date==null){
+			return false;
+		}
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			sdf.setLenient(false);
+			java.util.Date inputDate = sdf.parse(date);
+			System.out.println(inputDate);	
+			
+			java.util.Date toDaysDate = new java.util.Date();
+			toDaysDate = sdf.parse(sdf.format(toDaysDate));
+
+			return inputDate.compareTo(toDaysDate)<=0;
+			
+		} catch (ParseException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		return false;
+	}
+	
+	/***
+	 * This method deletes a existing time report and returns a success message if it is successfully removed.
+	 * If the sql query is unsuccessful it will give a fail message.
+	 * 
+	 * @param request the servlet request.
+	 * @return a String containing the result.
+	 */
+	public String deleteTimeReport(HttpServletRequest request) {
+		String timeReportId = request.getParameter("deletetimereport");
+		if (timeReportId != null) {
+			long deleteTimeReport = Long.parseLong(timeReportId);
+			return instance.getTimeReport(deleteTimeReport).removeMe() ? "Time report was removed successfully."
+					: "Could not remove time report.";
+		}
+		return null;
+	}
+
+	
 	//TODO Try to move this to USER.toHTML() /J
 	private void printUser(PrintWriter out, String name, String role, String group,
 			String editCode, String pw, String deleteCode) {
