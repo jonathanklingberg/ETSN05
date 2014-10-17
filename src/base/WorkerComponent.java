@@ -82,9 +82,9 @@ public class WorkerComponent extends ServletBase {
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = deleteTimeReport(request);
 			if(timeReportActionMessage == null)
-				timeReportActionMessage = editTimeReport(request, out, userId);
+				timeReportActionMessage = editTimeReport(request, out, userId, role);
 			if(timeReportActionMessage == null)
-				timeReportActionMessage = addNewTimeReport(request, out, userId);
+				timeReportActionMessage = addNewTimeReport(request, out, userId, role);
 			
 			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
@@ -135,8 +135,8 @@ public class WorkerComponent extends ServletBase {
 	 * @return String containing a result message either containing a success message or a failure message.
 	 */
 	private String addNewTimeReport(HttpServletRequest request,
-			PrintWriter out, Long userId) {
-		return handleTimeReports(request, out, userId, false);
+			PrintWriter out, Long userId, String role) {
+		return handleTimeReports(request, out, userId, role, false);
 	}
 	
 	/**
@@ -148,8 +148,8 @@ public class WorkerComponent extends ServletBase {
 	 * @return String containing a result message either containing a success message or a failure message.
 	 */
 	private String editTimeReport(HttpServletRequest request,
-			PrintWriter out, Long userId){
-		return handleTimeReports(request, out, userId, true);
+			PrintWriter out, Long userId, String role){
+		return handleTimeReports(request, out, userId, role, true);
 	}
 	
 	/***
@@ -163,7 +163,7 @@ public class WorkerComponent extends ServletBase {
 	 * @return
 	 */
 	private String handleTimeReports(HttpServletRequest request,
-			PrintWriter out, Long userId, boolean existingReport){
+			PrintWriter out, Long userId, String role, boolean existingReport){
 		String resultMsg = null;
 		String idString = null;
 		Long id = null;
@@ -197,13 +197,13 @@ public class WorkerComponent extends ServletBase {
 								long week = calenderWeek.get(java.util.Calendar.WEEK_OF_YEAR);
 								
 								if(existingReport){
-									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), type, duration, week, Date.valueOf(date), false, number )){
+									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), role, type, duration, week, Date.valueOf(date), false, number )){
 										resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
 									} else {
 										resultMsg = "<p class=\"failure-message\">Time report was signed while you were editing it</p>";
 									}
 								}else{
-									instance.addTimeReport(new TimeReport(currentUser.getGroupId(), null, type, 
+									instance.addTimeReport(new TimeReport(currentUser.getGroupId(), role, type, 
 											userId, duration, week, Date.valueOf(date), false, number));
 									resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
 								}

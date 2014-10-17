@@ -477,9 +477,10 @@ public class DatabaseHandlerInstance {
 	public void addTimeReport(TimeReport tr) {
 		try{
 			//NOT CORRECT YET!
-			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, date, duration, type, number ,week, signed) values("
+			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, role, date, duration, type, number ,week, signed) values("
 					+ tr.getUserId() + ", " 
 					+ tr.getGroupId() + ", '"
+					+ tr.getRole() + ", '"
 					+ tr.getDate().toString() + "', "
 					+ tr.getDuration() + ", '" 
 					+ tr.getType() + "', "  
@@ -499,9 +500,9 @@ public class DatabaseHandlerInstance {
 	 * @return True if update was successful, otherwise false
 	 */
 	public boolean editTimeReport(long id, long userId, long groupId,
-			char type, long duration, long week, Date date, boolean signed, long number){
+			String role, char type, long duration, long week, Date date, boolean signed, long number){
 		if(!instance.getTimeReport(id).isSigned()){
-			TimeReport tr = new TimeReport(conn, id, userId, null, groupId, type, duration, week, date, signed, number);
+			TimeReport tr = new TimeReport(conn, id, userId, role, groupId, type, duration, week, date, signed, number);
 			return tr.updateTimeReport();
 		}
 		return false;
