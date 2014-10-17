@@ -151,14 +151,7 @@ public class AdministrationComponent extends ServletBase {
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Password: <input type=\"text\" id=\"password\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input><br/>");
-			String t = "<select id=\"myselect\"> " + 
-		    	           " <option value=\"Developer\">Developer</option> " +
-		    	           " <option value=\"ProjectManager\">ProjectManager</option> " +
-		    	            "<option value=\"SystemArchitect\">SystemArchitect</option>  " +
-		    	            "<option value=\"Tester\">Tester</option> "+
-		    	           " <option value=\"Unspecified\">Unspecified</option> "+
-		    	        "</select>";
-			out.print(t);
+			out.print("<input type=\"checkbox\" id=\"pmCheckbox\"> Project Manager");
 			out.print("</div>");
 			String groupFilter = "<input id=\"groupfilter\" class=\"form-control\" type=\"text\" placeholder=\"Filter groups\">";
 			String addGroupButton = "<a id=\"addNewGroupButton\" class=\"btn btn-block btn-lg btn-primary\" onclick="+ formElement("return createGroup();") + ">Add group</a>";
