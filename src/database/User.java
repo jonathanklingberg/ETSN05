@@ -317,7 +317,7 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 */
 	@Override
 	public void valueUnbound(HttpSessionBindingEvent event) {
-		usersSessions.remove(this);
+		usersSessions.remove(this.name);
 		System.out.println("*********"+this.name+" WENT OFFLINE***********");
 	}
 	
@@ -327,8 +327,8 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 */
 	public void killSession(){
 		if(usersSessions.containsKey(this.name)){
-			usersSessions.remove(this);
-			usersSessions.get(this.name).invalidate();			
+			usersSessions.get(this.name).invalidate();		
+			usersSessions.remove(this.name);
 			System.out.println("*********"+this.name+" WENT OFFLINE***********");
 		}
 	}

@@ -182,7 +182,7 @@ public class DatabaseHandlerInstance {
 			rs.next();
 			long id = rs.getLong("id");
 			String password = rs.getString("password");
-			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id);
+			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id + " AND isActiveInGroup=true");
 			rs = ps.executeQuery();
 			rs.next();
 			long groupId = rs.getLong("groupId");
