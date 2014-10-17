@@ -115,10 +115,11 @@ window.onload = function(){
 	    	},
 	        Add: function() {
 	            var name = $("#name").val();
+	            var password = $("#password").val();
 	            var group = $("#group").val();
 	            var role = $("#myselect").val();
 	            $(this).dialog("close");
-	            var url = "AdministrationComponent?addNewUser="+ name + "&group=" +  group + "&role=" + role;
+	            var url = "AdministrationComponent?addNewUser="+ name + "&password=" + password + "&group=" +  group + "&role=" + role;
 	            $(location).attr('href',url);
 	        }
 	    }
@@ -176,7 +177,7 @@ window.onload = function(){
 	            var group = $("#oldGroupName").val();
 	            var role = $( "#myselect2 option:selected" ).text();
 	            $(this).dialog("close");
-	            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&editUser=" + name +"&password=" + password + "&group=" + group + "&role=" + role;
+	            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&editUser=" + name +"&newPassword=" + password + "&group=" + group + "&role=" + role;
 	            $(location).attr('href', url);
 	        }
 	    }
@@ -200,7 +201,7 @@ window.onload = function(){
 	            $(location).attr('href',url);
 	        }
 	    }
-});
+	});
 	
 //http://jsfiddle.net/5b3cufzx/129/
 	

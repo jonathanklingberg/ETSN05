@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import sun.security.util.Password;
 import database.ProjectGroup;
 import database.User;
 
@@ -47,11 +48,7 @@ public class AdministrationComponent extends ServletBase {
 		if (ok)
 			for (int i = 0; i < length; i++) {
 				int ci = (int) name.charAt(i);
-				boolean thisOk = ((ci >= 48 && ci <= 57)
-						|| (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
-				// String extra = (thisOk ? "OK" : "notOK");
-				// System.out.println("bokst:" + name.charAt(i) + " " +
-				// (int)name.charAt(i) + " " + extra);
+				boolean thisOk = ((ci >= 48 && ci <= 57) || (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
 				ok = ok && thisOk;
 			}
 		return ok;
@@ -63,11 +60,19 @@ public class AdministrationComponent extends ServletBase {
 		if (ok)
 			for (int i = 0; i < length; i++) {
 				int ci = (int) name.charAt(i);
-				boolean thisOk = ((ci >= 48 && ci <= 57)
-						|| (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
-				// String extra = (thisOk ? "OK" : "notOK");
-				// System.out.println("bokst:" + name.charAt(i) + " " +
-				// (int)name.charAt(i) + " " + extra);
+				boolean thisOk = ((ci >= 48 && ci <= 57) || (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
+				ok = ok && thisOk;
+			}
+		return ok;
+	}
+	
+	private boolean checkNewPassword(String name) {
+		int length = name.length();
+		boolean ok = (length == PASSWORD_LENGTH);
+		if (ok)
+			for (int i = 0; i < length; i++) {
+				int ci = (int) name.charAt(i);
+				boolean thisOk = ci >= 97 && ci <= 122;
 				ok = ok && thisOk;
 			}
 		return ok;
@@ -145,6 +150,7 @@ public class AdministrationComponent extends ServletBase {
 			printUserTable(out, users, userActionMessage);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
+			out.println("Password: <input type=\"text\" id=\"password\"></input>");
 			out.println("Group: <input type=\"text\" id=\"group\"></input><br/>");
 			String t = "<select id=\"myselect\"> " + 
 		    	           " <option value=\"Developer\">Developer</option> " +
@@ -181,7 +187,7 @@ public class AdministrationComponent extends ServletBase {
 	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
 		String oldUserName = request.getParameter("oldUserName");
 		String newUserName = request.getParameter("editUser");
-		String newPassword = request.getParameter("password");
+		String newPassword = request.getParameter("newPassword");
 		String newGroupName = request.getParameter("group");
 		String role = request.getParameter("role");
 		ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
@@ -196,31 +202,27 @@ public class AdministrationComponent extends ServletBase {
 			String currentRole = oldUser.getRole();
 			boolean pmDemotionOrPromotion = (currentRole.equals("ProjectManager") || role.equals("ProjectManager")) && !currentRole.equals(role);
 			boolean groupChanged = !instance.getProjectGroup(oldUser.getGroupId()).getName().equals(newGroupName);
-			if(newPassword.length() == 6) {
-				if(checkNewName(newUserName)) {
-					if(groupExists) {
-						int amountOfPMs = instance.getProjectGroup(newGroupName).getNumberOfPMs();
-						if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
-							boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
-							if(res) {
-								if(pmDemotionOrPromotion || groupChanged){
-									instance.getUser(newUserName).killSession();
-								}
-								return "User edited succesfully.";
-							} else {
-								return "User not edited.";
+			if(checkNewName(newUserName) && checkNewPassword(newPassword)) {
+				if(groupExists) {
+					int amountOfPMs = instance.getProjectGroup(newGroupName).getNumberOfPMs();
+					if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
+						boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
+						if(res) {
+							if(pmDemotionOrPromotion || groupChanged){
+								instance.getUser(newUserName).killSession();
 							}
+							return "User edited succesfully.";
 						} else {
-							return "Amount of project managers exceeded.";
+							return "User not edited.";
 						}
 					} else {
-					return "The given groupname does not exist.";
+						return "Amount of project managers exceeded.";
 					}
 				} else {
-					return "Incorrect format of username.";
+				return "The given groupname does not exist.";
 				}
 			} else {
-				return "Password must consist of 6 characters.";
+				return "Wrong format on input! Please try again";
 			}
 		}
 		return null;
@@ -235,17 +237,18 @@ public class AdministrationComponent extends ServletBase {
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String failMsg = null;
 		String username = request.getParameter("addNewUser");
+		String newPassword = request.getParameter("password");
 		String groupName = request.getParameter("group");
 		String role = request.getParameter("role");
 		if(username != null) {
-			if(checkNewName(username)) {
+			if(checkNewName(username) && checkNewPassword(newPassword)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
 					long groupId = p.getId();
 						boolean res = false;
 						int amountOfPMs = instance.getProjectGroup(groupName).getNumberOfPMs();
 						if(!role.equals("ProjectManager") || amountOfPMs < 5) {
-								res = instance.addUser(new User(username, createPassword(), role, groupId));
+								res = instance.addUser(new User(username, newPassword, role, groupId));
 						}else{
 							return "Amount of project managers exceeded.";
 						}
