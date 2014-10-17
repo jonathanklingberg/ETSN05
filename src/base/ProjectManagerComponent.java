@@ -47,8 +47,10 @@ public class ProjectManagerComponent extends ServletBase {
 		session = request.getSession(true);
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
+		String timeReportActionMessage = null;
 		
 		String myName = getName();
+		String role = getRole();
 		
 		//TODO Give admin access to this component! /J
 		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || getRole().equalsIgnoreCase("admin"))) {
@@ -92,12 +94,27 @@ public class ProjectManagerComponent extends ServletBase {
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			printUserTable(out, usersInGroup, null);
 			
+			
+			Long userId = (Long) session.getAttribute("userId");
+
+			
+			if(timeReportActionMessage == null)
+				timeReportActionMessage = deleteTimeReport(request);
+			if(timeReportActionMessage == null)
+				timeReportActionMessage = editTimeReport(request, out, userId, role);
+			if(timeReportActionMessage == null)
+				timeReportActionMessage = addNewTimeReport(request, out, userId, role);
+			
+			
 			// Prints a table with time reports from users of the same group
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			System.out.println("Got all time reports for group " + groupId + ": " + instance.getProjectGroup(groupId).getName());
 			System.out.println("There were " + timeReports.size() + " of them");
-			printTimeReportTable(out, timeReports, null);
-
+			printTimeReportTable(out, timeReports, timeReportActionMessage, userId);
+			
+			out.println(getEditTimeReportForm());
+			out.println(getAddTimeReportForm());
+			
 			/* Do alot of stuff according to the SRS:
 			 * See all members of his group			X
 			 * See all groupmembers timereports		X
