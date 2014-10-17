@@ -177,6 +177,7 @@ public abstract class ServletBase extends HttpServlet {
 			String deleteCode = "<a href='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
+				editCode = "";
 			}
 			printUser(out, name, role, group, editCode, pw, deleteCode);
 
