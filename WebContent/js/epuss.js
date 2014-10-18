@@ -105,10 +105,7 @@ $(function () {
 window.onload = function(){
 	$("#createUser").dialog({
 	    autoOpen: false,
-	    maxWidth: 320,
-	    maxHeight: 310,
-	    minWidth: 309,
-	    minHeight: 310,
+	    resizable: false,
 	    buttons: { 
 	    	Cancel: function () {
 	    		$(this).dialog("close");
@@ -131,10 +128,7 @@ window.onload = function(){
 	
 	$("#createTimeReportWorker").dialog({
 	    autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+	    resizable: false,
 	    buttons: {
 	    	Cancel: function () {
 	    		$(this).dialog("close");
@@ -153,10 +147,7 @@ window.onload = function(){
 
 	$("#createTimeReportProjectManager").dialog({
 	    autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+	    resizable: false,
 	    buttons: {
 	    	Cancel: function () {
 	    		$(this).dialog("close");
@@ -183,10 +174,7 @@ window.onload = function(){
 
 	$("#editUser").dialog({
 	    autoOpen: false,
-	    maxWidth: 318,
-	    maxHeight: 337,
-	    minWidth: 318,
-	    minHeight: 337,
+	    resizable: false,
 	    open: function () {
 	        $("#oldUserName").val(oldUserName);
 	        $("#oldPassWord").val(oldPassword);
@@ -211,10 +199,7 @@ window.onload = function(){
 	
 	$("#editRole").dialog({
 	    autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+	    resizable: false,
         //('#editRole').title += 
 	    buttons: { 
 	    	Cancel: function () {
@@ -233,6 +218,7 @@ window.onload = function(){
 	
 	$("#editGroupName").dialog({
 	    autoOpen: false,
+	    resizable: false,
 	    open: function () {
 	    	$("#newGroupName").val(oldGroupName);
 	    },            
@@ -249,7 +235,8 @@ window.onload = function(){
 	});
 	
 	$("#deleteGroup").dialog({
-	    autoOpen: false,           
+	    autoOpen: false,   
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");
@@ -263,10 +250,7 @@ window.onload = function(){
 	
 	$("#editTimeReportWorker").dialog({
 		autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+		resizable: false,
 		open: function () {
 	        $("#oldDate").val(oldDate);
 	        $("#oldDuration").val(oldDuration);
@@ -290,10 +274,7 @@ window.onload = function(){
 	
 	$("#editTimeReportProjectManager").dialog({
 		autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+		resizable: false,
 		open: function () {
 	        $("#oldDate").val(oldDate);
 	        $("#oldDuration").val(oldDuration);
@@ -317,10 +298,7 @@ window.onload = function(){
 	
 	$("#addGroup").dialog({
 	    autoOpen: false,
-	    maxWidth: 309,
-	    maxHeight: 216,
-	    minWidth: 309,
-	    minHeight: 216,    
+	    resizable: false,
 	    buttons: {
 	        Cancel: function () {
 	            $(this).dialog("close");
@@ -335,7 +313,8 @@ window.onload = function(){
 	});
 
 	$("#deleteUser").dialog({
-	    autoOpen: false,           
+	    autoOpen: false,   
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");
@@ -349,7 +328,8 @@ window.onload = function(){
 	});
 	
 	$("#deleteTimeReportWorker").dialog({
-	    autoOpen: false,           
+	    autoOpen: false,   
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");
@@ -363,7 +343,8 @@ window.onload = function(){
 	});
 	
 	$("#deleteTimeReportProjectManager").dialog({
-	    autoOpen: false,           
+	    autoOpen: false,  
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");

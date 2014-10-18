@@ -366,7 +366,6 @@ public class AdministrationComponent extends ServletBase {
 		String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
     			"<input type=\"text\" id=\"newGroupName\"/>" +
     			"</div>";
-    	
     	out.println(editForm);
     	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
 			    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
