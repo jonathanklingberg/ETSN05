@@ -19,6 +19,14 @@
 	margin-right:100%;
 }
 
+#centerPag {
+	width: 800px;
+	text-align: center ;
+	margin-left: auto ;
+	margin-right: auto ;
+}
+
+
 .usertable-tools{	
 	margin: 20px 0px 80px 0px;
 }

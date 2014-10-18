@@ -127,6 +127,7 @@ public abstract class ServletBase extends HttpServlet {
 							"<script src=\"js/footable.plugin.template.js\"></script>" +
 							"<script src=\"js/footable.sort.js\"></script>" +
 							"<script src=\"js/footable.striping.js\"></script>" +
+							"<script src=\"js/footable.paginate.js\" type=\"text/javascript\"></script>" + 
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/flat-ui.css\"/>" +
 							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
@@ -155,8 +156,8 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param userActionMessage
 	 */
 	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
-		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" class=\"footable\" border=" + formElement("1") + ">");	
-		printUserTableHeader(out);
+		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" data-page-navigation=\".pagination\" class=\"footable\" data-page-size=\"10\" border=" + formElement("1") + ">");	
+		int amount = 0;
 		System.out.println("Total number of users in system: " + userList.size());
 		for(int i = 0; i < userList.size(); ++i) {	
 			User user = userList.get(i);
@@ -169,12 +170,15 @@ public abstract class ServletBase extends HttpServlet {
 
 			String editCode = "";
 			if(isAdminComponent()) {
+				amount = 6;
 				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
+				amount = 3;
 				if(role.equals("Admin") == false){
 				editCode = "<a href=\"#\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
 				}
 			} else {
+				amount = 2;
 				String editURL = "administrationcomponent?edituser="+name;
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
@@ -185,8 +189,18 @@ public abstract class ServletBase extends HttpServlet {
 				editCode = "";
 			}
 			printUser(out, name, role, group, editCode, pw, deleteCode);
-
 		}
+		String tFoot = "<tfoot>" +
+				"<tr>" +
+				"<td colspan='" + amount + "'>" +
+					"<div id=\"centerPag\">" +
+						"<div class=\"pagination pagination-centered\"></div> </div>"+ 
+				"</td>" +
+				"</tr>" +
+			"</tfoot>";
+		out.println(tFoot);
+		printUserTableHeader(out);
+
 		String editForm = "";
 		if(isAdminComponent()){		
 			String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
@@ -215,7 +229,6 @@ public abstract class ServletBase extends HttpServlet {
 					"</select>" +
 					"</div>";
 		}
-
 		out.println(editForm);
 		//TODO something with editForm! /J It already works, just leave the out.println(editForm) be /Soheil
 		out.println("</table>");
