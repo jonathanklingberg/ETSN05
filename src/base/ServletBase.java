@@ -171,19 +171,19 @@ public abstract class ServletBase extends HttpServlet {
 			String editCode = "";
 			if(isAdminComponent()) {
 				amount = 6;
-				editCode = "<a onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
+				editCode = "<a href ='#'onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				amount = 3;
 				if(role.equals("Admin") == false){
-				editCode = "<a onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
+				editCode = "<a href ='#' onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
 				}
 			} else {
 				amount = 2;
 				String editURL = "administrationcomponent?edituser="+name;
-				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
+				editCode = "<a href ='#' href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
 
-			String deleteCode = "<a onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
+			String deleteCode = "<a href ='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
 				editCode = "";
