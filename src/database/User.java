@@ -204,8 +204,9 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 		}else{
 			try {
 				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET role = '" + role + "' WHERE userId = '" + this.userID + "'");
-				ps.executeUpdate();
-				roleChanged = true;
+				if(ps.executeUpdate() > 0){
+					roleChanged = true;
+				}
 				killSession();
 				ps.close();
 			} catch (SQLException e) {
@@ -230,10 +231,11 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 		try {
 			PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
 				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
-			ps.executeUpdate();
+			if(ps.executeUpdate() > 0){
+				successfullyMoved = true;
+			}
 			killSession();
 			ps.close();
-			successfullyMoved = true;
 		} catch (SQLException e) {
 			successfullyMoved = false;
 			e.printStackTrace();
@@ -270,10 +272,11 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM Users WHERE id = " + userID);
 			ps.executeUpdate();
 			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = " + userID);
-			ps.executeUpdate();
+			if(ps.executeUpdate() > 0){
+				successfullyRemoved = true;
+			}
 			killSession();
 			ps.close();
-			successfullyRemoved = true;
 		} catch (SQLException e) {
 			successfullyRemoved = false;
 			e.printStackTrace();
