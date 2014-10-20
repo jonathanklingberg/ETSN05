@@ -44,34 +44,22 @@ public class LoginComponent extends ServletBase {
      * @return HTML code for the form
      */
     protected String loginRequestForm() {
-//    	String html = "<p>Please enter your name and password in order to log in:</p>";
-//    	html += "<div id=\"logincredentials\" class=\"login-form\"></div>";
-//    	html += "<p> <form name=" + formElement("input");
-//    	html += " method=" + formElement("post");
-//    	html += "<p> Name: <input type=" + formElement("text") + " name=" + formElement("userName") + '>'; 
-//    	html += "<p> Password: <input type=" + formElement("password") + " name=" + formElement("password") + '>';  
-//    	html += "<p> <input type=" + formElement("submit") + "value=" + formElement("Submit") + '>';
-    	
-	String html = "<form name=\"input\" method=\"post\">";
-	  html += "<div class=\"login-screen\">";
-	  html += "<div id=\"loginheader\"><h1>EPUSS</h1>";
-	  html += "</div>";
-	  html += "<div id=\"logincredentials\" class=\"login-form\">";
-      html += "  <div class=\"form-group\">";
-      html += "    <input type=\"text\" id=\"login-name\" placeholder=\"Enter your name\" value=\"\" class=\"form-control login-field\" name=\"userName\">";
-      html += "    <label for=\"login-name\" class=\"login-field-icon fui-user\"></label>";
-      html += "  </div>";
-
-      html += "  <div class=\"form-group\">";
-      html += "    <input type=\"password\" id=\"login-pass\" placeholder=\"Password\" value=\"\" class=\"form-control login-field\" name=\"password\">";
-      html += "    <label for=\"login-pass\" class=\"login-field-icon fui-lock\"></label>";
-      html += "  </div>";
-//      html += "<a class=\"btn btn-primary btn-lg btn-block\">Log in</a>";
-      html += "   <input type=\"submit\" value=\"Log in\" class=\"btn btn-primary btn-lg btn-block\"></input>";
-      html += "</div>";
-      html += "</div>";
-//      html += "  </div>";
-	  html += "</form>";
+    	String html = "<form name=\"input\" method=\"post\">";
+		  html += "<div class=\"login-screen\">";
+		  html += "<div id=\"loginheader\"><h1>EPUSS</h1></div>";
+		  html += "<div id=\"logincredentials\" class=\"login-form\">";
+	      html += "  <div class=\"form-group\">";
+	      html += "    <input type=\"text\" id=\"login-name\" placeholder=\"Enter your name\" value=\"\" class=\"form-control login-field\" name=\"userName\">";
+	      html += "    <label for=\"login-name\" class=\"login-field-icon fui-user\"></label>";
+	      html += "  </div>";
+	      html += "  <div class=\"form-group\">";
+	      html += "    <input type=\"password\" id=\"login-pass\" placeholder=\"Password\" value=\"\" class=\"form-control login-field\" name=\"password\">";
+	      html += "    <label for=\"login-pass\" class=\"login-field-icon fui-lock\"></label>";
+	      html += "  </div>";
+	      html += "   <input type=\"submit\" value=\"Log in\" class=\"btn btn-primary btn-lg btn-block\"></input>";
+	      html += "</div>";
+	      html += "</div>";
+		  html += "</form>";
     	return html;
     }
 
@@ -104,7 +92,6 @@ public class LoginComponent extends ServletBase {
         
         if (name != null && password != null) {
         	loginAttempt = true;
-        	// Request to login to web-site since not null means such GET-parameters currently exists in URL.
         	if(name.length() > 0 && password.length() > 0){ // Check if fields where empty at submit
 	        	User currUser = instance.getUser(name);
 	        	if(currUser != null && currUser.comparePassword(password)){

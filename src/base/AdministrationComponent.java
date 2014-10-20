@@ -24,8 +24,15 @@ import database.User;
  * @author SG
  * @version 0.3
  */
+
+//TODO add styled paragraphs! You should never print text that aren't wrapped inside any html-element, 
+//			paragraph or span are the most common ones for simple text
+// example: <p class="action-success">User added successfully!</p>
+//		& 	<p class="action-fail">Failed to add user!</p> 
+// These classes can be easily styled with simple css then!/J
 @WebServlet("/administrationcomponent")
 public class AdministrationComponent extends ServletBase {
+	private static final long serialVersionUID = 1L;
 	private static final int PASSWORD_LENGTH = 6;
 
 	/**
@@ -35,7 +42,7 @@ public class AdministrationComponent extends ServletBase {
 		super();
 	}
 	
-	//TODO Please describe the requirements or refer to specified item in SRS.
+	//TODO Please try describe the function a little bit better. /J
 	 /**
 	 * Checks if a username corresponds to the requirements for user names.
 	 * @param name The investigated username
@@ -53,6 +60,7 @@ public class AdministrationComponent extends ServletBase {
 		return ok;
 	}
 	
+	//TODO JavaDoc with good description /J
 	private boolean checkNewGroupName(String name) {
 		int length = name.length();
 		boolean ok = (length >= 1 && length <= 20);
@@ -65,6 +73,7 @@ public class AdministrationComponent extends ServletBase {
 		return ok;
 	}
 	
+	//TODO JavaDoc with good description /J
 	private boolean checkNewPassword(String name) {
 		int length = name.length();
 		boolean ok = (length == PASSWORD_LENGTH);
@@ -76,7 +85,8 @@ public class AdministrationComponent extends ServletBase {
 			}
 		return ok;
 	}
-
+	
+	//TODO please try to describe a little bit better, how many chars aso. /J
 	 /**
 	 * Creates a random password.
 	 * @return a randomly chosen password
@@ -89,7 +99,7 @@ public class AdministrationComponent extends ServletBase {
 		return result;
 	}
 	
-	//TODO JavaDoc
+	//TODO JavaDoc description
 	/**
 	 * 
 	 * @param name
@@ -115,7 +125,6 @@ public class AdministrationComponent extends ServletBase {
 		// check that the user is logged in as admin, otherwise redirect back to loginComponent
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("Admin")) {
 			
-			//TODO This is not shown in mockup design?
 			out.println("<h1>Administration page</h1>"); 
 			
 			// check if the administrator wants to add a new user in the form
@@ -124,12 +133,20 @@ public class AdministrationComponent extends ServletBase {
 				if (checkNewName(newName)) {
 					boolean addPossible = addUser(newName);
 					if (!addPossible)
-						out.println("<p>Error: Suggested user name not possible to add</p>"); // style red please
+						//TODO style red please
+						out.println("<p>Error: Suggested user name not possible to add</p>"); 
 				}	else
-					out.println("<p>Error: Suggesten name not allowed</p>"); // style red please
+					out.println("<p>Error: Suggesten name not allowed</p>");
 			}
 			
-			//TODO re-factor please! very hard to read and understand?
+			//TODO try to refactor this please! very hard to read and understand? /J
+			// This is ineffective, you're currently executing all actions until you find the correct one that doesn't return null, am I right?
+			// This means you're trying to perform request.getAttribute/getParameter on alot of parameters that doesn't exists.
+			// And for example in editExistingUser you always perform the instance.getAllProjectGroups() no matter if the parameters exists or not... No good!!
+			// What you normally do is that you do a switch-case on the action you're trying to execute. for example:
+			// AdministratorComponent?action=addNewUser&userid=<id> and in that way you'll be able to perform a simple switch-case on the action parameter instead.
+			// Do you follow me?
+			// You don't have to do this if you don't have time but just so that you know /J
 			if(groupActionMessage == null)
 				groupActionMessage = deleteGroup(request);
 			if(groupActionMessage == null)
@@ -161,6 +178,7 @@ public class AdministrationComponent extends ServletBase {
 							"Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
 							" </div>";
 			out.println(addGroupModal);
+			//TODO Move to servletBase.getPageOutro();
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 			out.println("</body></html>");
 
@@ -203,6 +221,7 @@ public class AdministrationComponent extends ServletBase {
 							if(pmDemotionOrPromotion || groupChanged){
 								instance.getUser(newUserName).killSession();
 							}
+							//TODO add styled paragraph!  /J
 							return "User edited succesfully.";
 						} else {
 							return "User not edited.";
@@ -242,6 +261,7 @@ public class AdministrationComponent extends ServletBase {
 						if(!role.equals("ProjectManager") || amountOfPMs < 5) {
 								res = instance.addUser(new User(username, newPassword, role, groupId));
 						}else{
+							//TODO add styled paragraph!  /J
 							return "Amount of project managers exceeded.";
 						}
 						if(!res){	
@@ -267,6 +287,7 @@ public class AdministrationComponent extends ServletBase {
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
+			//TODO add styled paragraph!  /J
 			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not removed user.";
 		}
 		return null;
@@ -282,6 +303,7 @@ public class AdministrationComponent extends ServletBase {
 		String deleteGroup = request.getParameter("deletegroup");
 		if (deleteGroup != null) {
 			long groupNumber = Long.parseLong(deleteGroup);
+			//TODO add styled paragraph!  /J
 			return instance.getProjectGroup(groupNumber).removeMe() ? "Group deleted successfully." : "Failed to delete group.";
 		}
 		return null;
@@ -302,6 +324,7 @@ public class AdministrationComponent extends ServletBase {
 			if(newGroupName != null) {
 				if(checkNewGroupName(newGroupName)) {
 					boolean res = instance.changeGroupName(groupNumber, newGroupName);	
+					//TODO add styled paragraph!  /J
 					if(!res) {
 						return "Group name already taken, please try a new one.";
 					} else {
@@ -328,6 +351,7 @@ public class AdministrationComponent extends ServletBase {
 			if(checkNewGroupName(createNewGroup)) {
 				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
 				if(res) {
+					//TODO add styled paragraph!  /J
 					return "Project group was created successfully!";
 				} else {
 					return "The project group does already exist! Please enter another project group name and try again";
@@ -353,7 +377,6 @@ public class AdministrationComponent extends ServletBase {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
-			//TODO Ändra knappnamn i dialogrutan för deleteUser till yes/no
 
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return deleteGroup(this, '" + name + "')") + "value=\"Delete group\">Delete</a>";
 		    String editCode = "<a href = \"#\"onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
@@ -367,13 +390,16 @@ public class AdministrationComponent extends ServletBase {
     			"<input type=\"text\" id=\"newGroupName\"/>" +
     			"</div>";
     	out.println(editForm);
+    	//TODO consider use a better id than "text". In case someone else uses this id in something that gets printed on the same page as this, then there will be major errors.
+    	// First of all try to use id as seldom as possible, much better to just use classes to get rid of this "eventual" problem
+    	// But if you really need to use id's then consider use names that describe what the element are used for and pick a name not plausible someone else would use. //J
     	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
 			    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
 				"</div>";
     	out.println(deleteForm);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
-			 //TODO Add red style to all of your error-messages if possible please =)
+			 //TODO consider switch inline-style to some sort of error-class that gets styled instead. =)
 			 out.print("<p style=\"color:red\">"+ groupActionMessage +"</p>");			 
 		 }
 	}
@@ -388,11 +414,11 @@ public class AdministrationComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return true;
 	}
-
+	//TODO JavaDoc
 	protected boolean isWorkerComponent() {
 		return false;
 	}
-
+	//TODO JavaDoc
 	protected boolean isProjectManagerComponent() {
 		return false;
 	}

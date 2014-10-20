@@ -65,6 +65,8 @@ public class WorkerComponent extends ServletBase {
 					.getUser(userName).getGroupId());
 			printUserTable(out, groupMembers, null);
 			
+			//TODO this is not a good approach, see my comment on AdministratorComponent,
+			// Consider define a GET parameter called action which can be switch-cased instead. /J
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = deleteTimeReport(request);
 			if(timeReportActionMessage == null)
@@ -79,8 +81,8 @@ public class WorkerComponent extends ServletBase {
 			out.println(getEditTimeReportForm());
 			out.println(getAddTimeReportForm());
 			
+			//TODO Move to servetBase.getPageOutro();
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
-			System.out.print("ROLE :"+ role);
 		} else {
 			System.err.println("Illegal action performed as: " + role
 					+ "; Tried to access WorkerComponent.");
@@ -99,7 +101,8 @@ public class WorkerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response); // forward post-data to get-function /J
 	}
-
+	
+	//TODO please look at the JavaDoc guidelines for how to define return-parameters correctly. /J
 	/***
 	 * Method stating that this component isn't the admin component through a boolean variable false.
 	 */

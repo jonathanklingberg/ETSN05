@@ -53,17 +53,7 @@ public abstract class ServletBase extends HttpServlet {
 			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
 					"user=puss1403&password=9dpa2oan");
 			instance = DatabaseHandlerInstance.getInstance(conn);
-			//TODO see description below: /J
-			/**
-			 *  We're very dependent of this connection and some sort of 
-			 *  re-connection functionality in case the connection closes is 
-			 *  of high importance, please try if this actually works or if it
-			 *  needs to be implemented, something prints out the following success-msg
-			 *  multiple times but I can't see why there is? /J
-			 *  
-			 *  It's easy to test simply by manipulating the server name temporary 
-			 *  to something that cannot be resolved for example. (vmxxx.cs.lth.se) /J
-			 */
+			//TODO Why do we connect to database here and not i databasehandler constructor? Didn't I move it there? /J
 			System.out.println("Successfully connected to database!");
 			//TODO BETTER ERROR HANDLING! /J
 		} catch (SQLException ex) {
@@ -111,41 +101,32 @@ public abstract class ServletBase extends HttpServlet {
 	 */
 	protected String getPageIntro() {
 		String intro = "<html><head>" + 
-				"<script src=\"js/jquery-1.8.3.js\"></script>" +
-				"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
-				"<script src=\"js/epuss.js\"></script>" +
-				"<script src=\"js/footable.js\"></script>" +
-				"<script src=\"js/footable.bookmarkable.js\"></script>" +
-				"<script src=\"js/footable.filter.js\"></script>" +
-				"<script src=\"js/footable.grid.js\"></script>" +
-				"<script src=\"js/footable.memory.js\"></script>" +
-//				"<script src=\"js/flat-ui.min.js\"></script>" +
-
-//							Not needed for our project but some other footable plugins might need this so leave it commented
-//							"<script src=\"js/footable.paginate.js\"></script>" + /J
-
-							"<script src=\"js/footable.plugin.template.js\"></script>" +
-							"<script src=\"js/footable.sort.js\"></script>" +
-							"<script src=\"js/footable.striping.js\"></script>" +
-							"<script src=\"js/footable.paginate.js\" type=\"text/javascript\"></script>" + 
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\"/>" +
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/flat-ui.css\"/>" +
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
-							
-							"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/epuss.css\"/>" +
-							"<title> The Base Block System </title></head><body>";
+			// Import javaScript-libraries
+			"<script src=\"js/jquery-1.8.3.js\"></script>" +
+			"<script src=\"js/jquery-ui-1.9.2.custom.min.js\"></script>" +
+			"<script src=\"js/epuss.js\"></script>" +
+			"<script src=\"js/footable.js\"></script>" +
+			"<script src=\"js/footable.bookmarkable.js\"></script>" +
+			"<script src=\"js/footable.filter.js\"></script>" +
+			"<script src=\"js/footable.grid.js\"></script>" +
+			"<script src=\"js/footable.memory.js\"></script>" +
+			"<script src=\"js/footable.plugin.template.js\"></script>" +
+			"<script src=\"js/footable.sort.js\"></script>" +
+			"<script src=\"js/footable.striping.js\"></script>" +
+			"<script src=\"js/footable.paginate.js\" type=\"text/javascript\"></script>" + 
+			
+			// Import stylesheets
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\"/>" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/flat-ui.css\"/>" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.core.min.css\"/>" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/footable.metro.min.css\"/>" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui-1.9.2.custom.min.css\"/>" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/epuss.css\"/>" +
+			
+			// Set the title used for browser-tabs etc.
+			"<title> The EPUSS System </title></head><body>";
 		
 		return intro;
-	}
-
-	protected String getViewLayoutStart(){
-		return "";
-	}
-
-	protected String getViewLayoutSEnd(){
-		return "";
 	}
 
 	//TODO JavaDoc
@@ -171,19 +152,19 @@ public abstract class ServletBase extends HttpServlet {
 			String editCode = "";
 			if(isAdminComponent()) {
 				amount = 6;
-				editCode = "<a href ='#'onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
+				editCode = "<a onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				amount = 3;
 				if(role.equals("Admin") == false){
-				editCode = "<a href ='#' onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
+				editCode = "<a onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
 				}
 			} else {
 				amount = 2;
 				String editURL = "administrationcomponent?edituser="+name;
-				editCode = "<a href ='#' href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
+				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
 
-			String deleteCode = "<a href ='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
+			String deleteCode = "<a onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
 				editCode = "";
@@ -191,34 +172,36 @@ public abstract class ServletBase extends HttpServlet {
 			printUser(out, name, role, group, editCode, pw, deleteCode);
 		}
 		String tFoot = "<tfoot>" +
-				"<tr>" +
-				"<td colspan='" + amount + "'>" +
-					"<div id=\"centerPag\">" +
-						"<div class=\"pagination pagination-centered\"></div> </div>"+ 
-				"</td>" +
-				"</tr>" +
-			"</tfoot>";
+							"<tr>" +
+							"<td colspan='" + amount + "'>" +
+							 "<div id=\"centerPag\">" +
+								"<div class=\"pagination pagination-centered\"></div> " +
+							 "</div>"+ 
+							"</td>" +
+							"</tr>" +
+						"</tfoot>";
 		out.println(tFoot);
 		printUserTableHeader(out);
 
 		String editForm = "";
 		if(isAdminComponent()){		
 			String deleteForm =  "<div id=\"deleteUser\" title=\"Delete user\"> " +
-				    "<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
-					"</div>";
+							    	"<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
+						    	 "</div>";
 	    	out.println(deleteForm);
+	    	//TODO please try to use better id's, myselect2 etc. doesn't make sense. /J
 			editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
-					"<input type=\"text\" id=\"oldUserName\" />Password:" +
-					" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
-					" <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
-					"<select id=\"myselect2\"> " + 
-					" <option value=\"Developer\">Developer</option> " +
-					" <option value=\"ProjectManager\">ProjectManager</option> " +
-					"<option value=\"SystemArchitect\">SystemArchitect</option>  " +
-					"<option value=\"Tester\">Tester</option> "+
-					" <option value=\"Unspecified\">Unspecified</option> "+
-					"</select>"+
-					" </div>";
+						" <input type=\"text\" id=\"oldUserName\" />Password:" +
+						" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
+						" <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
+						"<select id=\"myselect2\"> " + 
+						" <option value=\"Developer\">Developer</option> " +
+						" <option value=\"ProjectManager\">ProjectManager</option> " +
+						" <option value=\"SystemArchitect\">SystemArchitect</option>  " +
+						" <option value=\"Tester\">Tester</option> "+
+						" <option value=\"Unspecified\">Unspecified</option> "+
+						"</select>"+
+					   "</div>";
 		}else if(isProjectManagerComponent()){
 			editForm = "<div id=\"editRole\" title=\"Edit\">" +
 					"Role: <br /><select id=\"roleType\">" +
@@ -230,7 +213,6 @@ public abstract class ServletBase extends HttpServlet {
 					"</div>";
 		}
 		out.println(editForm);
-		//TODO something with editForm! /J It already works, just leave the out.println(editForm) be /Soheil
 		out.println("</table>");
 		if(userActionMessage != null){
 			out.print("<p>"+ userActionMessage +"</p>");
@@ -266,7 +248,7 @@ public abstract class ServletBase extends HttpServlet {
 		printTimeReportTableFooter(out);
 		out.println("</table>");
 		if(userActionMessage != null){
-			out.print(userActionMessage); // style text red please! /J
+			out.print(userActionMessage); 
 		}
 	}
 
@@ -285,21 +267,22 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
 		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
-		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
-
+		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");
 		
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 			
-			String editCodePM = "<a onclick=" + formElement("return editTimeReportProjectManager('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+			//TODO consider moving inline js to js-file. It gets messy with inline onclick-events and so on. /J
 			
+			String editCodePM = "<a onclick=" + formElement("return editTimeReportProjectManager('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+
 			String deleteCodePM = "<a onclick="+formElement("return deleteTimeReportProjectManager(" + tr.getId() + ")") + ">delete</a>";
 
 			if(userId == tr.getUserId()){
-			out.println("<td>" + editCodePM +  "</td>");
-			out.println("<td>" + deleteCodePM + "</td></tr>");
+				out.println("<td>" + editCodePM +  "</td>");
+				out.println("<td>" + deleteCodePM + "</td></tr>");
 			} else {
 				out.println("<td> </td>");
 				out.println("<td> </td></tr>");
@@ -310,6 +293,7 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
 			
+			//TODO these edit and delete a-elemnts are the same as for PM, please remove if that's the case? Looks like there's more that can be done here. /J
 			String editCodeWorker = "<a onclick=" + formElement("return editTimeReportWorker('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
 			String deleteCodeWorker = "<a onclick="+formElement("return deleteTimeReportWorker(" + tr.getId() + ")") + ">delete</a>";
 			
@@ -361,7 +345,6 @@ public abstract class ServletBase extends HttpServlet {
 		int colspanTotalTimeValue = 6;
 		if(isAdminOrProjectManagerComponent()){
 			colspanTotalTimeTitle = 4;
-			colspanTotalTimeValue = 6;
 		}
 		out.println("<td colspan='"+ colspanTotalTimeTitle+"'>"
 				+ "		<span style=\"font-weight:bold; float:right;\">Total:</span>"
@@ -411,8 +394,8 @@ public abstract class ServletBase extends HttpServlet {
     	           " <option value=\"I\">Informal</option> " +
     	            "<option value=\"F\">Formal</option>  " +
     	            "<option value=\"R\">Rework</option> "+
-    	           "</select>" + 
-    	           "</div>";
+	           "</select>" + 
+	           "</div>";
 		return addForm;
 	}
 	
@@ -539,6 +522,7 @@ public abstract class ServletBase extends HttpServlet {
 
 			return inputDate.compareTo(toDaysDate)<=0;
 			
+		//TODO Better error handling /J	
 		} catch (ParseException e) {
 		} catch (IllegalArgumentException e) {
 		}
