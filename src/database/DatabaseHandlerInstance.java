@@ -160,7 +160,7 @@ public class DatabaseHandlerInstance {
 			ps.close();
 			rs.close();
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return users;
 	}
@@ -176,21 +176,21 @@ public class DatabaseHandlerInstance {
 	 */
 	public synchronized User getUser(String userName) {
 		try {
-			//TODO Username is not unique if we use isActive, fix this! /J
-			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName= '" + userName + "'");
+			
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.password, RoleInGroup.groupId, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+					+ " WHERE userName='"+userName+"' AND RoleInGroup.isActiveInGroup = 1");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			long id = rs.getLong("id");
-			String password = rs.getString("password");
-			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id + " AND isActiveInGroup=true");
-			rs = ps.executeQuery();
-			rs.next();
-			long groupId = rs.getLong("groupId");
-			String role = rs.getString("role");
-			ps.close();
-			return new User(conn, userName, password, id, groupId, role);
+			if(rs.next()){ // check so that an entry existed in the database resultset /J				
+				long userId = rs.getLong("id");
+				String password = rs.getString("password");
+				Long groupId = rs.getLong("groupId");
+				String role = rs.getString("role");
+				ps.close();
+				rs.close();
+				return new User(conn, userName, password, userId, groupId, role);
+			}
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return null;			
 	}
@@ -563,7 +563,7 @@ public class DatabaseHandlerInstance {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 	}
 	//TODO JavaDoc
@@ -580,7 +580,7 @@ public class DatabaseHandlerInstance {
 	private void handleSqlErrors(SQLException e){
 		//TODO Implement better error handling! /J
 		// As a suggestion use a container which always shows error messages! /J
-		e.printStackTrace();
+		handleSqlErrors(e);
 	}
 
 
