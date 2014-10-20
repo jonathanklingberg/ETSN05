@@ -2447,12 +2447,10 @@ fieldset[disabled] .input-group-btn .btn-default.active {
     }
   }
 .pagination > ul {
-  display: inline-block;
   padding: 0;
   margin: 0;
   color: #fff;
   word-spacing: -.5px;
-  background: #d6dbdf;
   border-radius: 6px;
   }
 @media (max-width: 767px) {
@@ -2465,8 +2463,7 @@ fieldset[disabled] .input-group-btn .btn-default.active {
     }
   }
 .pagination li {
-  display: inline-block;
-  margin-right: -3px;
+  display: inline;
   word-spacing: normal;
   vertical-align: middle;
   }

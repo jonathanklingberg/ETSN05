@@ -105,10 +105,7 @@ $(function () {
 window.onload = function(){
 	$("#createUser").dialog({
 	    autoOpen: false,
-	    maxWidth: 320,
-	    maxHeight: 310,
-	    minWidth: 309,
-	    minHeight: 310,
+	    resizable: false,
 	    buttons: { 
 	    	Cancel: function () {
 	    		$(this).dialog("close");
@@ -129,13 +126,10 @@ window.onload = function(){
 	    $("#createUser").dialog("open");
 	});
 	
-	$("#createTimeReport").dialog({
+	$("#createTimeReportWorker").dialog({
 	    autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
-	    buttons: { 
+	    resizable: false,
+	    buttons: {
 	    	Cancel: function () {
 	    		$(this).dialog("close");
 	    	},
@@ -150,17 +144,37 @@ window.onload = function(){
 	        }
 	    }
 	});
-	
-	$("#createTimeReportButton").click(function () {
-	    $("#createTimeReport").dialog("open");
+
+	$("#createTimeReportProjectManager").dialog({
+	    autoOpen: false,
+	    resizable: false,
+	    buttons: {
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
+	        Submit: function() {
+	            var date = $("#date").val();
+	            var duration = $("#duration").val();
+	            var number = $("#number").val();
+	            var type = $( "#myType option:selected" ).val();
+	            $(this).dialog("close");
+	            var url = "projectmanagercomponent?date="+ date + "&duration=" + duration + "&number=" + number + "&type=" + type;
+	            $(location).attr('href',url);
+	        }
+	    }
+	});
+
+	$("#createTimeReportButtonWorker").click(function () {
+	    $("#createTimeReportWorker").dialog("open");
+	});
+
+	$("#createTimeReportButtonProjectManager").click(function () {
+	    $("#createTimeReportProjectManager").dialog("open");
 	});
 
 	$("#editUser").dialog({
 	    autoOpen: false,
-	    maxWidth: 318,
-	    maxHeight: 337,
-	    minWidth: 318,
-	    minHeight: 337,
+	    resizable: false,
 	    open: function () {
 	        $("#oldUserName").val(oldUserName);
 	        $("#oldPassWord").val(oldPassword);
@@ -185,10 +199,7 @@ window.onload = function(){
 	
 	$("#editRole").dialog({
 	    autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+	    resizable: false,
         //('#editRole').title += 
 	    buttons: { 
 	    	Cancel: function () {
@@ -207,6 +218,7 @@ window.onload = function(){
 	
 	$("#editGroupName").dialog({
 	    autoOpen: false,
+	    resizable: false,
 	    open: function () {
 	    	$("#newGroupName").val(oldGroupName);
 	    },            
@@ -223,7 +235,8 @@ window.onload = function(){
 	});
 	
 	$("#deleteGroup").dialog({
-	    autoOpen: false,           
+	    autoOpen: false,   
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");
@@ -235,12 +248,9 @@ window.onload = function(){
 	    }
 	});
 	
-	$("#editTimeReport").dialog({
+	$("#editTimeReportWorker").dialog({
 		autoOpen: false,
-	    maxWidth: 360,
-	    maxHeight: 300,
-	    minWidth: 360,
-	    minHeight: 300,
+		resizable: false,
 		open: function () {
 	        $("#oldDate").val(oldDate);
 	        $("#oldDuration").val(oldDuration);
@@ -262,12 +272,33 @@ window.onload = function(){
 	    }
 	});
 	
+	$("#editTimeReportProjectManager").dialog({
+		autoOpen: false,
+		resizable: false,
+		open: function () {
+	        $("#oldDate").val(oldDate);
+	        $("#oldDuration").val(oldDuration);
+	        $("#oldNumber").val(oldNumber);
+	    },
+		buttons: {
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
+	        Edit: function() {
+	            var date = $("#oldDate").val();
+	            var duration = $("#oldDuration").val();
+	            var number = $("#oldNumber").val();
+	            var type = $( "#oldType option:selected" ).text();
+	            $(this).dialog("close");
+	            var url = "projectmanagercomponent?newDate="+ date + "&newDuration=" + duration + "&newNumber=" + number + "&newType=" + type + "&id=" + oldId;
+	            $(location).attr('href',url);
+	        }
+	    }
+	});
+	
 	$("#addGroup").dialog({
 	    autoOpen: false,
-	    maxWidth: 309,
-	    maxHeight: 216,
-	    minWidth: 309,
-	    minHeight: 216,    
+	    resizable: false,
 	    buttons: {
 	        Cancel: function () {
 	            $(this).dialog("close");
@@ -282,7 +313,8 @@ window.onload = function(){
 	});
 
 	$("#deleteUser").dialog({
-	    autoOpen: false,           
+	    autoOpen: false,   
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");
@@ -295,8 +327,9 @@ window.onload = function(){
 	    }
 	});
 	
-	$("#deleteTimeReport").dialog({
-	    autoOpen: false,           
+	$("#deleteTimeReportWorker").dialog({
+	    autoOpen: false,   
+	    resizable: false,
 	    buttons: {
 	        No: function () {
 	            $(this).dialog("close");
@@ -308,12 +341,33 @@ window.onload = function(){
 	        }        
 	    }
 	});
+	
+	$("#deleteTimeReportProjectManager").dialog({
+	    autoOpen: false,  
+	    resizable: false,
+	    buttons: {
+	        No: function () {
+	            $(this).dialog("close");
+	        },
+	        Yes: function () {
+                var deleteTimeReportHref = "projectmanagercomponent?deletetimereport=" + timeReportToBePrinted;
+	            $(this).dialog("close");
+	            $(location).attr('href', deleteTimeReportHref);
+	        }        
+	    }
+	});
 }
 
-function deleteTimeReport(timeReportId){
+function deleteTimeReportWorker(timeReportId){
 	document.getElementById("timeReportIDFix").innerHTML = "" + timeReportId;
 	timeReportToBePrinted = timeReportId;
-    $("#deleteTimeReport").dialog("open");
+    $("#deleteTimeReportWorker").dialog("open");
+}
+
+function deleteTimeReportProjectManager(timeReportId){
+	document.getElementById("timeReportIDFix").innerHTML = "" + timeReportId;
+	timeReportToBePrinted = timeReportId;
+    $("#deleteTimeReportProjectManager").dialog("open");
 }
 
 function editRole(id){
@@ -347,12 +401,20 @@ function createGroup() {
 	$("#addGroup").dialog("open");
 }
 
-function editTimeReport(date, duration, number, id){
+function editTimeReportWorker(date, duration, number, id){
 	oldDate = date;
 	oldDuration = duration;
 	oldNumber = number;
 	oldId = id;
-    $("#editTimeReport").dialog("open");
+    $("#editTimeReportWorker").dialog("open");
+}
+
+function editTimeReportProjectManager(date, duration, number, id){
+	oldDate = date;
+	oldDuration = duration;
+	oldNumber = number;
+	oldId = id;
+    $("#editTimeReportProjectManager").dialog("open");
 }
 
 function deleteUser(userName) {
@@ -361,3 +423,5 @@ function deleteUser(userName) {
     $("#deleteUser").dialog("open");
     return false;
 }
+
+
