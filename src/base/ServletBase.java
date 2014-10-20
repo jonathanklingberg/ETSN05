@@ -171,11 +171,11 @@ public abstract class ServletBase extends HttpServlet {
 			String editCode = "";
 			if(isAdminComponent()) {
 				amount = 6;
-				editCode = "<a href=\"#\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
+				editCode = "<a onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				amount = 3;
 				if(role.equals("Admin") == false){
-				editCode = "<a href=\"#\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
+				editCode = "<a onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
 				}
 			} else {
 				amount = 2;
@@ -183,7 +183,7 @@ public abstract class ServletBase extends HttpServlet {
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
 
-			String deleteCode = "<a href='#' onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
+			String deleteCode = "<a onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
 				editCode = "";
@@ -293,9 +293,9 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 			
-			String editCodePM = "<a href=\"#\" onclick=" + formElement("return editTimeReportProjectManager('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+			String editCodePM = "<a onclick=" + formElement("return editTimeReportProjectManager('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
 			
-			String deleteCodePM = "<a href=\"#\" onclick="+formElement("return deleteTimeReportProjectManager(" + tr.getId() + ")") + ">delete</a>";
+			String deleteCodePM = "<a onclick="+formElement("return deleteTimeReportProjectManager(" + tr.getId() + ")") + ">delete</a>";
 
 			if(userId == tr.getUserId()){
 			out.println("<td>" + editCodePM +  "</td>");
@@ -310,8 +310,8 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
 			
-			String editCodeWorker = "<a href=\"#\" onclick=" + formElement("return editTimeReportWorker('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
-			String deleteCodeWorker = "<a href=\"#\" onclick="+formElement("return deleteTimeReportWorker(" + tr.getId() + ")") + ">delete</a>";
+			String editCodeWorker = "<a onclick=" + formElement("return editTimeReportWorker('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
+			String deleteCodeWorker = "<a onclick="+formElement("return deleteTimeReportWorker(" + tr.getId() + ")") + ">delete</a>";
 			
 			if(signed){
 				out.println("<td> </td>");
@@ -377,7 +377,7 @@ public abstract class ServletBase extends HttpServlet {
 	public String getEditTimeReportForm(){
 		String editForm = "";
 		if(isWorkerComponent()){
-			editForm = "<div id=\"editTimeReportProjectManager\" title=\"Edit time report\">"; 
+			editForm = "<div id=\"editTimeReportWorker\" title=\"Edit time report\">"; 
 		} else if (isProjectManagerComponent()){
 			editForm =  "<div id=\"editTimeReportProjectManager\" title=\"Edit time report\">"; 
 		}

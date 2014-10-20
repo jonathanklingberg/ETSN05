@@ -1,12 +1,8 @@
 package database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
 import java.util.Map;
 
 import data.Role;
@@ -31,8 +27,6 @@ import javax.servlet.http.HttpSessionBindingListener;
  * 
  */
 
-//TODO Don't forget to close both preparedstatements and resultsets!
-//TODO Please redirect errors to handleSqlErrors(error) as error handler /J
 public class User extends AbstractCointainer implements HttpSessionBindingListener{
 	private String name;
 	private String password;
@@ -138,10 +132,9 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	}
 	
 	
-	
 	/**
 	 * Compares the given password with the one
-	 * which is private for the user
+	 * that is private for the user
 	 * 
 	 * @param pw Password to be checked
 	 * @return True if they match, false otherwise
@@ -213,9 +206,10 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 				PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET role = '" + role + "' WHERE userId = '" + this.userID + "'");
 				ps.executeUpdate();
 				roleChanged = true;
-				//TODO Kick user! /J
+				killSession();
+				ps.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				handleSqlErrors(e);
 			}
 			return roleChanged;
 		}
@@ -232,21 +226,13 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 *  specified project, otherwise false
 	 */
 	public boolean moveUser(ProjectGroup project) {
-		//Should be sufficient to do an update table
-		//instead of having to use "Add" and "Remove"
-		//methods in the two different projects
-		
-		//Don't forget to kill the user's session since he should
-		//be logged out after this operation has been done
-		
-		//The user maintains his role from his previous project
-		
 		boolean successfullyMoved = false;
 		try {
 			PreparedStatement ps = conn.prepareStatement("UPDATE RoleInGroup SET " +
 				"groupId = " + project.id +" WHERE userId = '" + userID + "'");
 			ps.executeUpdate();
-			// TODO kick logged in user! /J
+			killSession();
+			ps.close();
 			successfullyMoved = true;
 		} catch (SQLException e) {
 			successfullyMoved = false;
@@ -279,16 +265,14 @@ public class User extends AbstractCointainer implements HttpSessionBindingListen
 	 * @return True if the object manages to remove itself, otherwise false
 	 */
 	public boolean removeMe() {
-		//TODO Don't forget to set 'activeInGroup' to false
-		//when removing the user
 		boolean successfullyRemoved = false;
 		try {
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM Users WHERE id = " + userID);
 			ps.executeUpdate();
 			ps = conn.prepareStatement("UPDATE RoleInGroup set isActiveInGroup = false WHERE userid = " + userID);
 			ps.executeUpdate();
-			//TODO kick logged in user!
 			killSession();
+			ps.close();
 			successfullyRemoved = true;
 		} catch (SQLException e) {
 			successfullyRemoved = false;
