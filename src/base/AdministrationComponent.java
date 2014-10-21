@@ -62,6 +62,7 @@ public class AdministrationComponent extends ServletBase {
 	
 	//TODO JavaDoc with good description /J
 	private boolean checkNewGroupName(String name) {
+		System.out.println("Name of group that admin wants to add: " + name);
 		int length = name.length();
 		boolean ok = (length >= 1 && length <= 20);
 		if (ok)
@@ -75,6 +76,7 @@ public class AdministrationComponent extends ServletBase {
 	
 	//TODO JavaDoc with good description /J
 	private boolean checkNewPassword(String name) {
+		System.out.println("my password: "  + name);
 		int length = name.length();
 		boolean ok = (length == PASSWORD_LENGTH);
 		if (ok)
@@ -103,7 +105,6 @@ public class AdministrationComponent extends ServletBase {
 	/**
 	 * 
 	 * @param name
-	 * @return
 	 */
 	private boolean addUser(String name) {
 		return instance.addUser(name, createPassword());
@@ -196,7 +197,7 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
 		String oldUserName = request.getParameter("oldUserName");
-		String newUserName = request.getParameter("editUser");
+		String newUserName = request.getParameter("newUsername");
 		String newPassword = request.getParameter("newPassword");
 		String newGroupName = request.getParameter("group");
 		String role = request.getParameter("role");
@@ -252,6 +253,7 @@ public class AdministrationComponent extends ServletBase {
 		String groupName = request.getParameter("group");
 		String role = request.getParameter("role");
 		if(username != null) {
+			System.out.println("the new userName: " + username);
 			if(checkNewName(username) && checkNewPassword(newPassword)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
 				if(p != null) {
@@ -349,6 +351,7 @@ public class AdministrationComponent extends ServletBase {
 		String createNewGroup = request.getParameter("addNewGroup");
 		if(createNewGroup != null) {
 			if(checkNewGroupName(createNewGroup)) {
+				System.out.println("New name of the group: " + createNewGroup);
 				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
 				if(res) {
 					//TODO add styled paragraph!  /J
