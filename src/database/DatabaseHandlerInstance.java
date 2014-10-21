@@ -39,10 +39,8 @@ public class DatabaseHandlerInstance {
 		System.out.println("Successfully connected to database!");
 
 		//TODO BETTER ERROR HANDLING! /J
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+		} catch (SQLException e) {
+			handleSqlErrors(e);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

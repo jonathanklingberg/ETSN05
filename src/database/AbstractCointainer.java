@@ -42,9 +42,30 @@ public abstract class AbstractCointainer {
 	public abstract boolean removeMe();
 	
 	//TODO JavaDoc
-	protected void handleSqlErrors(SQLException e){
+	protected void handleSqlErrors(SQLException ex){
 		//TODO Implement better error handling! /J
 		// As a suggestion use a container which always shows error messages! /J
-		e.printStackTrace();
+		ex.printStackTrace();
+		for (Throwable e : ex) {
+	        if (e instanceof SQLException) {
+
+	                e.printStackTrace(System.err);
+	                System.err.println("SQLState: " +
+	                    ((SQLException)e).getSQLState());
+
+	                System.err.println("Error Code: " +
+	                    ((SQLException)e).getErrorCode());
+
+	                System.err.println("Message: " + e.getMessage());
+
+	                Throwable t = ex.getCause();
+	                while(t != null) {
+	                    System.out.println("Cause: " + t);
+	                    t = t.getCause();
+	                }
+	        }
+	    }
+		
+		
 	}
 }
