@@ -69,7 +69,7 @@ window.onload = function(){
 	            var group = $("#group").val();
 	            var role = $("#pmCheckbox").prop('checked') ? "ProjectManager" : "Unspecified";
 	            $(this).dialog("close");
-	            var url = "AdministrationComponent?addNewUser="+ name + "&password=" + password + "&group=" +  group + "&role=" + role;
+	            var url = "AdministrationComponent?addNewUser="+ encodeURIComponent(name) + "&password=" + encodeURIComponent(password) + "&group=" +  encodeURIComponent(group) + "&role=" + role;
 	            $(location).attr('href',url);
 	        }
 	    }
@@ -122,7 +122,7 @@ window.onload = function(){
 	            var group = $("#oldGroupName").val();
 	            var role = $( "#myselect2 option:selected" ).text();
 	            $(this).dialog("close");
-	            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&editUser=" + name +"&newPassword=" + password + "&group=" + group + "&role=" + role;
+	            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&newUsername=" + encodeURIComponent(name) +"&newPassword=" + encodeURIComponent(password) + "&group=" + encodeURIComponent(group) + "&role=" + role;
 	            $(location).attr('href', url);
 	        }
 	    }
@@ -159,7 +159,7 @@ window.onload = function(){
 	        },
 	        Edit: function () {
 	            var newGroupName = $("#newGroupName").val();
-	            var url = "AdministrationComponent?editgroup=" + oldGroupId + "&groupname=" + newGroupName;
+	            var url = "AdministrationComponent?editgroup=" + oldGroupId + "&groupname=" + encodeURIComponent(newGroupName);
 	            $(location).attr('href', url);
 	        }
 	    }
@@ -189,7 +189,7 @@ window.onload = function(){
 	        Add: function () {
 	            var newGroupName = $("#addGroupName").val();
 	            $(this).dialog("close");
-	            var url = "AdministrationComponent?addNewGroup=" + newGroupName;
+	            var url = "AdministrationComponent?addNewGroup=" + encodeURIComponent(newGroupName);
 	            $(location).attr('href', url);
 	        }
 	    }

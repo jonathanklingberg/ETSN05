@@ -130,6 +130,7 @@ public class DatabaseHandlerInstance {
 		try {
 			//TODO Doesn't feel like this check is needed, the userName column should be defined unique in the database already?
 			// this is just another unnecessary call to the database. /J
+			//Answer: This is to check that admin doesnt try to add someone with the same username. If so, we return false, and write appropiate fail msg /M
 			PreparedStatement ps = conn.prepareStatement("select * from Users where userName = '" + user.getName() + "'");
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {

@@ -294,12 +294,14 @@ public class ProjectGroup extends AbstractCointainer {
 				removeTimeReport(timeReportsToDelete.get(i), "admin");
 			}
 			PreparedStatement ps;
-			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = '" + id + "'");
+			//Kan inte köra kontroll på executeUpdate, eftersom denna returnerar noll om det inte finns någon roleInGroup förknippat med gruppen!! Detta funkar, ändra 
+			//INTE / S & M
+			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = " + id);
+			ps.executeUpdate();
+			
+			ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE id = " + id );
 			if(ps.executeUpdate() > 0){
-				ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE id = '" + id + "'");
-				if(ps.executeUpdate() > 0){
-					successfullyDeleted = true;
-				}
+				successfullyDeleted = true;
 			}
 			ps.close();
 			return successfullyDeleted;
