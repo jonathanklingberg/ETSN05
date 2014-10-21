@@ -152,11 +152,11 @@ public abstract class ServletBase extends HttpServlet {
 			String editCode = "";
 			if(isAdminComponent()) {
 				amount = 6;
-				editCode = "<a onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
+				editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				amount = 3;
 				if(role.equals("Admin") == false){
-				editCode = "<a onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
+				editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
 				}
 			} else {
 				amount = 2;
@@ -164,7 +164,7 @@ public abstract class ServletBase extends HttpServlet {
 				editCode = "<a href=" + formElement(editURL) +" onclick="+formElement("return confirm('Are you sure you want to edit "+name+"?')") + ">Edit</a>";
 			}
 
-			String deleteCode = "<a onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
+			String deleteCode = "<a class=\"cursor-pointer\" onclick="+formElement("return deleteUser('" + name + "')") + "> Delete </a>";
 			if (name.equals("admin")){
 				deleteCode = "";
 				editCode = "";
@@ -269,8 +269,8 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 			
-			String editCodePM = "<a class=\"edit-timereport-btn\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=projectmanagercomponent> edit </a>";
-			String deleteCodePM = "<a class=\"delete-timereport-btn\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=projectmanagercomponent> delete </a>";
+			String editCodePM = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=projectmanagercomponent> edit </a>";
+			String deleteCodePM = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=projectmanagercomponent> delete </a>";
 
 			if(userId == tr.getUserId()){
 				out.println("<td>" + editCodePM +  "</td>");
@@ -285,8 +285,8 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
 			
-			String editCodeWorker = "<a class=\"edit-timereport-btn\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=workercomponent> edit </a>";
-			String deleteCodeWorker = "<a class=\"delete-timereport-btn\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=workercomponent> delete </a>";
+			String editCodeWorker = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=workercomponent> edit </a>";
+			String deleteCodeWorker = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=workercomponent> delete </a>";
 			
 			if(signed){
 				out.println("<td> </td>");

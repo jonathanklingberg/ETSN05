@@ -73,3 +73,7 @@ table{
 body{
 	padding:15px;
 }
+
+.cursor-pointer {
+	cursor: pointer;
+}
