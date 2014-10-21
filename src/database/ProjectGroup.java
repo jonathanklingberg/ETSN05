@@ -78,7 +78,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			rs.close();
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return membersList;
 	}
@@ -123,7 +123,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			rs.close();
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return timeReportList;
 	}
@@ -234,7 +234,7 @@ public class ProjectGroup extends AbstractCointainer {
 				ps.close();
 			} catch (SQLException e) {
 				wasAdded = false;
-				e.printStackTrace();
+				handleSqlErrors(e);
 			}
 		}
 		return wasAdded;
@@ -298,7 +298,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			return true;
 		}catch(SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 			return false;
 		}
 	}
