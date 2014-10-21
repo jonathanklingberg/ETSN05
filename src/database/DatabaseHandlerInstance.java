@@ -2,6 +2,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,8 +28,29 @@ import java.util.List;
 public class DatabaseHandlerInstance {
 	private static DatabaseHandlerInstance instance = null;
 	private static Connection conn;
-	protected DatabaseHandlerInstance(Connection conn) {
-		DatabaseHandlerInstance.conn = conn;
+	protected DatabaseHandlerInstance() {
+//		DatabaseHandlerInstance.conn = conn;
+		try{
+
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
+				"user=puss1403&password=9dpa2oan");
+		
+		System.out.println("Successfully connected to database!");
+
+		//TODO BETTER ERROR HANDLING! /J
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -39,9 +61,9 @@ public class DatabaseHandlerInstance {
 	 * @return The WorkspaceInstance which will be the same in the entire
 	 *         system.
 	 */
-	public static DatabaseHandlerInstance getInstance(Connection conn) {  
+	public static DatabaseHandlerInstance getInstance() {  
 		if(instance == null) {
-			instance = new DatabaseHandlerInstance(conn);
+			instance = new DatabaseHandlerInstance();
 		}
 		return instance;
 	}

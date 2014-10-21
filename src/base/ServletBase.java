@@ -3,8 +3,6 @@ package base;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,26 +45,8 @@ public abstract class ServletBase extends HttpServlet {
 	/**
 	 * Constructs a servlet and makes a connection to the database.
 	 */
-	public ServletBase() {
-		try{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1403?" +
-					"user=puss1403&password=9dpa2oan");
-			instance = DatabaseHandlerInstance.getInstance(conn);
-			//TODO Why do we connect to database here and not i databasehandler constructor? Didn't I move it there? /J
-			System.out.println("Successfully connected to database!");
-			//TODO BETTER ERROR HANDLING! /J
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+	public ServletBase() {			
+			instance = DatabaseHandlerInstance.getInstance();
 	}
 
 	/**
