@@ -1,24 +1,14 @@
 package base;
 
-import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import data.Number;
-import data.Type;
 import database.ProjectGroup;
 import database.TimeReport;
 import database.User;
@@ -56,14 +46,10 @@ public class WorkerComponent extends ServletBase {
 		out.println(getPageIntro());
 		String timeReportActionMessage = null;
 		String role = getRole();
-
-		// Check so that the current user is either a developer, tester or a
-		// system architect.
-		// Currently not giving the admin or PM access to WorkerComponent?
+		
 		if (isLoggedIn(request)
 				&& (role.equals("Developer") || role.equals("SystemArchitect") || role
 						.equals("Tester"))) {
-			// TODO This is not shown in mockup
 			out.println("<h1> Worker page </h1>");
 
 			String userName = getName();
@@ -79,6 +65,8 @@ public class WorkerComponent extends ServletBase {
 					.getUser(userName).getGroupId());
 			printUserTable(out, groupMembers, null);
 			
+			//TODO this is not a good approach, see my comment on AdministratorComponent,
+			// Consider define a GET parameter called action which can be switch-cased instead. /J
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = deleteTimeReport(request);
 			if(timeReportActionMessage == null)
@@ -86,17 +74,15 @@ public class WorkerComponent extends ServletBase {
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = addNewTimeReport(request, out, userId, role);
 			
-			// Display all time reports belonging to the logged in user
 			ArrayList<TimeReport> timeReports = instance
 					.getUsersTimeReportsOfUser(userId);
 			printTimeReportTable(out, timeReports, timeReportActionMessage, userId);
 
-			
 			out.println(getEditTimeReportForm());
 			out.println(getAddTimeReportForm());
 			
+			//TODO Move to servetBase.getPageOutro();
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
-			System.out.print("ROLE :"+ role);
 		} else {
 			System.err.println("Illegal action performed as: " + role
 					+ "; Tried to access WorkerComponent.");
@@ -108,7 +94,6 @@ public class WorkerComponent extends ServletBase {
 	/**
 	 * Handles input from the worker and displays information.
 	 * 
-	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
@@ -116,7 +101,8 @@ public class WorkerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response); // forward post-data to get-function /J
 	}
-
+	
+	//TODO please look at the JavaDoc guidelines for how to define return-parameters correctly. /J
 	/***
 	 * Method stating that this component isn't the admin component through a boolean variable false.
 	 */

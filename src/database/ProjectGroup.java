@@ -25,8 +25,6 @@ import data.Role;
  *  @author SG
  *  @version 0.3
  */
-//TODO Don't forget to close both preparedstatements and resultsets!
-//Please redirect errors to handleSqlErrors(error) as error handler /J
 public class ProjectGroup extends AbstractCointainer {
 	protected String name;
 	protected long id;
@@ -65,11 +63,6 @@ public class ProjectGroup extends AbstractCointainer {
 	 * in the group
 	 */
 	public List<User> getUsers() {
-		//Make SQL statement to get Users from Database,
-		//Probably will need to join on Users table
-		//and "RoleInGroup", and select that the
-		//"activeInGroup" is yes, and project id is the id given
-		//in this class
 		ArrayList<User> membersList = new ArrayList<User>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.userName, Users.password, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
@@ -85,7 +78,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			rs.close();
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return membersList;
 	}
@@ -131,7 +124,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			rs.close();
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return timeReportList;
 	}
@@ -161,8 +154,7 @@ public class ProjectGroup extends AbstractCointainer {
 			rs.close();
 			return new TimeReport(conn, reportId, userId, role, id, charType, duration, week, date, signed, number);
 		}catch (SQLException e) {
-			//TODO handleSqlErrors(e);
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return null;
 	}
@@ -185,13 +177,12 @@ public class ProjectGroup extends AbstractCointainer {
 			PreparedStatement ps = conn.prepareStatement("INSERT into TimeReports(id, userId, groupId, date, duration, type, week, signed) "
 					+ "VALUES('', '" + report.getUserId() + "', '" + report.getGroupId() + "', '" + report.getDate() + "', '" + report.getDuration() + "',"
 							+ " '" + report.getType() + "', '" + report.getWeek() + "', '" + signed + ")" );
-			ps.executeUpdate();
-			//TODO Better check (>0) /J
-			wasAdded = true;
+			if(ps.executeUpdate() > 0){
+				wasAdded = true;
+			}
 			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return wasAdded;
 	}
@@ -204,24 +195,20 @@ public class ProjectGroup extends AbstractCointainer {
 	 * otherwise false
 	 */
 	public boolean removeTimeReport(TimeReport report, String userName) {
-		
-		//Don't forget to check that the time report is unsigned!
 		boolean wasRemoved = false;
 		try {
 			PreparedStatement ps = null;
 			if(userName.equals("admin")) {
 				ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = " + report.getId());
-				
 			} else {
 				ps = conn.prepareStatement("DELETE FROM TimeReports WHERE id = " + report.getId() + " AND signed = 0");
 			}
-			if(ps.executeUpdate() == 1){
+			if(ps.executeUpdate() > 0){
 				wasRemoved = true;
 			}
 			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return wasRemoved;
 	}
@@ -243,13 +230,13 @@ public class ProjectGroup extends AbstractCointainer {
 			try {
 				PreparedStatement ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role, isActiveInGroup) values("+ user.getUserId() +", " +
 					user.getGroupId() +", '" + user.getRole() + "', 1);");
-				if(ps.executeUpdate() != 0){ // This is a correct check =) /J
+				if(ps.executeUpdate() > 0){
 					wasAdded = true;
 				}
 				ps.close();
 			} catch (SQLException e) {
 				wasAdded = false;
-				e.printStackTrace();
+				handleSqlErrors(e);
 			}
 		}
 		return wasAdded;
@@ -313,7 +300,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ps.close();
 			return true;
 		}catch(SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 			return false;
 		}
 	}

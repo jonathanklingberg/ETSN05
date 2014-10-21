@@ -51,12 +51,11 @@ public class ProjectManagerComponent extends ServletBase {
 		String timeReportActionMessage = null;
 		
 		String myName = getName();
-		String role = getRole();
+		String role = getRole();		
 		boolean isAdmin = getRole().equalsIgnoreCase("admin");
+		
 		//TODO Give admin access to this component! /J
-		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || isAdmin)) {
-			
-			//TODO this not shown in mockup design!
+		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || isAdmin)) {			
 			out.println("<h1>Project management page</h1>");
 			if(getRole().equalsIgnoreCase("admin")){
 				out.print("<a id=\"back-btn\" class=\"btn btn-block btn-lg btn-warning\" href=\"administrationcomponent\">Go back</a>");
@@ -67,15 +66,12 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			long groupId = -1;
 			if(adminGroupRequestString != null && isAdmin) { // An admin has been redirected to ProjectManagerComponent for the first time
-//				System.out.println("Admin clicked on a group for the first time");
 				groupId = Long.parseLong(adminGroupRequestString);
 				session.setAttribute("adminGroupRequestId", groupId);
 			} else if(adminGroupSessionObject != null && isAdmin){  // An admin has clicked on something in ProjectManagerComponent view and page is rendered again
-//				System.out.println("Admin re rendered project manager page");
-//				System.out.println("adminGroupSessionObject is of class " + adminGroupSessionObject.getClass());
+
 				groupId = Long.parseLong(adminGroupSessionObject.toString());
-			}else{ // User is projectmanager
-//				System.out.println("User is project manager");
+			}else{ 													// User is projectmanager
 				groupId = instance.getUser(myName).getGroupId();
 			}
 			
@@ -94,6 +90,7 @@ public class ProjectManagerComponent extends ServletBase {
 			}
 			
 			String roleIdString = request.getParameter("roleId");
+			//TODO Better check! (against db) /J
 			if (roleIdString != null) {				
 				Long roleId = Long.parseLong(roleIdString);
 				String newRole = request.getParameter("role");
@@ -104,10 +101,10 @@ public class ProjectManagerComponent extends ServletBase {
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
 			printUserTable(out, usersInGroup, null);
 			
-			
 			Long userId = (Long) session.getAttribute("userId");
-
 			
+			//TODO I'm pretty sceptical about this approach, a simple switch-case where requested action was specified would have been better. 
+			// See my comment on adminComponent, implement if you have the time /J
 			if(timeReportActionMessage == null)
 				timeReportActionMessage = deleteTimeReport(request);
 			if(timeReportActionMessage == null)
@@ -117,14 +114,17 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			
 			// Prints a table with time reports from users of the same group
+			//TODO groupId can never be null or what happens then? do you handle this? /J
 			ArrayList<TimeReport> timeReports = instance.getTimeReportsOfGroup(groupId);
 			System.out.println("Got all time reports for group " + groupId + ": " + instance.getProjectGroup(groupId).getName());
 			System.out.println("There were " + timeReports.size() + " of them");
+			//TODO what if there're no reports? should we just print an empty table? or show a message? Make sure there's no exception whatsoever. /J
 			printTimeReportTable(out, timeReports, timeReportActionMessage, userId);
 			
 			out.println(getEditTimeReportForm());
 			out.println(getAddTimeReportForm());
 			
+			//TODO are these items done? remove comment then /J
 			/* Do alot of stuff according to the SRS:
 			 * See all members of his group			X
 			 * See all groupmembers timereports		X
@@ -136,6 +136,7 @@ public class ProjectManagerComponent extends ServletBase {
 			 * Maybe:
 			 * Be able to write and edit his own time reports
 			 */
+			//TODO Move to servletBase.getPageOutro();
 			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
 			out.println("</body></html>");
 
@@ -158,15 +159,15 @@ public class ProjectManagerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response); // redirect post-data to GET-action
 	}
-
+	//TODO JavaDoc
 	protected boolean isAdminComponent() {
 		return false;
 	}
-	
+	//TODO JavaDoc	
 	protected boolean isWorkerComponent() {
 		return false;
 	}
-
+	//TODO JavaDoc
 	protected boolean isProjectManagerComponent() {
 		return true;
 	}

@@ -22,8 +22,7 @@ import java.util.List;
  */
 
 //TODO Remember to always close BOTH resultset and eventual preparedStatements!
-//TODO Please in case you catch a sql-error then redirect the error-object to handleSqlErrors(e);
-// I have left these problems for somebody else to fix /J
+//TODO Please in case you catch a sql-error then redirect the error-object to handleSqlErrors(e); /J
 
 public class DatabaseHandlerInstance {
 	private static DatabaseHandlerInstance instance = null;
@@ -84,7 +83,6 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT into ProjectGroups(groupName) VALUES ('" + projectGroup.name + "')" );
 			ps.executeUpdate();
-			//TODO Better check! ( >0 )  /J
 			wasAdded = true;
 			ps.close();
 		} catch (SQLException e) {
@@ -102,19 +100,14 @@ public class DatabaseHandlerInstance {
 	 *         false
 	 */
 	public synchronized boolean addUser(User user) {
-		//Since the user will contain the group id as well,
-		//calls both to the "Users" table as well as the
-		//"RoleInGroup" table could (should?) be made here, since
-		//the user needs to be assigned to the group instantly.
-
-		//Also note that according to the requirements in the base
-		//system, the password needs to be 6 characters long, and
-		//exactly 6 characters long. This might be a stupid requirement
-		//we would like to change later on, just keep it in mind when
-		//implementing for now though
+		//TODO validate that the user object has all of the needed attributes,
+		//for example the user need to be assigned a group when created, 
+		//also make sure the password was valid according to length aso. /J
 
 		boolean wasAdded = false;
 		try {
+			//TODO Doesn't feel like this check is needed, the userName column should be defined unique in the database already?
+			// this is just another unnecessary call to the database. /J
 			PreparedStatement ps = conn.prepareStatement("select * from Users where userName = '" + user.getName() + "'");
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
@@ -122,7 +115,6 @@ public class DatabaseHandlerInstance {
 			}
 			ps = conn.prepareStatement("INSERT into Users(userName, password) VALUES('" + user.getName() + "', '" + user.getPassword() + "')");
 			ps.executeUpdate();
-			//TODO If we use isActive-attribute from db then multiple users with same name exists in db, needs to be handled. /J
 			ps = conn.prepareStatement("select id from Users where userName = '" + user.getName() + "'");
 			rs = ps.executeQuery();
 			rs.next();
@@ -130,6 +122,9 @@ public class DatabaseHandlerInstance {
 			ps.close();
 			wasAdded = true;
 			User usr = new User(conn, user.getName(), user.getPassword(), userid, user.getGroupId(), user.getRole());
+			//TODO really don't get the idea behind adding the user to instance-group, but it might just be me? /J
+			//also why no check if this was succeeded if it's needed? 
+			//right now we say it went OK even though we could not add the user to the instance-group? /J
 			instance.getProjectGroup(user.getGroupId()).addUser(usr);
 		} catch (SQLException e) {
 			handleSqlErrors(e);
@@ -160,7 +155,7 @@ public class DatabaseHandlerInstance {
 			ps.close();
 			rs.close();
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return users;
 	}
@@ -176,25 +171,25 @@ public class DatabaseHandlerInstance {
 	 */
 	public synchronized User getUser(String userName) {
 		try {
-			//TODO Username is not unique if we use isActive, fix this! /J
-			PreparedStatement ps = conn.prepareStatement("SELECT * from Users WHERE userName= '" + userName + "'");
+			PreparedStatement ps = conn.prepareStatement("SELECT Users.id, Users.password, RoleInGroup.groupId, RoleInGroup.role FROM Users JOIN RoleInGroup On (Users.id = RoleInGroup.userId)"
+					+ " WHERE userName='"+userName+"' AND RoleInGroup.isActiveInGroup = 1");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			long id = rs.getLong("id");
-			String password = rs.getString("password");
-			ps = conn.prepareStatement("SELECT * from RoleInGroup WHERE userId = " + id + " AND isActiveInGroup=true");
-			rs = ps.executeQuery();
-			rs.next();
-			long groupId = rs.getLong("groupId");
-			String role = rs.getString("role");
-			ps.close();
-			return new User(conn, userName, password, id, groupId, role);
+			if(rs.next()){			
+				long userId = rs.getLong("id");
+				String password = rs.getString("password");
+				Long groupId = rs.getLong("groupId");
+				String role = rs.getString("role");
+				ps.close();
+				rs.close();
+				return new User(conn, userName, password, userId, groupId, role);
+			}
 		}catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 		return null;			
 	}
-
+	
+	//TODO JavaDoc which is not good /J
 	/** 
 	 * Retrieves a specific user from the database
 	 * 
@@ -212,6 +207,9 @@ public class DatabaseHandlerInstance {
 			if(rs.next()) {
 				user = getUser(rs.getString("userName"));
 			} else {
+				//TODO Me no like at all! manipulating user attributes in this manner is not accepted.
+				// I see what you want to achieve but this is not the correct approach for that!
+				// Please refactor asap! /J
 				user = new User("<i>**removed user**</i>", "<i>**removedUserPassword**</i>", "<i>**removed user**</i>", -1);
 			}
 			ps.close();
@@ -235,11 +233,12 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where id =" + id + ";");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			String groupName = rs.getString("groupName");
-			rs.close();
-			ps.close();
-			return new ProjectGroup(conn, id, groupName);
+			if(rs.next()){
+				String groupName = rs.getString("groupName");
+				rs.close();
+				ps.close();
+				return new ProjectGroup(conn, id, groupName);
+			}
 		}catch (SQLException e) {
 			handleSqlErrors(e);
 		}
@@ -257,12 +256,12 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM ProjectGroups where groupName ='" + groupName + "';");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			long id = rs.getLong("id");
-			System.out.println("Groupid: " + id);
-			rs.close();
-			ps.close();
-			return new ProjectGroup(conn, id, groupName);
+			if(rs.next()){				
+				long id = rs.getLong("id");
+				rs.close();
+				ps.close();
+				return new ProjectGroup(conn, id, groupName);
+			}
 		}catch (SQLException e) {
 			handleSqlErrors(e);
 		}
@@ -279,13 +278,11 @@ public class DatabaseHandlerInstance {
 	 */
 	public boolean changeGroupName(long groupNumber, String newGroupName) {
 		try{
-			System.out.println(newGroupName);
 			PreparedStatement p = conn.prepareStatement("select * from ProjectGroups where groupName='" + newGroupName + "'");
 			ResultSet rs = p.executeQuery();
 			if(!rs.next()) {
 				PreparedStatement ps2 = conn.prepareStatement("update ProjectGroups set groupName='" + newGroupName + "'" + "where id= '" + groupNumber + "'");
 				ps2.executeUpdate();
-				//TODO Better check! /J
 				ps2.close();
 				p.close();
 				rs.close();
@@ -313,7 +310,6 @@ public class DatabaseHandlerInstance {
 			ps.close();
 			resultOK = true;
 		} catch (SQLException ex) {
-			resultOK = false;
 			handleSqlErrors(ex);
 		}
 		return resultOK;
@@ -345,7 +341,6 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps = conn.prepareStatement("update Users set is_active = 0 where name = '"
 					+ name + "'");
 			ps.executeUpdate();
-			//TODO Better check! /J
 			ps.close();
 		} catch (SQLException ex) {
 			resultOk = false;
@@ -415,8 +410,7 @@ public class DatabaseHandlerInstance {
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TimeReports WHERE userId = " + userId);
 			ResultSet rs = ps.executeQuery();
-			while(rs.next()){	
-				//TODO I'm really not brave enough to believe this is working in all cases, please specify attributes! /J
+			while(rs.next()){
 				list.add(createTimeReport(rs));	
 			}			
 			rs.close();
@@ -476,7 +470,6 @@ public class DatabaseHandlerInstance {
 	 */
 	public void addTimeReport(TimeReport tr) {
 		try{
-			//NOT CORRECT YET!
 			PreparedStatement ps = conn.prepareStatement("insert into TimeReports (userId, groupId, role, date, duration, type, number ,week, signed) values("
 					+ tr.getUserId() + ", " 
 					+ tr.getGroupId() + ", '"
@@ -492,7 +485,7 @@ public class DatabaseHandlerInstance {
 			handleSqlErrors(ex);
 		}
 	}
-
+	
 	/**
 	 * Edit a timereport in the system
 	 *
@@ -525,37 +518,42 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps;
 			ResultSet rs;
 			if(!oldUserName.equals(newUserName)){
+				//TODO What the F is the "AND id != "doing there? /J
 				ps = conn.prepareStatement("select * from Users where userName = '" + newUserName + "' AND id != ");
 				rs = ps.executeQuery();
 				if(rs.next()) {
-					return false;
+					return false; // return false if userName already exists in Users table
 				}
 			}
 			ps = conn.prepareStatement("update Users set userName = '" + newUserName + "', password = '" + newPassword + "' where userName = '" + oldUserName + "'");
-			ps.executeUpdate();
+			ps.executeUpdate(); // Update actual Users table
 			ps = conn.prepareStatement("select * from Users where userName = '"  + newUserName + "'");
-			rs = ps.executeQuery();
-			rs.next();
-			long userId = rs.getLong("id");	
-			long groupId = instance.getProjectGroup(newGroupName).getId();
-			ps = conn.prepareStatement("select * from RoleInGroup where userId = " + userId + " AND groupId = " + groupId + " AND isActiveInGroup=true");
-			rs = ps.executeQuery();
-			if(!rs.next()) {
-				ps = conn.prepareStatement("update RoleInGroup set isActiveInGroup = false where userId = " + userId);
-				ps.executeUpdate();
-				ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role ,isActiveInGroup) VALUES(" +userId + ", " +groupId + ", '" + role + "', true)");
-				ps.executeUpdate();
-			} else {
-				changeRoleOfUser(role, userId);
+			rs = ps.executeQuery(); // Fetch the ID of updated User. 
+			//TODO Rather not perform a separate query to fetch userID! Why not simply include it with the function in-paramters, feels more natural to me? /J
+			if(rs.next()){
+				long userId = rs.getLong("id");	
+				long groupId = instance.getProjectGroup(newGroupName).getId();
+				ps = conn.prepareStatement("select * from RoleInGroup where userId = " + userId + " AND groupId = " + groupId + " AND isActiveInGroup=true");
+				rs = ps.executeQuery();
+				if(!rs.next()) {
+					//The userId-groupId pair did not exist in the RoleInGroup table!
+					ps = conn.prepareStatement("update RoleInGroup set isActiveInGroup = false where userId = " + userId);
+					ps.executeUpdate(); // inactivate user in old group(s).
+					ps = conn.prepareStatement("insert into RoleInGroup(userId, groupId, role ,isActiveInGroup) VALUES(" +userId + ", " +groupId + ", '" + role + "', true)");
+					ps.executeUpdate(); //insert new entry into the RoleInGroup table.
+				} else {
+					//The userId-groupId pair already assigned in RoleInGroup, update with separate function.
+					changeRoleOfUser(role, userId);
+				}
+				ps.close();
 			}
-			ps.close();
 		} catch(SQLException e) {
 			handleSqlErrors(e);
 			return false;
 		}
 		return true;
 	}
-
+	//TODO JavaDoc
 	public void changeRoleOfUser(String newRole, long userId){
 		PreparedStatement ps;
 		try {
@@ -563,10 +561,10 @@ public class DatabaseHandlerInstance {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			handleSqlErrors(e);
 		}
 	}
-	//TODO JavaDoc
+	//TODO JavaDoc better name would be toggleSignature....
 	public void changeSignatureOfTimeReport(String timereportId) {
 		TimeReport tr = instance.getTimeReport(Long.parseLong(timereportId));
 		boolean isSigned = tr.isSigned();		
@@ -576,55 +574,10 @@ public class DatabaseHandlerInstance {
 			tr.signTimeReport();
 		}
 	}
+	
 	//TODO JavaDoc
+	//TODO Create a link to the AbstractContainer->handleSqlErrors instead of implementing it here.
 	private void handleSqlErrors(SQLException e){
-		//TODO Implement better error handling! /J
-		// As a suggestion use a container which always shows error messages! /J
 		e.printStackTrace();
 	}
-
-
-	//	/**
-	//	 * Method for generating the overall structure for the different
-	//	 * component classes. Will typically differ depending on the user who
-	//	 * is sent as input.
-	//	 * 
-	//	 * @param user The user who wants to print a project group.
-	//	 * @return Returns the components of the page in HTML representation.
-	//	 */
-	//	public synchronized String toHTML(User user) {
-	//		return null;
-	//		//If administrator, getProjects and getUsers should be called
-	//		//and then for each on each of those objects and call toHTML()
-	//		//on them. If project worker, call appropriate methods to
-	//		//generate this page instead, etc.
-	//		
-	//		//If the administrator would like to get the view of a project
-	//		//manager (which should be possible since the administrator also
-	//		//has the same rights as project manager), an 'ugly' solution
-	//		//is proposed here, but feel free to refine it if you find it too 
-	//		//ugly.
-	//		
-	//		//Simply change the role for the user (who is the administrator)
-	//		//to "ProjectManager" (before calling this method), 
-	//		//and then check what role the user has in this method. That is,
-	//		//always check the role to determine which page that should be generated
-	//		
-	//		//Problem if done this way is that the administrator does not have any
-	//		//role defined, however, then it should be null, so if the role is null
-	//		//we can be certain that the user is the administrator who wants 
-	//		//the administrator page. But as stated earlier, this is kind of
-	//		//ugly so there might be a better way to solve it!
-	//		
-	// //Moreover the setRole(ProjectManager) for the administrator object
-	// should not
-	//		//have any effect on the database, thus a control needs to be done in
-	// //setRole which checks if it is the administrator who the role is set
-	// for,
-	//		//if so, just set the attribute internally for the class, but do not
-	//		//update the database.	
-	//		
-	//	}
-
-
 }

@@ -6,6 +6,7 @@ package data;
  * @author SG
  * @version 0.2
  */
+//TODO JavaDoc
 public enum Type {
     Development('D'), Formal('F'), Informal('I'), Rework('R');
     private char value;
