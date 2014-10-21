@@ -45,32 +45,42 @@ public class ProjectManagerComponent extends ServletBase {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession(true);
+//		System.out.println("groupIdAttribute = " + session.getAttribute("groupId"));
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
 		String timeReportActionMessage = null;
 		
 		String myName = getName();
 		String role = getRole();
-		
+		boolean isAdmin = getRole().equalsIgnoreCase("admin");
 		//TODO Give admin access to this component! /J
-		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || getRole().equalsIgnoreCase("admin"))) {
+		if (isLoggedIn(request) && (getRole().equalsIgnoreCase("projectmanager") || isAdmin)) {
+			
 			//TODO this not shown in mockup design!
 			out.println("<h1>Project management page</h1>");
 			if(getRole().equalsIgnoreCase("admin")){
 				out.print("<a id=\"back-btn\" class=\"btn btn-block btn-lg btn-warning\" href=\"administrationcomponent\">Go back</a>");
 			}
-			String groupIdString = (String)request.getParameter("adminProjectId");
-			System.out.println("groupIdString is: " +groupIdString);
+			
+			String adminGroupRequestString = request.getParameter("adminGroupRequestId");
+			Object adminGroupSessionObject = session.getAttribute("adminGroupRequestId");
+			
 			long groupId = -1;
-			if(groupIdString != null) {
-				groupId = Long.parseLong(groupIdString);
-			} else {
+			if(adminGroupRequestString != null && isAdmin) { // An admin has been redirected to ProjectManagerComponent for the first time
+//				System.out.println("Admin clicked on a group for the first time");
+				groupId = Long.parseLong(adminGroupRequestString);
+				session.setAttribute("adminGroupRequestId", groupId);
+			} else if(adminGroupSessionObject != null && isAdmin){  // An admin has clicked on something in ProjectManagerComponent view and page is rendered again
+//				System.out.println("Admin re rendered project manager page");
+//				System.out.println("adminGroupSessionObject is of class " + adminGroupSessionObject.getClass());
+				groupId = Long.parseLong(adminGroupSessionObject.toString());
+			}else{ // User is projectmanager
+//				System.out.println("User is project manager");
 				groupId = instance.getUser(myName).getGroupId();
 			}
 			
-			out.println("<p>User:<strong> " +getRole() +"</strong></p>");
-			
 			System.out.println("groupId = " + groupId);
+			out.println("<p>User:<strong> " +getRole() +"</strong></p>");
 			ProjectGroup pg = instance.getProjectGroup(groupId);
 			out.println("<p>Group:<strong> "+ pg.getName() +"</strong></p>");
 			String timereportId = request.getParameter("signtimereport");

@@ -118,6 +118,7 @@ public class ProjectGroup extends AbstractCointainer {
 			while(rs.next()){
 				long reportId = rs.getLong("id");
 				long userId = rs.getLong("userId");
+				String role = rs.getString("role");
 				String type = rs.getString("type");
 				long duration = rs.getLong("duration");
 				long week = rs.getLong("week");
@@ -125,7 +126,7 @@ public class ProjectGroup extends AbstractCointainer {
 				boolean signed = rs.getBoolean("signed");
 				long number = rs.getLong("number");
 				char charType = type.charAt(0);
-				timeReportList.add(new TimeReport(conn, reportId, userId, null, id, charType, duration, week, date, signed, number));
+				timeReportList.add(new TimeReport(conn, reportId, userId, role, id, charType, duration, week, date, signed, number));
 			}
 			ps.close();
 			rs.close();
@@ -148,6 +149,7 @@ public class ProjectGroup extends AbstractCointainer {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long userId = rs.getLong("userId");
+			String role = rs.getString("role");
 			String type = rs.getString("type");
 			long duration = rs.getLong("duration");
 			long week = rs.getLong("week");
@@ -157,7 +159,7 @@ public class ProjectGroup extends AbstractCointainer {
 			char charType = type.charAt(0);
 			ps.close();
 			rs.close();
-			return new TimeReport(conn, reportId, userId, null, id, charType, duration, week, date, signed, number);
+			return new TimeReport(conn, reportId, userId, role, id, charType, duration, week, date, signed, number);
 		}catch (SQLException e) {
 			//TODO handleSqlErrors(e);
 			e.printStackTrace();
