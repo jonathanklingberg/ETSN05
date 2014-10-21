@@ -21,65 +21,13 @@ $(document).ready(
 		$("body").on("submit", function(){
 			$("body").fadeOut(1000);
 		});
-		
-//		$('#logincredentials').html(  "admin - adminpw <br>" +
-//				"testuser -  passwd <br>" +
-//				"devuser -  passwd <br>" +
-//				"pmuser -  passwd <br>"
-//		);
 		$('.signedCheckbox').on('change', function(){
 			var reportId = $(this).siblings('.timereportid').val();
 			window.location = "projectmanagercomponent?signtimereport="+reportId;			
-//			e.preventDefault();
-//			var success = false;
-//			var checked;
-//			if($(this).prop('checked')){
-//				checked = true;
-//			}else{
-//				checked = false;
-//			}
-//			var reportId = $(this).siblings('.timereportid').val();
-//			var data = {
-//					checked : checked,
-//					reportId : reportId
-//				};
-//			console.log("Checked: " + checked);
-//			console.log("reportId: " + reportId);
-//			$.ajax({
-//				  type: "POST",
-//				  url:  "projectmanagercomponent",
-//				  data: data,
-//				  dataType: "html"
-//				}).done(function(response) {
-//					if(response != null && response == 1){ // Success!						
-//						console.log("response: " + response);
-//						//$('#testcont').html(response);
-//						success = true;
-//						alert( "success" );
-//					}else{ // Something went wrong!
-//						alert( "error" );
-//					}
-//				  })
-//				  .fail(function( jqXHR, textStatus ) {
-//				    alert( "error"  + textStatus);
-//				  })
-//				  .always(function() {
-//				    alert( "complete" );
-//				    if(success){
-//				    	console.log("checkingbox");
-//				    	if(checked == true){				
-//				    		$(this).prop("checked", "checked");
-//				    	}
-//				    }else{
-//				    	console.log("unchecking box");
-//				    	$(this).prop("checked", "");
-//				    }
-//			  });
 			});			
 		});
 
 $(function () {
-
     $('.footable').footable({    	
 			filter: {
 				minimum: 1,
