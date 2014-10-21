@@ -136,8 +136,8 @@ public class ProjectManagerComponent extends ServletBase {
 			 * Maybe:
 			 * Be able to write and edit his own time reports
 			 */
-			//TODO Move to servletBase.getPageOutro();
-			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
+
+			out.println(getPageOutro());
 			out.println("</body></html>");
 
 

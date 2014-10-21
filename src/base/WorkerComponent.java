@@ -81,8 +81,7 @@ public class WorkerComponent extends ServletBase {
 			out.println(getEditTimeReportForm());
 			out.println(getAddTimeReportForm());
 			
-			//TODO Move to servetBase.getPageOutro();
-			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
+			out.println(getPageOutro());
 		} else {
 			System.err.println("Illegal action performed as: " + role
 					+ "; Tried to access WorkerComponent.");

@@ -178,8 +178,8 @@ public class AdministrationComponent extends ServletBase {
 							"Group name:<br><br><input type=\"text\" id=\"addGroupName\"/> "+ 
 							" </div>";
 			out.println(addGroupModal);
-			//TODO Move to servletBase.getPageOutro();
-			out.println("<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>");
+
+			out.println(getPageOutro());
 			out.println("</body></html>");
 
 		} else {
