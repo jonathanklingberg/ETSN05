@@ -83,7 +83,12 @@ public class ProjectGroup extends AbstractCointainer {
 		return membersList;
 	}
 
-	//TODO JavaDoc
+	
+	/**
+	 * Gets the total amount of project managers in a project group
+	 * 
+	 * @return the number of project managers in the project group
+	 */
 	public int getNumberOfPMs() {
 		int amountOfPMs = 0;
 		ArrayList<User> users = (ArrayList<User>) getUsers();
@@ -221,10 +226,6 @@ public class ProjectGroup extends AbstractCointainer {
 	 * otherwise false
 	 */
 	public boolean addUser(User user) {
-		//Don't forget to check that the user is not
-		//the administrator, since he isn't allowed to
-		//be a part of a group. 
-
 		boolean wasAdded = false;
 		if(!user.getName().equals("admin")){
 			try {
@@ -281,27 +282,30 @@ public class ProjectGroup extends AbstractCointainer {
 	 * otherwise false
 	 */
 	public boolean removeMe() {
+		boolean successfullyDeleted = false;
 		try {
 			List<User> usersTobeDeleted = getUsers();
 			List<TimeReport> timeReportsToDelete = getTimeReports();
-			PreparedStatement ps;
+			
 			for(int i = 0; i < usersTobeDeleted.size(); i++) {
 				usersTobeDeleted.get(i).removeMe();
 			}
 			for(int i = 0; i < timeReportsToDelete.size(); i++) {
 				removeTimeReport(timeReportsToDelete.get(i), "admin");
 			}
+			PreparedStatement ps;
 			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = '" + id + "'");
-			ps.executeUpdate();
+			if(ps.executeUpdate() > 0){
+				ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE id = '" + id + "'");
+				if(ps.executeUpdate() > 0){
+					successfullyDeleted = true;
+				}
+			}
 			ps.close();
-			ps = conn.prepareStatement("DELETE FROM ProjectGroups WHERE id = '" + id + "'");
-			ps.executeUpdate();
-			//TODO Better checks, close stmts rs and use own error handler. /J
-			ps.close();
-			return true;
+			return successfullyDeleted;
 		}catch(SQLException e) {
 			handleSqlErrors(e);
-			return false;
+			return successfullyDeleted;
 		}
 	}
 }

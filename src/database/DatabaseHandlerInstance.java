@@ -244,6 +244,8 @@ public class DatabaseHandlerInstance {
 		}
 		return null;
 	}	
+	
+	
 	/**
 	 * Retrieves a specific project group from the database
 	 * 
