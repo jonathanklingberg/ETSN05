@@ -246,21 +246,16 @@ public abstract class ServletBase extends HttpServlet {
 	 */
 	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage, long userId){
 		out.println("<div class=\"reportstable-tools\"><input class=\"form-control\" id=\"reportsfilter\" type=\"text\" placeholder=\"Filter Reports\"></input>");
-		out.println(isWorkerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary\" id=\"createTimeReportButtonWorker\">Add report</a></div>" :"");
-		out.println(isProjectManagerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary\" id=\"createTimeReportButtonProjectManager\">Add report</a></div>" :"");
+		out.println(isWorkerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=workercomponent>Add report</a></div>" :"");
+		out.println(isProjectManagerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=projectmanagercomponent>Add report</a></div>" :"");
 		out.println("<table class=\"footable\" id=\"reportstable\" data-filter=\"#reportsfilter\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
 			printTimeReport(out,timeReports.get(i), userId);
 		}
 		
-		String deleteForm = "";
-		if(isWorkerComponent()){
-			deleteForm = "<div id=\"deleteTimeReportWorker\" title=\"Delete time report\"> ";
-		} else if(isProjectManagerComponent()){
-			deleteForm = "<div id=\"deleteTimeReportProjectManager\" title=\"Delete time report\">";
-		}
-		deleteForm += "<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
+		String deleteForm = "<div id=\"deleteTimeReport\" title=\"Delete time report\">" +
+				"<p>Are you sure that you want to delete time report with id <span id=\"timeReportIDFix\"></span>? <p>" +
 				"</div> <br />";
 		out.println(deleteForm);
 		printTimeReportTableFooter(out);
@@ -287,19 +282,17 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
 		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
 
-		
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 			
-			String editCodePM = "<a onclick=" + formElement("return editTimeReportProjectManager('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
-			
-			String deleteCodePM = "<a onclick="+formElement("return deleteTimeReportProjectManager(" + tr.getId() + ")") + ">delete</a>";
+			String editCodePM = "<a class=\"edit-timereport-btn\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=projectmanagercomponent> edit </a>";
+			String deleteCodePM = "<a class=\"delete-timereport-btn\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=projectmanagercomponent> delete </a>";
 
 			if(userId == tr.getUserId()){
-			out.println("<td>" + editCodePM +  "</td>");
-			out.println("<td>" + deleteCodePM + "</td></tr>");
+				out.println("<td>" + editCodePM +  "</td>");
+				out.println("<td>" + deleteCodePM + "</td></tr>");
 			} else {
 				out.println("<td> </td>");
 				out.println("<td> </td></tr>");
@@ -310,8 +303,8 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
 			
-			String editCodeWorker = "<a onclick=" + formElement("return editTimeReportWorker('" + tr.getDate() + "','" + tr.getDuration() + "','" + tr.getNumber() + "','" + tr.getId() + "')") + "> edit </a>";
-			String deleteCodeWorker = "<a onclick="+formElement("return deleteTimeReportWorker(" + tr.getId() + ")") + ">delete</a>";
+			String editCodeWorker = "<a class=\"edit-timereport-btn\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=workercomponent> edit </a>";
+			String deleteCodeWorker = "<a class=\"delete-timereport-btn\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=workercomponent> delete </a>";
 			
 			if(signed){
 				out.println("<td> </td>");
@@ -375,17 +368,11 @@ public abstract class ServletBase extends HttpServlet {
 	
 	//TODO Javadoc
 	public String getEditTimeReportForm(){
-		String editForm = "";
-		if(isWorkerComponent()){
-			editForm = "<div id=\"editTimeReportWorker\" title=\"Edit time report\">"; 
-		} else if (isProjectManagerComponent()){
-			editForm =  "<div id=\"editTimeReportProjectManager\" title=\"Edit time report\">"; 
-		}
-		
-		editForm += "Date: <input type=\"text\" id=\"oldDate\" placeholder=\"YYYY-MM-dd\"></input><br>"+
-				"Duration(min): <input type=\"text\" id=\"oldDuration\"></input><br>"+
-				"Number: <input type=\"text\" id=\"oldNumber\"><br>" +
-				"Type: <select id=\"oldType\"> " +
+		String editForm = "<div id=\"editTimeReport\" title=\"Edit time report\">" +
+				"Date: <input type=\"text\" id=\"edit-date\" placeholder=\"YYYY-MM-dd\"></input><br>"+
+				"Duration(min): <input type=\"text\" id=\"edit-duration\"></input><br>"+
+				"Number: <input type=\"text\" id=\"edit-number\"><br>" +
+				"Type: <select id=\"edit-type\"> " +
     	           " <option value=\"D\">Development</option> " +
     	           " <option value=\"I\">Informal</option> " +
     	            "<option value=\"F\">Formal</option>  " +
@@ -397,16 +384,11 @@ public abstract class ServletBase extends HttpServlet {
 	
 	//TODO Javadoc
 	public String getAddTimeReportForm(){
-		String addForm = "";
-		if(isWorkerComponent()){
-			addForm = "<div id=\"createTimeReportWorker\" title=\"Add a new time report\">"; 
-		} else if (isProjectManagerComponent()){
-			addForm = "<div id=\"createTimeReportProjectManager\" title=\"Add a new time report\">"; 
-		}
-		addForm += "Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input><br>" + 
+		String addForm = "<div id=\"createTimeReport\" title=\"Add a new time report\">" +
+				"Date: <input type=\"text\" id=\"date\" placeholder=\"YYYY-MM-dd\"></input><br>" + 
 				"Duration(min): <input type=\"text\" id=\"duration\"></input><br>" +
 				"Number: <input type=\"text\" id=\"number\"><br>" +
-				"Typer: <select id=\"myType\"> " +
+				"Type: <select id=\"myType\"> " +
 				" <option value=\"D\">Development</option> " +
     	           " <option value=\"I\">Informal</option> " +
     	            "<option value=\"F\">Formal</option>  " +

@@ -6,13 +6,18 @@ var oldGroupName = "";
 var oldRole = "";
 var roleList = ["Developer", "ProjectManager", "SystemArchitect", "Tester", "Unspecified"];
 var deleteGroupHref = "";
-var oldId = -1;
-var oldDate = -1;
-var oldDuration = -1;
-var oldNumber = -1;
 var roleId = -1;
 var userNameToBePrinted = "";
 var timeReportToBePrinted = "";
+
+var editDate = -1;
+var editDuration = -1;
+var editNumber = -1;
+var editId = -1;
+var editUrlComponent = "";
+var deleteUrlComponent = "";
+var createUrlComponent = "";
+var deleteId = -1;
 
 $(document).ready(
 	function(){
@@ -125,51 +130,29 @@ window.onload = function(){
 	$("#createUserButton").click(function () {
 	    $("#createUser").dialog("open");
 	});
+
+	$("#createTimeReport").dialog({
+	    autoOpen: false,
+	    resizable: false,
+	    buttons: {
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
+	        Submit: function() {
+	            var date = $("#date").val();
+	            var duration = $("#duration").val();
+	            var number = $("#number").val();
+	            var type = $( "#myType option:selected" ).val();
+	            $(this).dialog("close");
+	            var url =  createUrlComponent + "?date="+ date + "&duration=" + duration + "&number=" + number + "&type=" + type;
+	            $(location).attr('href',url);
+	        }
+	    }
+	});
 	
-	$("#createTimeReportWorker").dialog({
-	    autoOpen: false,
-	    resizable: false,
-	    buttons: {
-	    	Cancel: function () {
-	    		$(this).dialog("close");
-	    	},
-	        Submit: function() {
-	            var date = $("#date").val();
-	            var duration = $("#duration").val();
-	            var number = $("#number").val();
-	            var type = $( "#myType option:selected" ).val();
-	            $(this).dialog("close");
-	            var url = "workercomponent?date="+ date + "&duration=" + duration + "&number=" + number + "&type=" + type;
-	            $(location).attr('href',url);
-	        }
-	    }
-	});
-
-	$("#createTimeReportProjectManager").dialog({
-	    autoOpen: false,
-	    resizable: false,
-	    buttons: {
-	    	Cancel: function () {
-	    		$(this).dialog("close");
-	    	},
-	        Submit: function() {
-	            var date = $("#date").val();
-	            var duration = $("#duration").val();
-	            var number = $("#number").val();
-	            var type = $( "#myType option:selected" ).val();
-	            $(this).dialog("close");
-	            var url = "projectmanagercomponent?date="+ date + "&duration=" + duration + "&number=" + number + "&type=" + type;
-	            $(location).attr('href',url);
-	        }
-	    }
-	});
-
-	$("#createTimeReportButtonWorker").click(function () {
-	    $("#createTimeReportWorker").dialog("open");
-	});
-
-	$("#createTimeReportButtonProjectManager").click(function () {
-	    $("#createTimeReportProjectManager").dialog("open");
+	$('.create-timereport-btn').on('click', function(){
+		createUrlComponent = $(this).data("create-url-component");
+		$("#createTimeReport").dialog("open");
 	});
 
 	$("#editUser").dialog({
@@ -248,54 +231,6 @@ window.onload = function(){
 	    }
 	});
 	
-	$("#editTimeReportWorker").dialog({
-		autoOpen: false,
-		resizable: false,
-		open: function () {
-	        $("#oldDate").val(oldDate);
-	        $("#oldDuration").val(oldDuration);
-	        $("#oldNumber").val(oldNumber);
-	    },
-		buttons: {
-	    	Cancel: function () {
-	    		$(this).dialog("close");
-	    	},
-	        Edit: function() {
-	            var date = $("#oldDate").val();
-	            var duration = $("#oldDuration").val();
-	            var number = $("#oldNumber").val();
-	            var type = $( "#oldType option:selected" ).text();
-	            $(this).dialog("close");
-	            var url = "workercomponent?newDate="+ date + "&newDuration=" + duration + "&newNumber=" + number + "&newType=" + type + "&id=" + oldId;
-	            $(location).attr('href',url);
-	        }
-	    }
-	});
-	
-	$("#editTimeReportProjectManager").dialog({
-		autoOpen: false,
-		resizable: false,
-		open: function () {
-	        $("#oldDate").val(oldDate);
-	        $("#oldDuration").val(oldDuration);
-	        $("#oldNumber").val(oldNumber);
-	    },
-		buttons: {
-	    	Cancel: function () {
-	    		$(this).dialog("close");
-	    	},
-	        Edit: function() {
-	            var date = $("#oldDate").val();
-	            var duration = $("#oldDuration").val();
-	            var number = $("#oldNumber").val();
-	            var type = $( "#oldType option:selected" ).text();
-	            $(this).dialog("close");
-	            var url = "projectmanagercomponent?newDate="+ date + "&newDuration=" + duration + "&newNumber=" + number + "&newType=" + type + "&id=" + oldId;
-	            $(location).attr('href',url);
-	        }
-	    }
-	});
-	
 	$("#addGroup").dialog({
 	    autoOpen: false,
 	    resizable: false,
@@ -327,22 +262,7 @@ window.onload = function(){
 	    }
 	});
 	
-	$("#deleteTimeReportWorker").dialog({
-	    autoOpen: false,   
-	    resizable: false,
-	    buttons: {
-	        No: function () {
-	            $(this).dialog("close");
-	        },
-	        Yes: function () {
-                var deleteTimeReportHref = "workercomponent?deletetimereport=" + timeReportToBePrinted;
-	            $(this).dialog("close");
-	            $(location).attr('href', deleteTimeReportHref);
-	        }        
-	    }
-	});
-	
-	$("#deleteTimeReportProjectManager").dialog({
+	$("#deleteTimeReport").dialog({
 	    autoOpen: false,  
 	    resizable: false,
 	    buttons: {
@@ -350,24 +270,52 @@ window.onload = function(){
 	            $(this).dialog("close");
 	        },
 	        Yes: function () {
-                var deleteTimeReportHref = "projectmanagercomponent?deletetimereport=" + timeReportToBePrinted;
+                var deleteTimeReportHref = deleteUrlComponent + "?deletetimereport=" + deleteId;
 	            $(this).dialog("close");
 	            $(location).attr('href', deleteTimeReportHref);
 	        }        
 	    }
 	});
-}
-
-function deleteTimeReportWorker(timeReportId){
-	document.getElementById("timeReportIDFix").innerHTML = "" + timeReportId;
-	timeReportToBePrinted = timeReportId;
-    $("#deleteTimeReportWorker").dialog("open");
-}
-
-function deleteTimeReportProjectManager(timeReportId){
-	document.getElementById("timeReportIDFix").innerHTML = "" + timeReportId;
-	timeReportToBePrinted = timeReportId;
-    $("#deleteTimeReportProjectManager").dialog("open");
+	
+	$('.delete-timereport-btn').on('click', function(){
+		deleteId = $(this).data("delete-id");
+		document.getElementById("timeReportIDFix").innerHTML = "" + deleteId;
+		deleteUrlComponent = $(this).data("delete-url-component");
+		$("#deleteTimeReport").dialog("open");
+	});
+	
+	$("#editTimeReport").dialog({
+    	autoOpen:false,
+		resizable: false,
+		open: function () {
+	        $("#edit-date").val(editDate);
+	        $("#edit-duration").val(editDuration);
+	        $("#edit-number").val(editNumber);
+	    },
+		buttons: {
+	    	Cancel: function () {
+	    		$(this).dialog("close");
+	    	},
+	        Edit: function() {
+	            var date = $("#edit-date").val();
+	            var duration = $("#edit-duration").val();
+	            var number = $("#edit-number").val();
+	            var type = $("#edit-type option:selected").val();
+	            $(this).dialog("close");
+	            var url = editUrlComponent+ "?newDate="+ date + "&newDuration=" + duration + "&newNumber=" + number + "&newType=" + type + "&id=" + editId;
+	            $(location).attr('href',url);
+	        }
+	    }
+	});
+	
+	$('.edit-timereport-btn').on('click', function(){
+		editDate = $(this).data("edit-date");
+		editDuration = $(this).data("edit-duration");
+		editNumber = $(this).data("edit-number");
+		editId = $(this).data("edit-id");
+		editUrlComponent = $(this).data("edit-url-component");
+		$("#editTimeReport").dialog("open");
+	});
 }
 
 function editRole(id){
@@ -399,22 +347,6 @@ function editGroup(groupId, oldName) {
 
 function createGroup() { 
 	$("#addGroup").dialog("open");
-}
-
-function editTimeReportWorker(date, duration, number, id){
-	oldDate = date;
-	oldDuration = duration;
-	oldNumber = number;
-	oldId = id;
-    $("#editTimeReportWorker").dialog("open");
-}
-
-function editTimeReportProjectManager(date, duration, number, id){
-	oldDate = date;
-	oldDuration = duration;
-	oldNumber = number;
-	oldId = id;
-    $("#editTimeReportProjectManager").dialog("open");
 }
 
 function deleteUser(userName) {
