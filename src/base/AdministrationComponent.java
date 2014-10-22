@@ -417,11 +417,23 @@ public class AdministrationComponent extends ServletBase {
 	protected boolean isAdminComponent() {
 		return true;
 	}
-	//TODO JavaDoc
+	
+	/**
+	 * Determines whether this is an worker component
+	 * 
+	 * @return 	true if it is an worker component, 
+	 * 			false otherwise
+	 */
 	protected boolean isWorkerComponent() {
 		return false;
 	}
-	//TODO JavaDoc
+	
+	/**
+	 * Determines whether this is an project manager component
+	 * 
+	 * @return 	true if it is an project manager component, 
+	 * 			false otherwise
+	 */
 	protected boolean isProjectManagerComponent() {
 		return false;
 	}

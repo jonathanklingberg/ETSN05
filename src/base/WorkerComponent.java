@@ -101,23 +101,31 @@ public class WorkerComponent extends ServletBase {
 		doGet(request, response); // forward post-data to get-function /J
 	}
 	
-	//TODO please look at the JavaDoc guidelines for how to define return-parameters correctly. /J
-	/***
-	 * Method stating that this component isn't the admin component through a boolean variable false.
+	/**
+	 * Determines whether this is an admin component
+	 * 
+	 * @return 	true if it is an admin component, 
+	 * 			false otherwise
 	 */
 	protected boolean isAdminComponent() {
 		return false;
 	}
 
-	/***
-	 * Method stating that this component is the worker component through a boolean variable true.
+	/**
+	 * Determines whether this is an worker component
+	 * 
+	 * @return 	true if it is an worker component, 
+	 * 			false otherwise
 	 */
 	protected boolean isWorkerComponent() {
 		return true;
 	}
 	
-	/***
-	 * Method stating that this component isn't the projectmanager component through a boolean variable false.
+	/**
+	 * Determines whether this is an project manager component
+	 * 
+	 * @return 	true if it is an project manager component, 
+	 * 			false otherwise
 	 */
 	protected boolean isProjectManagerComponent() {
 		return false;
