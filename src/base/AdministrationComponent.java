@@ -253,6 +253,9 @@ public class AdministrationComponent extends ServletBase {
 		String groupName = request.getParameter("group");
 		String role = request.getParameter("role");
 		if(username != null) {
+			if(groupName.toLowerCase().equals("admingroup")) {
+				return "Only administrators are allowed to be a part of this group. Please choose another one and try again";
+			}
 			System.out.println("the new userName: " + username);
 			if(checkNewName(username) && checkNewPassword(newPassword)) {
 				ProjectGroup p = instance.getProjectGroup(groupName);
