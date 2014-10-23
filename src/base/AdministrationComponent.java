@@ -311,7 +311,7 @@ public class AdministrationComponent extends ServletBase {
 	}
 	
 	/**
-	 * Lists all groups of the system
+	 * Lists all groups in the database
 	 * 
 	 * @param out
 	 * @param groupActionMessage
@@ -327,7 +327,13 @@ public class AdministrationComponent extends ServletBase {
 
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return deleteGroup(this, '" + name + "')") + "value=\"Delete group\">Delete</a>";
 		    String editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
-			out.println("<tr>");
+			
+		    if(name.toLowerCase().equals("admingroup")) {
+		    	editCode = "";
+		    	deleteCode = "";
+		    }
+		    
+		    out.println("<tr>");
 	    	out.println("<td data-value='" + name + "'><a href='ProjectManagerComponent?adminGroupRequestId=" + id +"'>" + name + "</a></td>");
 	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
