@@ -48,7 +48,7 @@ public class WorkerComponent extends ServletBase {
 		String role = getRole();
 		
 		if (isLoggedIn(request)
-				&& (role.equals("Developer") || role.equals("SystemArchitect") || role
+				&& (role.equals("Developer") || role.equals("Unspecified") || role.equals("SystemArchitect") || role
 						.equals("Tester"))) {
 			out.println("<h1> Worker page </h1>");
 
