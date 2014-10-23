@@ -92,7 +92,7 @@ window.onload = function(){
 	            var number = $("#number").val();
 	            var type = $( "#myType option:selected" ).val();
 	            $(this).dialog("close");
-	            var url =  createUrlComponent + "?date="+ date + "&duration=" + duration + "&number=" + number + "&type=" + type;
+	            var url =  createUrlComponent + "?date="+ encodeURIComponent(date) + "&duration=" + encodeURIComponent(duration) + "&number=" + encodeURIComponent(number) + "&type=" + encodeURIComponent(type);
 	            $(location).attr('href',url);
 	        }
 	    }
@@ -250,7 +250,7 @@ window.onload = function(){
 	            var number = $("#edit-number").val();
 	            var type = $("#edit-type option:selected").val();
 	            $(this).dialog("close");
-	            var url = editUrlComponent+ "?newDate="+ date + "&newDuration=" + duration + "&newNumber=" + number + "&newType=" + type + "&id=" + editId;
+	            var url = editUrlComponent+ "?newDate="+ encodeURIComponent(date) + "&newDuration=" + encodeURIComponent(duration) + "&newNumber=" + encodeURIComponent(number) + "&newType=" + encodeURIComponent(type) + "&id=" + editId;
 	            $(location).attr('href',url);
 	        }
 	    }
