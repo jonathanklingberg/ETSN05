@@ -87,28 +87,6 @@ public class AdministrationComponent extends ServletBase {
 			}
 		return ok;
 	}
-	
-	//TODO please try to describe a little bit better, how many chars aso. /J
-	 /**
-	 * Creates a random password.
-	 * @return a randomly chosen password
-	 */
-	private String createPassword() {
-		String result = "";
-		Random r = new Random();
-		for (int i = 0; i < PASSWORD_LENGTH; i++)
-			result += (char) (r.nextInt(26) + 97); // 122-97+1=26
-		return result;
-	}
-	
-	//TODO JavaDoc description
-	/**
-	 * 
-	 * @param name
-	 */
-	private boolean addUser(String name) {
-		return instance.addUser(name, createPassword());
-	}
 
 	/**
 	 * Handles input from the administrator and displays information for
@@ -125,29 +103,8 @@ public class AdministrationComponent extends ServletBase {
 
 		// check that the user is logged in as admin, otherwise redirect back to loginComponent
 		if (isLoggedIn(request) && getRole().equalsIgnoreCase("Admin")) {
-			
 			out.println("<h1>Administration page</h1>"); 
-			
-			// check if the administrator wants to add a new user in the form
-			String newName = request.getParameter("addname");
-			if (newName != null) {
-				if (checkNewName(newName)) {
-					boolean addPossible = addUser(newName);
-					if (!addPossible)
-						//TODO style red please
-						out.println("<p>Error: Suggested user name not possible to add</p>"); 
-				}	else
-					out.println("<p>Error: Suggesten name not allowed</p>");
-			}
-			
-			//TODO try to refactor this please! very hard to read and understand? /J
-			// This is ineffective, you're currently executing all actions until you find the correct one that doesn't return null, am I right?
-			// This means you're trying to perform request.getAttribute/getParameter on alot of parameters that doesn't exists.
-			// And for example in editExistingUser you always perform the instance.getAllProjectGroups() no matter if the parameters exists or not... No good!!
-			// What you normally do is that you do a switch-case on the action you're trying to execute. for example:
-			// AdministratorComponent?action=addNewUser&userid=<id> and in that way you'll be able to perform a simple switch-case on the action parameter instead.
-			// Do you follow me?
-			// You don't have to do this if you don't have time but just so that you know /J
+				
 			if(groupActionMessage == null)
 				groupActionMessage = deleteGroup(request);
 			if(groupActionMessage == null)
@@ -197,12 +154,12 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
 		String oldUserName = request.getParameter("oldUserName");
-		String newUserName = request.getParameter("newUsername");
-		String newPassword = request.getParameter("newPassword");
-		String newGroupName = request.getParameter("group");
-		String role = request.getParameter("role");
-		ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
 		if(oldUserName != null) {
+			String newUserName = request.getParameter("newUsername");
+			String newPassword = request.getParameter("newPassword");
+			String newGroupName = request.getParameter("group");
+			String role = request.getParameter("role");
+			ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
 			boolean groupExists = false;
 			for(int i = 0; i < groups.size(); i++) {
 				if(groups.get(i).getName().equals(newGroupName)) {
@@ -247,12 +204,11 @@ public class AdministrationComponent extends ServletBase {
 	 * @return
 	 */
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
-		String failMsg = null;
 		String username = request.getParameter("addNewUser");
-		String newPassword = request.getParameter("password");
-		String groupName = request.getParameter("group");
-		String role = request.getParameter("role");
 		if(username != null) {
+			String newPassword = request.getParameter("password");
+			String groupName = request.getParameter("group");
+			String role = request.getParameter("role");
 			if(groupName.toLowerCase().equals("admingroup")) {
 				return "Only administrators are allowed to be a part of this group. Please choose another one and try again";
 			}
@@ -266,22 +222,21 @@ public class AdministrationComponent extends ServletBase {
 						if(!role.equals("ProjectManager") || amountOfPMs < 5) {
 								res = instance.addUser(new User(username, newPassword, role, groupId));
 						}else{
-							//TODO add styled paragraph!  /J
 							return "Amount of project managers exceeded.";
 						}
 						if(!res){	
-							failMsg = "Username does already exist! Please choose another one and try again!";
+							return "Username does already exist! Please choose another one and try again!";
 						} else {
-							failMsg = "Project member was created successfully!";
+							return "Project member was created successfully!";
 						}
 					} else {
-						failMsg = "The group does not exist! Please enter a valid group and try again!";
+						return "The group does not exist! Please enter a valid group and try again!";
 					}
 				} else {
-					failMsg = "Wrong format on input! Please try again";
+					return "Wrong format on input! Please try again";
 				}	
 		}
-		return failMsg;
+		return null;
 	}
 	//TODO Javaoc
 	/**
