@@ -274,7 +274,7 @@ function editRole(id){
 
 function deleteGroup(link, groupName) {
 	deleteGroupHref = link.href;
-	document.getElementById("text").innerHTML = groupName;
+	document.getElementById("nameOfGroupToBeDeleted").innerHTML = groupName;
     $("#deleteGroup").dialog("open");
     return false;
 }

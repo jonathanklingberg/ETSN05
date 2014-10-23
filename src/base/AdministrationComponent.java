@@ -347,7 +347,7 @@ public class AdministrationComponent extends ServletBase {
     	// First of all try to use id as seldom as possible, much better to just use classes to get rid of this "eventual" problem
     	// But if you really need to use id's then consider use names that describe what the element are used for and pick a name not plausible someone else would use. //J
     	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
-			    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
+			    "<p>Are you sure that you want to delete <span id=\"nameOfGroupToBeDeleted\"></span>? <p>" +
 				"</div>";
     	out.println(deleteForm);
 		String tFoot = "<tfoot>" +
