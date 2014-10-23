@@ -541,8 +541,8 @@ public class DatabaseHandlerInstance {
 			PreparedStatement ps;
 			ResultSet rs;
 			if(!oldUserName.equals(newUserName)){
-				//TODO What the F is the "AND id != "doing there? /J
-				ps = conn.prepareStatement("select * from Users where userName = '" + newUserName + "' AND id != ");
+				//TODO Do not touch code that works!!!! and if you do, check that it works for the thousand time!!!!!! /S
+				ps = conn.prepareStatement("select * from Users where userName = '" + newUserName + "'");
 				rs = ps.executeQuery();
 				if(rs.next()) {
 					return false; // return false if userName already exists in Users table
