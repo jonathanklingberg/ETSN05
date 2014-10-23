@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,11 +24,6 @@ import database.User;
  * @version 0.3
  */
 
-//TODO add styled paragraphs! You should never print text that aren't wrapped inside any html-element, 
-//			paragraph or span are the most common ones for simple text
-// example: <p class="action-success">User added successfully!</p>
-//		& 	<p class="action-fail">Failed to add user!</p> 
-// These classes can be easily styled with simple css then!/J
 @WebServlet("/administrationcomponent")
 public class AdministrationComponent extends ServletBase {
 	private static final long serialVersionUID = 1L;
@@ -159,19 +153,16 @@ public class AdministrationComponent extends ServletBase {
 			String newPassword = request.getParameter("newPassword");
 			String newGroupName = request.getParameter("group");
 			String role = request.getParameter("role");
-			ArrayList<ProjectGroup> groups = (ArrayList<ProjectGroup>) instance.getAllProjectGroups();
-			boolean groupExists = false;
-			for(int i = 0; i < groups.size(); i++) {
-				if(groups.get(i).getName().equals(newGroupName)) {
-					groupExists = true;
-				}
+			if(newGroupName.toLowerCase().equals("admingroup")) {
+				return "Only administrators are allowed to be a part of this group. Please choose another one and try again";
 			}
 			User oldUser = instance.getUser(oldUserName);
 			String currentRole = oldUser.getRole();
 			boolean pmDemotionOrPromotion = (currentRole.equals("ProjectManager") || role.equals("ProjectManager")) && !currentRole.equals(role);
 			boolean groupChanged = !instance.getProjectGroup(oldUser.getGroupId()).getName().equals(newGroupName);
 			if(checkNewName(newUserName) && checkNewPassword(newPassword)) {
-				if(groupExists) {
+				ProjectGroup p = instance.getProjectGroup(newGroupName);
+				if(p != null) {
 					int amountOfPMs = instance.getProjectGroup(newGroupName).getNumberOfPMs();
 					if(amountOfPMs < 5 || !role.equals("ProjectManager")) {
 						boolean res = instance.editUser(oldUserName, newUserName, newPassword, newGroupName, role);
@@ -179,7 +170,6 @@ public class AdministrationComponent extends ServletBase {
 							if(pmDemotionOrPromotion || groupChanged){
 								instance.getUser(newUserName).killSession();
 							}
-							//TODO add styled paragraph!  /J
 							return "User edited succesfully.";
 						} else {
 							return "User not edited.";
@@ -188,7 +178,7 @@ public class AdministrationComponent extends ServletBase {
 						return "Amount of project managers exceeded.";
 					}
 				} else {
-				return "The given groupname does not exist.";
+					return "The given groupname does not exist.";
 				}
 			} else {
 				return "Wrong format on input! Please try again";
@@ -247,7 +237,6 @@ public class AdministrationComponent extends ServletBase {
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
-			//TODO add styled paragraph!  /J
 			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not removed user.";
 		}
 		return null;
@@ -263,7 +252,6 @@ public class AdministrationComponent extends ServletBase {
 		String deleteGroup = request.getParameter("deletegroup");
 		if (deleteGroup != null) {
 			long groupNumber = Long.parseLong(deleteGroup);
-			//TODO add styled paragraph!  /J
 			return instance.getProjectGroup(groupNumber).removeMe() ? "Group deleted successfully." : "Failed to delete group.";
 		}
 		return null;
@@ -284,7 +272,6 @@ public class AdministrationComponent extends ServletBase {
 			if(newGroupName != null) {
 				if(checkNewGroupName(newGroupName)) {
 					boolean res = instance.changeGroupName(groupNumber, newGroupName);	
-					//TODO add styled paragraph!  /J
 					if(!res) {
 						return "Group name already taken, please try a new one.";
 					} else {
@@ -312,7 +299,6 @@ public class AdministrationComponent extends ServletBase {
 				System.out.println("New name of the group: " + createNewGroup);
 				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
 				if(res) {
-					//TODO add styled paragraph!  /J
 					return "Project group was created successfully!";
 				} else {
 					return "The project group does already exist! Please enter another project group name and try again";
