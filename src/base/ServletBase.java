@@ -195,7 +195,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(editForm);
 		out.println("</table>");
 		if(userActionMessage != null){
-			out.print("<p>"+ userActionMessage +"</p>");
+			out.print("<p style=\"color:red\">"+ userActionMessage +"</p>");
 		}
 	}
 
@@ -312,7 +312,7 @@ public abstract class ServletBase extends HttpServlet {
 	
 	private void printTimeReportTableFooter(PrintWriter out) {
 		out.println("<tfoot><tr>");
-		int colspanTotalTimeTitle = 1;
+		int colspanTotalTimeTitle = 3;
 		int colspanTotalTimeValue = 6;
 		if(isAdminOrProjectManagerComponent()){
 			colspanTotalTimeTitle = 4;
