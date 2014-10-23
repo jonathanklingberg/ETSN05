@@ -350,6 +350,16 @@ public class AdministrationComponent extends ServletBase {
 			    "<p>Are you sure that you want to delete <span id=\"text\"></span>? <p>" +
 				"</div>";
     	out.println(deleteForm);
+		String tFoot = "<tfoot>" +
+					"<tr>" +
+					"<td colspan='3'>" +
+					 "<div class=\"centerPag\">" +
+						"<div class=\"pagination pagination-centered\"></div> " +
+					 "</div>"+ 
+					"</td>" +
+					"</tr>" +
+				"</tfoot>";
+		out.println(tFoot);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
 			 //TODO consider switch inline-style to some sort of error-class that gets styled instead. =)

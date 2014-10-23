@@ -154,7 +154,7 @@ public abstract class ServletBase extends HttpServlet {
 		String tFoot = "<tfoot>" +
 							"<tr>" +
 							"<td colspan='" + amount + "'>" +
-							 "<div id=\"centerPag\">" +
+							 "<div class=\"centerPag\">" +
 								"<div class=\"pagination pagination-centered\"></div> " +
 							 "</div>"+ 
 							"</td>" +
