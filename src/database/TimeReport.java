@@ -28,8 +28,6 @@ import data.Role;
  * @version 0.3
  */
 
-//TODO Don't forget to close both preparedstatements and resultsets!
-// Please redirect errors to handleSqlErrors(error) as error handler /J
 public class TimeReport extends AbstractCointainer {
 	private long id;
 	private long groupId;
@@ -306,8 +304,6 @@ public class TimeReport extends AbstractCointainer {
 	 * @param duration The duration to change to.
 	 */
 	public void setDuration(long duration) {
-		//TODO Check SRS for conditions for this! /J
-		//This is done before a TimeReport is created.
 		this.duration=duration;
 	}
 	
@@ -317,15 +313,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param week The week to change to.
 	 */
 	private void setWeek(long week) {
-		//TODO check no future week /J
-		//This should be done when trying to submit a time report.
 		this.week=week;
-		//See setId
-		
-		//Moreover the user will never enter an explicit value
-		//for the week, this will be calculated based on the date
-		//instead before calling this method. Thus if setWeek
-		//is called, setDate should have been called as well
 	}
 	
 	/**
@@ -334,8 +322,6 @@ public class TimeReport extends AbstractCointainer {
 	 * @param date The date to change to.
 	 */
 	public void setDate(Date date) {
-		//TODO check not future date! /J
-		//This should be done when trying to submit a time report.
 		this.date=date;
 		java.util.Calendar calenderWeek = java.util.Calendar.getInstance();
 		calenderWeek.setTime(date);
@@ -359,12 +345,8 @@ public class TimeReport extends AbstractCointainer {
 	 * @return True if the object manages to remove itself, otherwise false.
 	 */
 	public boolean removeMe() {
-		//Does not matter whether it's signed or not, since this method
-		//only should be called when we are certain that the object
-		//actually is to be removed.
 		boolean successfullyRemovedTimeReport = false;
 		try {
-			//TODO Does this work in reality? Are there really no foreign keys that are connected to this table? /J
 			PreparedStatement ps = conn.prepareStatement("DELETE from TimeReports WHERE id= " + id);
 			ps.executeUpdate();
 			successfullyRemovedTimeReport = true;
