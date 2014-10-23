@@ -355,9 +355,6 @@ public class AdministrationComponent extends ServletBase {
     			"<input type=\"text\" id=\"newGroupName\"/>" +
     			"</div>";
     	out.println(editForm);
-    	//TODO consider use a better id than "text". In case someone else uses this id in something that gets printed on the same page as this, then there will be major errors.
-    	// First of all try to use id as seldom as possible, much better to just use classes to get rid of this "eventual" problem
-    	// But if you really need to use id's then consider use names that describe what the element are used for and pick a name not plausible someone else would use. //J
     	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
 			    "<p>Are you sure that you want to delete <span id=\"nameOfGroupToBeDeleted\"></span>? <p>" +
 				"</div>";
