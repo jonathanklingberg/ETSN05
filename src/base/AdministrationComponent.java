@@ -36,46 +36,59 @@ public class AdministrationComponent extends ServletBase {
 		super();
 	}
 	
-	//TODO Please try describe the function a little bit better. /J
 	 /**
-	 * Checks if a username corresponds to the requirements for user names.
-	 * @param name The investigated username
-	 * @return True if the username corresponds to the requirements
+	 * Checks if a user name corresponds to the requirements for user names.
+	 * The requirements are fulfilled if the user name is between 5 and 20 characters long
+	 * and only contains characters with encodings 48-57, 65-90 and 97-122 in the ASCII table.
+	 * @param userName The investigated user name
+	 * @return True if the user name corresponds to the requirements
 	 */
-	private boolean checkNewName(String name) {
-		int length = name.length();
+	private boolean checkNewName(String userName) {
+		int length = userName.length();
 		boolean ok = (length >= 5 && length <= 10);
 		if (ok)
 			for (int i = 0; i < length; i++) {
-				int ci = (int) name.charAt(i);
+				int ci = (int) userName.charAt(i);
 				boolean thisOk = ((ci >= 48 && ci <= 57) || (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
 				ok = ok && thisOk;
 			}
 		return ok;
 	}
 	
-	//TODO JavaDoc with good description /J
-	private boolean checkNewGroupName(String name) {
-		System.out.println("Name of group that admin wants to add: " + name);
-		int length = name.length();
+	/**
+	 * Checks if a group name corresponds to the requirements for group names.
+	 * The requirements are fulfilled if the group name is between 1 and 20 characters long
+	 * and only contains characters with encodings 48-57, 65-90 and 97-122 in the ASCII table.
+	 * @param groupName The investigated group name
+	 * @return True if the group name corresponds to the requirements
+	 */
+	private boolean checkNewGroupName(String groupName) {
+		System.out.println("Name of group that admin wants to add: " + groupName);
+		int length = groupName.length();
 		boolean ok = (length >= 1 && length <= 20);
 		if (ok)
 			for (int i = 0; i < length; i++) {
-				int ci = (int) name.charAt(i);
+				int ci = (int) groupName.charAt(i);
 				boolean thisOk = ((ci >= 48 && ci <= 57) || (ci >= 65 && ci <= 90) || (ci >= 97 && ci <= 122));
 				ok = ok && thisOk;
 			}
 		return ok;
 	}
 	
-	//TODO JavaDoc with good description /J
-	private boolean checkNewPassword(String name) {
-		System.out.println("my password: "  + name);
-		int length = name.length();
+	/**
+	 * Checks if a password corresponds to the requirements for passwords.
+	 * The requirements are fulfilled if the password is 6 characters long
+	 * and only contains characters with encodings 97-122 in the ASCII table.
+	 * @param password The investigated password
+	 * @return True if the password corresponds to the requirements
+	 */
+	private boolean checkNewPassword(String password) {
+		System.out.println("my password: "  + password);
+		int length = password.length();
 		boolean ok = (length == PASSWORD_LENGTH);
 		if (ok)
 			for (int i = 0; i < length; i++) {
-				int ci = (int) name.charAt(i);
+				int ci = (int) password.charAt(i);
 				boolean thisOk = ci >= 97 && ci <= 122;
 				ok = ok && thisOk;
 			}
@@ -85,7 +98,6 @@ public class AdministrationComponent extends ServletBase {
 	/**
 	 * Handles input from the administrator and displays information for
 	 * administration.
-	 * 
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -363,9 +375,9 @@ public class AdministrationComponent extends ServletBase {
 	}
 	
 	/**
-	 * Determines whether this is an worker component
+	 * Determines whether this is a worker component
 	 * 
-	 * @return 	true if it is an worker component, 
+	 * @return 	true if it is a worker component, 
 	 * 			false otherwise
 	 */
 	protected boolean isWorkerComponent() {
