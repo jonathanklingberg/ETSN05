@@ -79,14 +79,16 @@ public class ProjectManagerComponent extends ServletBase {
 			out.println("<p>User:<strong> " +getRole() +"</strong></p>");
 			ProjectGroup pg = instance.getProjectGroup(groupId);
 			out.println("<p>Group:<strong> "+ pg.getName() +"</strong></p>");
-			String timereportId = request.getParameter("signtimereport");
+			String timeReportId = request.getParameter("signtimereport");
 			
-			//TODO Better check! (against db) /J
-			if(timereportId != null && timereportId.length() > 0){
-				System.out.println("TimeReportId: " + timereportId);
-				instance.changeSignatureOfTimeReport(timereportId);
+			if(timeReportId != null && timeReportId.length() > 0){
+				System.out.println("TimeReportId: " + timeReportId);
+				boolean changed = instance.changeSignatureOfTimeReport(timeReportId);
+				if(!changed){
+					System.out.println("TimeReportId does not exist!");
+				}
 			}else{
-				System.out.println("TimeReportId not existing!");
+				System.out.println("TimeReportId does not exist!");
 			}
 			
 			String roleIdString = request.getParameter("roleId");

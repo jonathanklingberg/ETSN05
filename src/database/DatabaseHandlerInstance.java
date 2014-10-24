@@ -576,26 +576,50 @@ public class DatabaseHandlerInstance {
 		}
 		return true;
 	}
-	//TODO JavaDoc
-	public void changeRoleOfUser(String newRole, long userId){
+	
+	
+	/**
+	 * Changes the role of a given user. 
+	 * 
+	 * @param newRole the users new role
+	 * @param userId the users user id
+	 * @return true if the role is changed, otherwise false
+	 */
+	public boolean changeRoleOfUser(String newRole, long userId){
+		boolean successfullyChanged = false;
 		PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement("update RoleInGroup set role = '" + newRole + "' where userId = " + userId + " AND isActiveInGroup=true");
-			ps.executeUpdate();
+			if(ps.executeUpdate() > 0) {
+				successfullyChanged = true;
+			}
 			ps.close();
 		} catch (SQLException e) {
 			handleSqlErrors(e);
 		}
+		return successfullyChanged;
 	}
+	
 	//TODO JavaDoc better name would be toggleSignature....
-	public void changeSignatureOfTimeReport(String timereportId) {
+	/**
+	 * Changes the signature of a given time report
+	 * 
+	 * @param timereportId the time reports id number
+	 * @return true if the signature is changed, otherwise false
+	 */
+	public boolean changeSignatureOfTimeReport(String timereportId) {
+		boolean changedSignature = false;
 		TimeReport tr = instance.getTimeReport(Long.parseLong(timereportId));
-		boolean isSigned = tr.isSigned();		
-		if(isSigned){
-			tr.unsignTimeReport();
-		}else{
-			tr.signTimeReport();
+		if(tr != null){
+			boolean isSigned = tr.isSigned();		
+			if(isSigned){
+				tr.unsignTimeReport();
+			}else{
+				tr.signTimeReport();
+			}
+			changedSignature = true;
 		}
+		return changedSignature;
 	}
 	
 	//TODO JavaDoc
