@@ -1,8 +1,8 @@
 var oldUserName = "";
 var oldPassword = "";
 var oldGroup = "";
-var oldGroupId = -1;
-var oldGroupName = "";
+//var oldGroupId = -1;
+//var oldGroupName = "";
 var oldRole = "";
 var roleList = ["Developer", "ProjectManager", "SystemArchitect", "Tester", "Unspecified"];
 var deleteGroupHref = "";
@@ -147,23 +147,23 @@ window.onload = function(){
 	
 //http://jsfiddle.net/5b3cufzx/129/
 	
-	$("#editGroupName").dialog({
-	    autoOpen: false,
-	    resizable: false,
-	    open: function () {
-	    	$("#newGroupName").val(oldGroupName);
-	    },            
-	    buttons: {        
-	        Cancel: function () {
-	            $(this).dialog("close");
-	        },
-	        Edit: function () {
-	            var newGroupName = $("#newGroupName").val();
-	            var url = "AdministrationComponent?editgroup=" + oldGroupId + "&groupname=" + encodeURIComponent(newGroupName);
-	            $(location).attr('href', url);
-	        }
-	    }
-	});
+//	$("#editGroupName").dialog({
+//	    autoOpen: false,
+//	    resizable: false,
+//	    open: function () {
+//	    	$("#newGroupName").val(oldGroupName);
+//	    },            
+//	    buttons: {        
+//	        Cancel: function () {
+//	            $(this).dialog("close");
+//	        },
+//	        Edit: function () {
+//	            var newGroupName = $("#newGroupName").val();
+//	            var url = "AdministrationComponent?editgroup=" + oldGroupId + "&groupname=" + encodeURIComponent(newGroupName);
+//	            $(location).attr('href', url);
+//	        }
+//	    }
+//	});
 	
 	$("#deleteGroup").dialog({
 	    autoOpen: false,   
@@ -287,11 +287,11 @@ function editUser(name, password, group, role){
     $("#editUser").dialog("open");
 }
 
-function editGroup(groupId, oldName) { 
-	oldGroupId = groupId;
-	oldGroupName = oldName;
-	$("#editGroupName").dialog("open");
-}
+//function editGroup(groupId, oldName) { 
+//	oldGroupId = groupId;
+//	oldGroupName = oldName;
+//	$("#editGroupName").dialog("open");
+//}
 
 function createGroup() { 
 	$("#addGroup").dialog("open");

@@ -341,31 +341,31 @@ public class AdministrationComponent extends ServletBase {
 	 */
 	public void listGroups(PrintWriter out, String groupActionMessage) { 
 		out.print("<table data-filter=\"#groupfilter\" id=\"grouptable\"  class=\"footable\" border=" + formElement("1") + ">");
-		out.print("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
+		out.print("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
+//		out.print("<thead><tr><th data-sort-initial=\"true\">Group</th><th data-sort-ignore=\"true\">Edit</th><th data-sort-ignore=\"true\">Remove</th></tr></thead>");
 		List<ProjectGroup> projectGroups = instance.getAllProjectGroups();		 
 		for(int i = 0; i < projectGroups.size(); i++) {
 			long id = projectGroups.get(i).getId();
 			String name = projectGroups.get(i).getName();
 			String deleteURL = "administrationcomponent?deletegroup="+id;
-
 		    String deleteCode = "<a href=" + formElement(deleteURL) + " onclick="+formElement("return deleteGroup(this, '" + name + "')") + "value=\"Delete group\">Delete</a>";
-		    String editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
+//		    String editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editGroup(" + projectGroups.get(i).getId() + ", '" + projectGroups.get(i).getName() + "')") + " id=\"editGroupNameLink\" value=\"Edit group\">Edit group</a>";
 			
 		    if(name.toLowerCase().equals("admingroup")) {
-		    	editCode = "";
+//		    	editCode = "";
 		    	deleteCode = "";
 		    }
 		    
 		    out.println("<tr>");
 	    	out.println("<td data-value='" + name + "'><a href='ProjectManagerComponent?adminGroupRequestId=" + id +"'>" + name + "</a></td>");
-	    	out.println("<td>" + editCode + "</td>");
+//	    	out.println("<td>" + editCode + "</td>");
 	    	out.println("<td>" + deleteCode + "</td>");
 	    	out.println("</tr>");
 		 }
-		String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
-    			"<input type=\"text\" id=\"newGroupName\"/>" +
-    			"</div>";
-    	out.println(editForm);
+//		String editForm = "<div id=\"editGroupName\" title=\"Edit groupname\">New groupname:<br /><br />" +
+//    			"<input type=\"text\" id=\"newGroupName\"/>" +
+//    			"</div>";
+//    	out.println(editForm);
     	String deleteForm =  "<div id=\"deleteGroup\" title=\"Delete group\"> " +
 			    "<p>Are you sure that you want to delete <span id=\"nameOfGroupToBeDeleted\"></span>? <p>" +
 				"</div>";
@@ -379,7 +379,7 @@ public class AdministrationComponent extends ServletBase {
 					"</td>" +
 					"</tr>" +
 				"</tfoot>";
-		out.println(tFoot);
+		 out.println(tFoot);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
 			 out.print(groupActionMessage);			 
