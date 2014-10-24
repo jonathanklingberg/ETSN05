@@ -110,7 +110,7 @@ window.onload = function(){
 	        $("#oldUserName").val(oldUserName);
 	        $("#oldPassWord").val(oldPassword);
 	        $("#oldGroupName").val(oldGroup);
-	        $( "#myselect2>option:eq(" + roleList.indexOf(oldRole) + ")" ).attr("selected", "selected");
+	        $( "#oldRoleType>option:eq(" + roleList.indexOf(oldRole) + ")" ).attr("selected", "selected");
 	    },            
 	    buttons: {
 	    	Cancel: function () {
@@ -120,7 +120,7 @@ window.onload = function(){
 	            var name = $("#oldUserName").val();
 	            var password = $("#oldPassWord").val();
 	            var group = $("#oldGroupName").val();
-	            var role = $( "#myselect2 option:selected" ).text();
+	            var role = $( "#oldRoleType option:selected" ).text();
 	            $(this).dialog("close");
 	            var url = "AdministrationComponent?oldUserName=" + oldUserName + "&newUsername=" + encodeURIComponent(name) +"&newPassword=" + encodeURIComponent(password) + "&group=" + encodeURIComponent(group) + "&role=" + role;
 	            $(location).attr('href', url);

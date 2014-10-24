@@ -169,12 +169,11 @@ public abstract class ServletBase extends HttpServlet {
 							    	"<p>Are you sure that you want to delete <span id=\"userNameText\"></span>? <p>" +
 						    	 "</div>";
 	    	out.println(deleteForm);
-	    	//TODO please try to use better id's, myselect2 etc. doesn't make sense. /J
 			editForm = "<div id=\"editUser\" title=\"Edit user\">Username: " +
 						" <input type=\"text\" id=\"oldUserName\" />Password:" +
 						" <input type=\"text\" id=\"oldPassWord\"/>Group: " +
 						" <input type=\"text\" id=\"oldGroupName\"/>Assign role:<br/> " +
-						"<select id=\"myselect2\"> " + 
+						"<select id=\"oldRoleType\"> " + 
 						" <option value=\"Developer\">Developer</option> " +
 						" <option value=\"ProjectManager\">ProjectManager</option> " +
 						" <option value=\"SystemArchitect\">SystemArchitect</option>  " +
@@ -195,7 +194,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(editForm);
 		out.println("</table>");
 		if(userActionMessage != null){
-			out.print("<p style=\"color:red\">"+ userActionMessage +"</p>");
+			out.print(userActionMessage);
 		}
 	}
 

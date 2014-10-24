@@ -166,7 +166,7 @@ public class AdministrationComponent extends ServletBase {
 			String newGroupName = request.getParameter("group");
 			String role = request.getParameter("role");
 			if(newGroupName.toLowerCase().equals("admingroup")) {
-				return "Only administrators are allowed to be a part of this group. Please choose another one and try again";
+				return createMessage("Only administrators are allowed to be a part of this group. Please choose another one and try again", false);
 			}
 			User oldUser = instance.getUser(oldUserName);
 			String currentRole = oldUser.getRole();
@@ -182,18 +182,18 @@ public class AdministrationComponent extends ServletBase {
 							if(pmDemotionOrPromotion || groupChanged){
 								instance.getUser(newUserName).killSession();
 							}
-							return "User edited succesfully.";
+							return createMessage("User edited succesfully.", true);
 						} else {
-							return "User not edited.";
+							return createMessage("User not edited.", false);
 						}
 					} else {
-						return "Amount of project managers exceeded.";
+						return createMessage("Amount of project managers exceeded.", false);
 					}
 				} else {
-					return "The given groupname does not exist.";
+					return createMessage("The given groupname does not exist.", false);
 				}
 			} else {
-				return "Wrong format on input! Please try again";
+				return createMessage("Wrong format on input! Please try again", false);
 			}
 		}
 		return null;
@@ -212,7 +212,7 @@ public class AdministrationComponent extends ServletBase {
 			String groupName = request.getParameter("group");
 			String role = request.getParameter("role");
 			if(groupName.toLowerCase().equals("admingroup")) {
-				return "Only administrators are allowed to be a part of this group. Please choose another one and try again";
+				return createMessage("Only administrators are allowed to be a part of this group. Please choose another one and try again", false);
 			}
 			System.out.println("the new userName: " + username);
 			if(checkNewName(username) && checkNewPassword(newPassword)) {
@@ -224,18 +224,18 @@ public class AdministrationComponent extends ServletBase {
 						if(!role.equals("ProjectManager") || amountOfPMs < 5) {
 								res = instance.addUser(new User(username, newPassword, role, groupId));
 						}else{
-							return "Amount of project managers exceeded.";
+							return createMessage("Amount of project managers exceeded.", false);
 						}
 						if(!res){	
-							return "Username does already exist! Please choose another one and try again!";
+							return createMessage("Username does already exist! Please choose another one and try again!", false);
 						} else {
-							return "Project member was created successfully!";
+							return createMessage("Project member was created successfully!", true);
 						}
 					} else {
-						return "The group does not exist! Please enter a valid group and try again!";
+						return createMessage("The group does not exist! Please enter a valid group and try again!", false);
 					}
 				} else {
-					return "Wrong format on input! Please try again";
+					return createMessage("Wrong format on input! Please try again", false);
 				}	
 		}
 		return null;
@@ -249,7 +249,7 @@ public class AdministrationComponent extends ServletBase {
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
 		if(deleteUser != null) {
-			return instance.getUser(deleteUser).removeMe() ? "User was removed successfully.": "Could not removed user.";
+			return instance.getUser(deleteUser).removeMe() ? createMessage("User was removed successfully.", true): createMessage("Could not removed user.", false);
 		}
 		return null;
 	}
@@ -264,7 +264,7 @@ public class AdministrationComponent extends ServletBase {
 		String deleteGroup = request.getParameter("deletegroup");
 		if (deleteGroup != null) {
 			long groupNumber = Long.parseLong(deleteGroup);
-			return instance.getProjectGroup(groupNumber).removeMe() ? "Group deleted successfully." : "Failed to delete group.";
+			return instance.getProjectGroup(groupNumber).removeMe() ? createMessage("Group deleted successfully.", true) : createMessage("Failed to delete group.", false);
 		}
 		return null;
 	}
@@ -285,12 +285,12 @@ public class AdministrationComponent extends ServletBase {
 				if(checkNewGroupName(newGroupName)) {
 					boolean res = instance.changeGroupName(groupNumber, newGroupName);	
 					if(!res) {
-						return "Group name already taken, please try a new one.";
+						return createMessage("Group name already taken, please try a new one.", false);
 					} else {
-						return "Group name has been updated.";
+						return createMessage("Group name has been updated.", true);
 					}
 				} else {
-					return "Wrong format on input! Please try again!";
+					return createMessage("Wrong format on input! Please try again!", false);
 				}
 			}
 		}
@@ -311,12 +311,12 @@ public class AdministrationComponent extends ServletBase {
 				System.out.println("New name of the group: " + createNewGroup);
 				boolean res = instance.addProjectGroup(new ProjectGroup(createNewGroup));
 				if(res) {
-					return "Project group was created successfully!";
+					return createMessage("Project group was created successfully!", true);
 				} else {
-					return "The project group does already exist! Please enter another project group name and try again";
+					return createMessage("The project group does already exist! Please enter another project group name and try again", false);
 				}
 			} else {
-				return "Wrong format on input! Please try again!";
+				return createMessage("Wrong format on input! Please try again!", false);
 			}
 		}
 		return null;
@@ -371,9 +371,12 @@ public class AdministrationComponent extends ServletBase {
 		out.println(tFoot);
 		 out.println("</table>");
 		 if(groupActionMessage != null){
-			 //TODO consider switch inline-style to some sort of error-class that gets styled instead. =)
-			 out.print("<p style=\"color:red\">"+ groupActionMessage +"</p>");			 
+			 out.print(groupActionMessage);			 
 		 }
+	}
+	
+	private String createMessage(String message, boolean isSuccess){
+		return "<p class=\"" + (isSuccess ? "success" : "failure") + "-message\">" + message + "</p>";
 	}
 
 
@@ -406,4 +409,5 @@ public class AdministrationComponent extends ServletBase {
 	protected boolean isProjectManagerComponent() {
 		return false;
 	}
+	
 }
