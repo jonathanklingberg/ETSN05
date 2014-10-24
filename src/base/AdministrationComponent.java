@@ -372,7 +372,7 @@ public class AdministrationComponent extends ServletBase {
     	out.println(deleteForm);
 		String tFoot = "<tfoot>" +
 					"<tr>" +
-					"<td colspan='3'>" +
+					"<td colspan='2'>" +
 					 "<div class=\"centerPag\">" +
 						"<div class=\"pagination pagination-centered\"></div> " +
 					 "</div>"+ 
