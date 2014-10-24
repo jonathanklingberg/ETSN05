@@ -151,12 +151,14 @@ public class AdministrationComponent extends ServletBase {
 			response.sendRedirect("logincomponent");
 		}
 	}
-	//TODO JavaDoc
+	
 	/**
-	 * 
-	 * @param request
-	 * @param out
-	 * @return
+	 * Checks whether a request is made to edit an existing user. A request has been made if the request parameter oldUsername is not null.
+	 * If a request is made, tries to update the users information with the new information sent in the request. Returns a success message or 
+	 * failure message depending on the success of the action. If the action fails, the message contains the reason for the failure.
+	 * @param request Contains information for user to be updated, if a request was sent
+	 * @param out Writer for printing HTML-code to Webpage
+	 * @return null if no update is requested, or an HTML tag containing a failure or success message depending on the success of the action.
 	 */
 	private String editExistingUser(HttpServletRequest request, PrintWriter out) {
 		String oldUserName = request.getParameter("oldUserName");
@@ -198,12 +200,14 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return null;
 	}
-	//TODO Javaoc
+	
 	/**
-	 * 
-	 * @param request
-	 * @param out
-	 * @return
+	 * Checks whether a request is made to add a new user. A request has been made if the request parameter addNewUser is not null.
+	 * If a request is made, tries to add the new user information with the information sent in the request. Returns a success message or 
+	 * failure message depending on the success of the action. If the action fails, the message contains the reason for the failure.
+	 * @param request Contains information for user to be added, if a request was sent
+	 * @param out Writer for printing HTML-code to Webpage
+	 * @return null if no user addition is requested, or an HTML tag containing a failure or success message depending on the success of the action.
 	 */
 	private String addNewUser(HttpServletRequest request, PrintWriter out) {
 		String username = request.getParameter("addNewUser");
@@ -240,11 +244,14 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return null;
 	}
-	//TODO Javaoc
+	
 	/**
-	 * 
-	 * @param request
-	 * @return
+	 * Checks whether a request is made to remove a user. A request has been made if the request parameter deleteuser is not null.
+	 * If a request is made, tries to remove the user with the information sent in the request. Returns a success message or 
+	 * failure message depending on the success of the action.
+	 * @param request Contains information for user to be deleted, if a request was sent
+	 * @param out Writer for printing HTML-code to Webpage
+	 * @return null if no user deletion is requested, or an HTML tag containing a failure or success message depending on the success of the action.
 	 */
 	private String deleteUser(HttpServletRequest request) {
 		String deleteUser = request.getParameter("deleteuser");
@@ -253,12 +260,14 @@ public class AdministrationComponent extends ServletBase {
 		}
 		return null;
 	}
-
-	//TODO Javaoc
+	
 	/**
-	 * 
-	 * @param request
-	 * @return
+	 * Checks whether a request is made to remove a group. A request has been made if the request parameter deletegroup is not null.
+	 * If a request is made, tries to remove the group with the information sent in the request. Returns a success message or 
+	 * failure message depending on the success of the action.
+	 * @param request Contains information for group to be deleted, if a request was sent
+	 * @param out Writer for printing HTML-code to Webpage
+	 * @return null if no group deletion is requested, or an HTML tag containing a failure or success message depending on the success of the action.
 	 */
 	private String deleteGroup(HttpServletRequest request) {
 		String deleteGroup = request.getParameter("deletegroup");
@@ -269,12 +278,13 @@ public class AdministrationComponent extends ServletBase {
 		return null;
 	}
 	
-	//TODO Javaoc
 	/**
-	 * 
-	 * @param request
-	 * @param out
-	 * @return
+	 * Checks whether a request is made to edit an existing group. A request has been made if the request parameter editgroup is not null.
+	 * If a request is made, tries to update the group information with the new information sent in the request. Returns a success message or 
+	 * failure message depending on the success of the action. If the action fails, the message contains the reason for the failure.
+	 * @param request Contains information for group to be updated, if a request was sent
+	 * @param out Writer for printing HTML-code to Webpage
+	 * @return null if no update is requested, or an HTML tag containing a failure or success message depending on the success of the action.
 	 */
 	private String editGroup(HttpServletRequest request, PrintWriter out) {
 		String editGroup = request.getParameter("editgroup");
@@ -297,12 +307,13 @@ public class AdministrationComponent extends ServletBase {
 		return null;
 	}
 	
-	//TODO Javaoc
 	/**
-	 * 
-	 * @param request
-	 * @param out
-	 * @return
+	 * Checks whether a request is made to create a new group. A request has been made if the request parameter addNewGroup is not null.
+	 * If a request is made, tries to create the new group with the information sent in the request. Returns a success message or 
+	 * failure message depending on the success of the action. If the action fails, the message contains the reason for the failure.
+	 * @param request Contains information for group to be created, if a request was sent
+	 * @param out Writer for printing HTML-code to Webpage
+	 * @return null if no group creation is requested, or an HTML tag containing a failure or success message depending on the success of the action.
 	 */
 	private String createNewGroup(HttpServletRequest request, PrintWriter out) {
 		String createNewGroup = request.getParameter("addNewGroup");
