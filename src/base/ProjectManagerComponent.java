@@ -92,11 +92,15 @@ public class ProjectManagerComponent extends ServletBase {
 			}
 			
 			String roleIdString = request.getParameter("roleId");
-			//TODO Better check! (against db) /J
 			if (roleIdString != null) {				
 				Long roleId = Long.parseLong(roleIdString);
 				String newRole = request.getParameter("role");
-				instance.changeRoleOfUser(newRole, roleId);
+				boolean changeRole = instance.changeRoleOfUser(newRole, roleId);
+				if(!changeRole){
+					System.out.println("UserId does not exist, or the new role is not a valid role!");
+				}
+			} else {
+				System.out.println("UserId does not exist!");
 			}
 			
 			//Prints a table with users that are in the same group
@@ -161,15 +165,34 @@ public class ProjectManagerComponent extends ServletBase {
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response); // redirect post-data to GET-action
 	}
-	//TODO JavaDoc
+	
+
+	/**
+	 * Determines whether this is an admin component
+	 * 
+	 * @return 	true if it is an admin component, 
+	 * 			false otherwise
+	 */
 	protected boolean isAdminComponent() {
 		return false;
 	}
-	//TODO JavaDoc	
+	
+	/**
+	 * Determines whether this is a worker component
+	 * 
+	 * @return 	true if it is a worker component, 
+	 * 			false otherwise
+	 */
 	protected boolean isWorkerComponent() {
 		return false;
 	}
-	//TODO JavaDoc
+	
+	/**
+	 * Determines whether this is a project manager component or not
+	 * 
+	 * @return 	true if it is a project manager component, 
+	 * 			false otherwise
+	 */
 	protected boolean isProjectManagerComponent() {
 		return true;
 	}
