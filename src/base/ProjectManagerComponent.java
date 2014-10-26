@@ -144,9 +144,6 @@ public class ProjectManagerComponent extends ServletBase {
 			 */
 
 			out.println(getPageOutro());
-			out.println("</body></html>");
-
-
 		} else { // user is not admin or project manager
 			System.err.println("Illigal action performed as: " + getRole() + "; Tried to access ProjectManagerComponent.");
 			response.sendRedirect("logincomponent");

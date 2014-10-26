@@ -540,7 +540,9 @@ public abstract class ServletBase extends HttpServlet {
 	}
 	
 	protected String getPageOutro() {
-		return "<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>";
+		String outro = "<a class=\"btn btn-block btn-lg btn-danger\" href =" + formElement("logincomponent") + "> Log out </a>" +
+		"</body></html>";
+		return outro;
 	}
 
 	protected  boolean isAdminOrProjectManagerComponent() {

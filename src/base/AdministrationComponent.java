@@ -144,8 +144,6 @@ public class AdministrationComponent extends ServletBase {
 			out.println(addGroupModal);
 
 			out.println(getPageOutro());
-			out.println("</body></html>");
-
 		} else {
 			System.err.println("Illigal action performed as: " + getRole() + "; Tried to access AdministrationComponent.");
 			response.sendRedirect("logincomponent");
