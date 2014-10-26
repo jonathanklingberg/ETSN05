@@ -2,14 +2,8 @@ package database;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
 import data.Role;
 
@@ -50,7 +44,7 @@ public class TimeReport extends AbstractCointainer {
 	 * @param conn A connection to the database
 	 * @param id	The id of the time report
 	 * @param userId The user id the time report belongs to
-	 * @param role TODO
+	 * @param role
 	 * @param groupId The group id the time reports belongs to
 	 * @param type The type of the time report
 	 * @param duration The duration of the time report
@@ -78,7 +72,7 @@ public class TimeReport extends AbstractCointainer {
 	 * Constructor which only should be used when the time report is about
 	 * to be created in the database
 	 * @param groupId The group id the time reports belongs to
-	 * @param role TODO
+	 * @param role
 	 * @param type The type of the time report
 	 * @param userId The user id the time report belongs to
 	 * @param duration The duration of the time report
@@ -284,8 +278,6 @@ public class TimeReport extends AbstractCointainer {
 	 * @param type The type to change to.
 	 */
 	public void setType(char type) {
-		//TODO Validate type number if not already done /J
-		//This is done before a TimeReport is created.
 		this.type = type;
 	}
 	

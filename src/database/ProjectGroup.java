@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -294,7 +293,7 @@ public class ProjectGroup extends AbstractCointainer {
 				removeTimeReport(timeReportsToDelete.get(i), "admin");
 			}
 			PreparedStatement ps;
-			//Kan inte köra kontroll på executeUpdate, eftersom denna returnerar noll om det inte finns någon roleInGroup förknippat med gruppen!! Detta funkar, ändra 
+			//Kan inte kï¿½ra kontroll pï¿½ executeUpdate, eftersom denna returnerar noll om det inte finns nï¿½gon roleInGroup fï¿½rknippat med gruppen!! Detta funkar, ï¿½ndra 
 			//INTE / S & M
 			ps = conn.prepareStatement("DELETE FROM RoleInGroup WHERE groupId = " + id);
 			ps.executeUpdate();
