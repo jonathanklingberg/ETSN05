@@ -249,8 +249,8 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'><input type=\"hidden\" class=\"timereportid\" name=\"reportid\" value=\""+tr.getId()+"\"></input><input type="+ formElement("checkbox") +" name="+formElement("signed") +" class=\"signedCheckbox\" "+checkedAttribute +"></input></td>");
 			
-			String editCodePM = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=projectmanagercomponent> edit </a>";
-			String deleteCodePM = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=projectmanagercomponent> delete </a>";
+			String editCodePM = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=projectmanagercomponent> Edit </a>";
+			String deleteCodePM = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=projectmanagercomponent> Delete </a>";
 
 			if(userId == tr.getUserId()){
 				out.println("<td>" + editCodePM +  "</td>");
@@ -265,8 +265,8 @@ public abstract class ServletBase extends HttpServlet {
 			boolean signed = tr.isSigned();
 			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
 			
-			String editCodeWorker = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=workercomponent> edit </a>";
-			String deleteCodeWorker = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=workercomponent> delete </a>";
+			String editCodeWorker = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=workercomponent> Edit </a>";
+			String deleteCodeWorker = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=workercomponent> Delete </a>";
 			
 			if(signed){
 				out.println("<td> </td>");
@@ -420,6 +420,9 @@ public abstract class ServletBase extends HttpServlet {
 					if (durationString!=null && !durationString.trim().equals("") && numberString!=null && !numberString.trim().equals("")) {
 						try{
 							Long duration = Long.parseLong(durationString);
+							if(duration < 0) {
+								return "<p class=\"failure-message\">Wrong format on input! Please try again!</p>";
+							}
 							Long number = Long.parseLong(numberString);
 							if(existingReport){
 								id = Long.parseLong(idString);
@@ -432,7 +435,7 @@ public abstract class ServletBase extends HttpServlet {
 								
 								if(existingReport){
 									if(instance.editTimeReport(id, userId, currentUser.getGroupId(), role, type, duration, week, Date.valueOf(date), false, number )){
-										resultMsg = existingReport ? "<pclass=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
+										resultMsg = existingReport ? "<p class=\"success-message\">Time report was edited successfully!</p>" : "<p class=\"success-message\">Time report was created successfully!</p>";
 									} else {
 										resultMsg = "<p class=\"failure-message\">Time report was signed while you were editing it</p>";
 									}
