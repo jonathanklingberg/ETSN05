@@ -238,8 +238,8 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + tr.getRole() + "'>" + tr.getRole() + "</td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td data-value='week:" + tr.getWeek() + ",' >" + tr.getWeek() + "</td>" : "");
 		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
+		out.println("<td data-value='week:" + tr.getWeek() + ",' >" + tr.getWeek() + "</td>");
 		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
 		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
@@ -284,8 +284,8 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<thead><tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<th>Username</th>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<th>Role</th>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<th>Week</th>" : "");
 		out.println("<th data-sort-initial=\"true\">Date</th>");
+		out.println("<th>Week</th>");
 		out.println("<th title=\"To filter: time:120\">Time (min)</th>");
 		out.println("<th>Type</th>");
 		out.println("<th>Number</th>");
