@@ -127,7 +127,7 @@ public class AdministrationComponent extends ServletBase {
 			ArrayList<User> users = instance.getAllUsers();
 			out.println("<div class=\"usertable-tools\"><input class=\"form-control filter\" id=\"userfilter\" type=\"text\" placeholder=\"Filter Users\"></input>");
 			out.println("<a class=\"btn btn-block btn-lg btn-primary\" id=\"createUserButton\" >Add user</a></div>");
-			printUserTable(out, users, userActionMessage);
+			printUserTable(out, users, userActionMessage, true);
 			out.println("<div id=\"createUser\" title=\"Add a new user\">");
 			out.println("Username: <input type=\"text\" id=\"name\"></input>");
 			out.println("Password: <input type=\"text\" id=\"password\"></input>");

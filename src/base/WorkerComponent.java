@@ -63,7 +63,7 @@ public class WorkerComponent extends ServletBase {
 
 			ArrayList<User> groupMembers = instance.getUsersInGroup(instance
 					.getUser(userName).getGroupId());
-			printUserTable(out, groupMembers, null);
+			printUserTable(out, groupMembers, null, false);
 			
 			//TODO this is not a good approach, see my comment on AdministratorComponent,
 			// Consider define a GET parameter called action which can be switch-cased instead. /J

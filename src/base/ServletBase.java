@@ -115,8 +115,9 @@ public abstract class ServletBase extends HttpServlet {
 	 * @param out
 	 * @param userList
 	 * @param userActionMessage
+	 * @param isAdmin 
 	 */
-	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage) {
+	protected void printUserTable(PrintWriter out, ArrayList<User> userList, String userActionMessage, boolean isAdmin) {
 		out.println("<table id=\"usertable\" data-filter=\"#userfilter\" data-page-navigation=\".pagination\" class=\"footable\" data-page-size=\"10\" border=" + formElement("1") + ">");	
 		int amount = 0;
 		System.out.println("Total number of users in system: " + userList.size());
@@ -135,7 +136,7 @@ public abstract class ServletBase extends HttpServlet {
 				editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editUser('" + name + "','" + pw + "','" + group + "', '" + role + "')") + " >Edit user</a>";
 			} else if(isProjectManagerComponent()){	
 				amount = 3;
-				if(role.equals("Admin") == false){
+				if(!role.equalsIgnoreCase("Admin") && (isAdmin || !role.equalsIgnoreCase("ProjectManager"))){
 				editCode = "<a class=\"cursor-pointer\" onclick=" + formElement("return editRole(" + userId + ")") + " >Edit</a>";
 				}
 			} else {

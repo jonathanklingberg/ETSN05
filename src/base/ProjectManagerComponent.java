@@ -105,7 +105,7 @@ public class ProjectManagerComponent extends ServletBase {
 			
 			//Prints a table with users that are in the same group
 			ArrayList<User> usersInGroup = instance.getUsersInGroup(groupId);
-			printUserTable(out, usersInGroup, null);
+			printUserTable(out, usersInGroup, null, isAdmin);
 			
 			Long userId = (Long) session.getAttribute("userId");
 			
