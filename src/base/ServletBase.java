@@ -237,7 +237,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + tr.getRole() + "'>" + tr.getRole() + "</td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td data-value='week:" + tr.getWeek() + "' >" + tr.getWeek() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='week:" + tr.getWeek() + ",' >" + tr.getWeek() + "</td>" : "");
 		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
 		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
