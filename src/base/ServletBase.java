@@ -293,7 +293,7 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<th title=\"To filter: signed:true\">Signed</th>");
 		out.println((isWorkerComponent() || isProjectManagerComponent())? "<th data-sort-ignore=\"true\">Edit</th>" : "");
 		out.println((isWorkerComponent() || isProjectManagerComponent())? "<th data-sort-ignore=\"true\">Remove</th>" : "");	
-		out.println("</thead></tr>");
+		out.println("</tr></thead>");
 	}
 
 	//TODO JavaDocs
