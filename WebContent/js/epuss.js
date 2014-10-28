@@ -36,6 +36,17 @@ $(function () {
     $('.footable').footable({    	
 			filter: {
 				minimum: 1,
+			},
+			parsers: {
+                alpha: function (cell) {
+                    return $(cell).data('value') || $.trim($(cell).text());
+                },
+                numeric: function (cell) {
+                    var val = $(cell).data('sort-value') || $(cell).text().replace(/[^0-9.\-]/g, '');
+                    val = parseFloat(val);
+                    if (isNaN(val)) val = 0;
+                    return val;
+                }
 			}
     	}).bind({
 		    'footable_filtered' : function(e) {
