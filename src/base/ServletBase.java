@@ -263,7 +263,8 @@ public abstract class ServletBase extends HttpServlet {
 
 		if(isWorkerComponent()){
 			boolean signed = tr.isSigned();
-			out.println("<td data-value='signed:" + signed + "'>" + signed + "</td>");
+			String signedString = signed ? "Yes":"No";
+			out.println("<td data-value='signed:" + signed + "'>" + signedString + "</td>");
 			
 			String editCodeWorker = "<a class=\"edit-timereport-btn cursor-pointer\" data-edit-date="+ formElement(tr.getDate().toString()) +" data-edit-duration=" + formElement(Long.toString(tr.getDuration())) + "data-edit-number=" + formElement(Long.toString(tr.getNumber())) +" data-edit-id=" + formElement(Long.toString(tr.getId())) + " data-edit-url-component=workercomponent> Edit </a>";
 			String deleteCodeWorker = "<a class=\"delete-timereport-btn cursor-pointer\" data-delete-id="+ formElement(Long.toString(tr.getId())) + " data-delete-url-component=workercomponent> Delete </a>";
