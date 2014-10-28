@@ -239,10 +239,10 @@ public abstract class ServletBase extends HttpServlet {
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + tr.getRole() + "'>" + tr.getRole() + "</td>" : "");
 		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
-		out.println("<td data-value='week:" + tr.getWeek() + ",' >" + tr.getWeek() + "</td>");
-		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
+		out.println("<td data-sort-value='" + tr.getWeek() + "' data-value='week:" + tr.getWeek() + ",' >" + tr.getWeek() + "</td>");
+		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-sort-value='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
 		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
-		out.println("<td data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
+		out.println("<td data-sort-value='" + tr.getNumber() + "' data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
 
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
@@ -285,11 +285,11 @@ public abstract class ServletBase extends HttpServlet {
 		out.println("<thead><tr>");
 		out.println(isAdminOrProjectManagerComponent()? "<th>Username</th>" : "");
 		out.println(isAdminOrProjectManagerComponent()? "<th>Role</th>" : "");
-		out.println("<th data-sort-initial=\"true\">Date</th>");
-		out.println("<th>Week</th>");
-		out.println("<th title=\"To filter: time:120\">Time (min)</th>");
+		out.println("<th data-type=\"numeric\" data-sort-initial=\"true\">Date</th>");
+		out.println("<th data-type=\"numeric\">Week</th>");
+		out.println("<th data-type=\"numeric\" title=\"To filter: time:120\">Time (min)</th>");
 		out.println("<th>Type</th>");
-		out.println("<th>Number</th>");
+		out.println("<th data-type=\"numeric\">Number</th>");
 		out.println("<th title=\"To filter: signed:true\">Signed</th>");
 		out.println((isWorkerComponent() || isProjectManagerComponent())? "<th data-sort-ignore=\"true\">Edit</th>" : "");
 		out.println((isWorkerComponent() || isProjectManagerComponent())? "<th data-sort-ignore=\"true\">Remove</th>" : "");	
