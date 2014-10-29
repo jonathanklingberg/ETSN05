@@ -208,8 +208,13 @@ public abstract class ServletBase extends HttpServlet {
 	 */
 	protected void printTimeReportTable(PrintWriter out, ArrayList<TimeReport> timeReports, String userActionMessage, long userId){
 		out.println("<div class=\"reportstable-tools\"><input class=\"form-control\" id=\"reportsfilter\" type=\"text\" placeholder=\"Filter Reports\"></input>");
+		if(getRole().equalsIgnoreCase("admin")){
+		out.println(isWorkerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=workercomponent disabled>Add report</a></div>" :"");
+		out.println(isProjectManagerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=projectmanagercomponent disabled>Add report</a></div>" :"");
+		}else{
 		out.println(isWorkerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=workercomponent>Add report</a></div>" :"");
-		out.println(isProjectManagerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=projectmanagercomponent>Add report</a></div>" :"");
+		out.println(isProjectManagerComponent()? "<a type=\"button\" class=\"btn btn-block btn-lg btn-primary create-timereport-btn\" data-create-url-component=projectmanagercomponent>Add report</a></div>" :"");	
+		}
 		out.println("<table class=\"footable\" id=\"reportstable\" data-filter=\"#reportsfilter\" border=" + formElement("1") + ">");	
 		printTimeReportTableHeader(out);
 		for(int i = 0; i < timeReports.size(); ++i){
