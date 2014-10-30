@@ -241,13 +241,13 @@ public abstract class ServletBase extends HttpServlet {
 	private void printTimeReport(PrintWriter out, TimeReport tr, long userId) {
 		User user = instance.getUser(tr.getUserId());
 		out.println("<tr>");
-		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + "'>" + user.getName() + "</td>" : "");
-		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + tr.getRole() + "'>" + tr.getRole() + "</td>" : "");
-		out.println("<td data-value='date:" + tr.getDate() + "'>" + tr.getDate() + "</td>");
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='username:" + user.getName() + ",'>" + user.getName() + "</td>" : "");
+		out.println(isAdminOrProjectManagerComponent()? "<td data-value='role:" + tr.getRole() + ",'>" + tr.getRole() + "</td>" : "");
+		out.println("<td data-value='date:" + tr.getDate() + ",'>" + tr.getDate() + "</td>");
 		out.println("<td data-sort-value='" + tr.getWeek() + "' data-value='week:" + tr.getWeek() + ",' >" + tr.getWeek() + "</td>");
-		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-sort-value='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + "'>" + tr.getDuration() + "</td>");
-		out.println("<td data-value='type:" + tr.getType() + "'>" + tr.getType() + "</td>");
-		out.println("<td data-sort-value='" + tr.getNumber() + "' data-value='number:" + tr.getNumber() + "'>" + tr.getNumber() + "</td>");		
+		out.println("<td class=\"duration-value\" data-duration='" + tr.getDuration() + "' data-sort-value='" + tr.getDuration() + "' data-value='duration:" + tr.getDuration() + ",'>" + tr.getDuration() + "</td>");
+		out.println("<td data-value='type:" + tr.getType() + ",'>" + tr.getType() + "</td>");
+		out.println("<td data-sort-value='" + tr.getNumber() + "' data-value='number:" + tr.getNumber() + ",'>" + tr.getNumber() + "</td>");		
 
 		if(isProjectManagerComponent()){
 			String checkedAttribute = tr.isSigned() ? "checked" : "";
